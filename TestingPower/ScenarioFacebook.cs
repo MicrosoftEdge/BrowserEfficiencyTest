@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 using System.Threading;
 
 namespace TestingPower
 {
-    class OpenFacebookAndScroll : Scenario
+    class ScenarioFacebook : Scenario
     {
-        public OpenFacebookAndScroll()
+        public ScenarioFacebook()
         {
+            // Specify its name and the total time the scenario will take (in seconds)
             Name = "facebook";
             Duration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
+            // Start by going to the Facebook homepage
             driver.Navigate().GoToUrl("http://www.facebook.com");
 
             // if not logged on, log on
@@ -42,8 +40,6 @@ namespace TestingPower
                     Thread.Sleep(2000);
                     var username = driver.FindElement(By.Id("email"));
                     var password = driver.FindElement(By.Id("pass"));
-                    // var button = _driver.FindElement(By.Id("loginbutton"));
-                    // Avoding applying click to button because of ObscureElement bug in Edge
 
                     username.Clear();
                     username.SendKeys(userName);
@@ -54,12 +50,17 @@ namespace TestingPower
                     password.SendKeys(passWord);
                     Thread.Sleep(1000);
 
+                    // Avoding applying click to button because of ObscureElement bug in Edge on high DPI monitors
+                    // Instead use tab and enter. Seemed to be pretty reliable across browsers
                     driver.Keyboard.SendKeys(Keys.Tab);
                     driver.Keyboard.SendKeys(Keys.Enter);
                     Thread.Sleep(2000);
                     break;
                 }
             }
+
+            // Once we're logged in, all we're going to do is scroll through the page
+            // We're simply measuring a user looking through their news feed for a minute
 
             Program.scrollPage(20);
         }
