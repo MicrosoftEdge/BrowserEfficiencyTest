@@ -82,8 +82,8 @@ namespace TestingPower
         private static void CreatePossibleScenarios()
         {
             // All scenarios are added to the list even if they're not final / not great. Order doesn't matter here.
-            AddScenario(new OpenFacebookAndScroll());
-            AddScenario(new OpenGmail());
+            AddScenario(new ScenarioFacebook());
+            AddScenario(new ScenarioGmail());
             AddScenario(new OpenMsn());
             AddScenario(new OpenMsnbcAndScroll());
             AddScenario(new OpenOutlookAndArrow10Emails());
@@ -193,10 +193,10 @@ namespace TestingPower
 
         public static void scrollPage(int timesToScroll)
         {
-            // Lots of examples had scrolling by executing Javascript. This seemed troublesome because the browser is
+            // Webdriver examples had scrolling by executing Javascript. This seemed troublesome because the browser is
             // scrolling in a way very different from how it would with a real user. This seemed to be the best
             // compromise in terms of it behaving like a real user scrolling, and it working reliably across browsers.
-            // Use the page down key
+            // Use the page down key.
             for (int i = 0; i < timesToScroll; i++)
             {
                 driver.Keyboard.SendKeys(Keys.PageDown);
