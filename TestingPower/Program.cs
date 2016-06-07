@@ -236,8 +236,11 @@ namespace TestingPower
                 case "operabeta":
                     OperaOptions oOption = new OperaOptions();
                     oOption.AddArgument("--disable-popup-blocking");
+                    oOption.AddArgument("--power-save-mode=on");
                     if (browser == "operabeta")
                     {
+                        // TODO: Ideally, this code would look inside the Opera beta folder for opera.exe
+                        // rather than depending on flaky hard-coded version in directory
                         oOption.BinaryLocation = @"C:\Program Files (x86)\Opera beta\38.0.2220.25\opera.exe";
                     }
                     driver = new OperaDriver(oOption);
@@ -257,10 +260,9 @@ namespace TestingPower
                     break;
             }
 
-            // This sleep exists to give enough time to click the Power Save button in Opera 38
-            // Ideally, this would have a flag and this sleep woudld be deleted but we haven't found one yet.
-            Thread.Sleep(3000);
+            // Maximize browser
             driver.Manage().Window.Maximize();
+
             Thread.Sleep(1000);
 
             return driver;
