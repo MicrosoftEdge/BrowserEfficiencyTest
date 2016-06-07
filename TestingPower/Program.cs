@@ -84,10 +84,10 @@ namespace TestingPower
             // All scenarios are added to the list even if they're not final / not great. Order doesn't matter here.
             AddScenario(new ScenarioFacebook());
             AddScenario(new ScenarioGmail());
-            AddScenario(new OpenMsn());
-            AddScenario(new OpenMsnbcAndScroll());
-            AddScenario(new OpenOutlookAndArrow10Emails());
-            AddScenario(new OpenRedditAndSearch());
+            AddScenario(new ScenarioMsn());
+            AddScenario(new ScenarioMsnbc());
+            AddScenario(new ScenarioOutlook());
+            AddScenario(new ScenarioReddit());
             AddScenario(new OpenWikipediaAndScroll());
             AddScenario(new PlayYoutubeVideo());
             AddScenario(new SearchAmazon());

@@ -57,12 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomateWPR.cs" />
-    <Compile Include="OpenFacebookAndScroll.cs" />
-    <Compile Include="OpenGmail.cs" />
-    <Compile Include="OpenMsn.cs" />
-    <Compile Include="OpenMsnbcAndScroll.cs" />
-    <Compile Include="OpenOutlookAndArrow10Emails.cs" />
-    <Compile Include="OpenRedditAndSearch.cs" />
+    <Compile Include="ScenarioFacebook.cs" />
+    <Compile Include="ScenarioGmail.cs" />
+    <Compile Include="ScenarioMsn.cs" />
+    <Compile Include="ScenarioMsnbc.cs" />
+    <Compile Include="ScenarioOutlook.cs" />
+    <Compile Include="ScenarioReddit.cs" />
     <Compile Include="OpenWikipediaAndScroll.cs" />
     <Compile Include="PlayYoutubeVideo.cs" />
     <Compile Include="Program.cs" />

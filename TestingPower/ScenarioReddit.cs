@@ -9,9 +9,9 @@ using OpenQA.Selenium;
 
 namespace TestingPower
 {
-    class OpenRedditAndSearch : Scenario
+    class ScenarioReddit : Scenario
     {
-        public OpenRedditAndSearch()
+        public ScenarioReddit()
         {
             Name = "reddit";
         }
