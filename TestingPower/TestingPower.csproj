@@ -63,13 +63,13 @@
     <Compile Include="ScenarioMsnbc.cs" />
     <Compile Include="ScenarioOutlook.cs" />
     <Compile Include="ScenarioReddit.cs" />
-    <Compile Include="OpenWikipediaAndScroll.cs" />
-    <Compile Include="PlayYoutubeVideo.cs" />
+    <Compile Include="ScenarioWikipedia.cs" />
+    <Compile Include="ScenarioYoutube.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenario.cs" />
-    <Compile Include="SearchAmazon.cs" />
-    <Compile Include="SearchGoogle.cs" />
+    <Compile Include="ScenarioAmazon.cs" />
+    <Compile Include="ScenarioGoogle.cs" />
     <Compile Include="UserInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -88,10 +88,10 @@ namespace TestingPower
             AddScenario(new ScenarioMsnbc());
             AddScenario(new ScenarioOutlook());
             AddScenario(new ScenarioReddit());
-            AddScenario(new OpenWikipediaAndScroll());
-            AddScenario(new PlayYoutubeVideo());
-            AddScenario(new SearchAmazon());
-            AddScenario(new SearchGoogle());
+            AddScenario(new ScenarioWikipedia());
+            AddScenario(new ScenarioYoutube());
+            AddScenario(new ScenarioAmazon());
+            AddScenario(new ScenarioGoogle());
         }
 
         private static void AddScenario(Scenario scenario)
