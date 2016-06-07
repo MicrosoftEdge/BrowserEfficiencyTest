@@ -224,9 +224,6 @@ namespace TestingPower
                     break;
             }
 
-            // This sleep exists to give enough time to click the Power Save button in Opera 38
-            // Ideally, this would have a flag and this sleep woudl be deleted but we haven't found one yet.
-            Thread.Sleep(3000);
             driver.Manage().Window.Maximize();
             Thread.Sleep(1000);
 
