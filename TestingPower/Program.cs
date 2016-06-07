@@ -175,7 +175,7 @@ namespace TestingPower
 
         private static void CloseTabs()
         {
-            // Simply go through and clsoe every tab one by one.
+            // Simply go through and close every tab one by one.
             foreach (var window in driver.WindowHandles)
             {
                 driver.SwitchTo().Window(window).Close();
