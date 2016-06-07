@@ -200,8 +200,11 @@ namespace TestingPower
                 case "operabeta":
                     OperaOptions oOption = new OperaOptions();
                     oOption.AddArgument("--disable-popup-blocking");
+                    oOption.AddArgument("--power-save-mode=on");
                     if (browser == "operabeta")
                     {
+                        // TODO: Ideally, this code would look inside the Opera beta folder for opera.exe
+                        // rather than depending on flaky hard-coded version in directory
                         oOption.BinaryLocation = @"C:\Program Files (x86)\Opera beta\38.0.2220.25\opera.exe";
                     }
                     driver = new OperaDriver(oOption);
