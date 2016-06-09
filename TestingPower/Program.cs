@@ -24,10 +24,8 @@ namespace TestingPower
         private static void Main(string[] args)
         {
             // A "Scenario" is opening up a tab and doing something (watch a youtube video, browse the facebook feed)
-            // Add each possible scenario so we can construct the workload we want from them
             CreatePossibleScenarios();
 
-            // Populate browser, scenario, and loops based on what the user is asking for in args
             ProcessArgs(args);
 
             // Get the login information from an external file
@@ -79,6 +77,10 @@ namespace TestingPower
             }
         }
 
+        /// <summary>
+        /// All scenarios must be instantiated and added to the list of possible scenarios in this method.
+        /// The order doensn't matter.
+        /// </summary>
         private static void CreatePossibleScenarios()
         {
             // All scenarios are added to the list even if they're not final / not great. Order doesn't matter here.
@@ -99,6 +101,13 @@ namespace TestingPower
             possibleScenarios.Add(scenario.Name, scenario);
         }
 
+        /// <summary>
+        /// Based on user input in the args, here we break them apart and determine:
+        ///  - Which browser to run on
+        ///  - Which scenario(s) to run
+        ///  - How many loops to execute
+        /// </summary>
+        /// <param name="args">The input arguments. E.g. "-browser edge -scenario all"</param>
         private static void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
@@ -191,6 +200,10 @@ namespace TestingPower
             return JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
         }
 
+        /// <summary>
+        /// Utility function for scenarios to call into to scroll the page
+        /// </summary>
+        /// <param name="timesToScroll">An abstract quantification of how much to scroll</param>
         public static void scrollPage(int timesToScroll)
         {
             // Webdriver examples had scrolling by executing Javascript. This seemed troublesome because the browser is
@@ -203,7 +216,9 @@ namespace TestingPower
                 Thread.Sleep(1000);
             }
         }
-
+        /// <summary>
+        /// Creates a new tab and puts focus in it so the next navigation will be in the new tab
+        /// </summary>
         private static void CreateNewTab()
         {
             // Sadly, we had to special case this a bit by browser because no mechanism behaved correctly for everyone
@@ -260,7 +275,6 @@ namespace TestingPower
                     break;
             }
 
-            // Maximize browser
             driver.Manage().Window.Maximize();
 
             Thread.Sleep(1000);

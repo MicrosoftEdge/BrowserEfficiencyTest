@@ -64,7 +64,7 @@
     <Compile Include="Scenarios\OutlookViewEmails.cs" />
     <Compile Include="Scenarios\RedditSearchSubreddit.cs" />
     <Compile Include="Scenarios\WikipediaUnitedStates.cs" />
-    <Compile Include="Scenarios\ScenarioYoutube.cs" />
+    <Compile Include="Scenarios\YoutubeWatchVideo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenario.cs" />
