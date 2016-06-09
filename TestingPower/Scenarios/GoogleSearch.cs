@@ -8,9 +8,9 @@ using OpenQA.Selenium;
 
 namespace TestingPower
 {
-    class ScenarioGoogle : Scenario
+    class GoogleSearch : Scenario
     {
-        public ScenarioGoogle()
+        public GoogleSearch()
         {
             Name = "google";
             // Default time

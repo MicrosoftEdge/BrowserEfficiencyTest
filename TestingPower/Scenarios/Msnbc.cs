@@ -5,9 +5,9 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class ScenarioMsnbc : Scenario
+    class Msnbc : Scenario
     {
-        public ScenarioMsnbc ()
+        public Msnbc ()
         {
             Name = "msnbc";
             Duration = 50;

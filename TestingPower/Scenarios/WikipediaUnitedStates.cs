@@ -8,9 +8,9 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class ScenarioWikipedia : Scenario
+    class WikipediaUnitedStates : Scenario
     {
-        public ScenarioWikipedia()
+        public WikipediaUnitedStates()
         {
             // Specifify name and that it's 30s
             Name = "wikipedia";

@@ -4,9 +4,9 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class ScenarioMsn : Scenario
+    class Msn : Scenario
     {
-        public ScenarioMsn()
+        public Msn()
         {
             this.Name = "msn";
         }

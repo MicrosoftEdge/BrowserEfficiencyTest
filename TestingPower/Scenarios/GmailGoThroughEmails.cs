@@ -8,9 +8,9 @@ using OpenQA.Selenium;
 
 namespace TestingPower
 {
-    class ScenarioGmail : Scenario
+    class GmailGoThroughEmails : Scenario
     {
-        public ScenarioGmail()
+        public GmailGoThroughEmails()
         {
             // Specify its name and total time the scenario will take (in seconds)
             Name = "gmail";

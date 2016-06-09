@@ -82,16 +82,16 @@ namespace TestingPower
         private static void CreatePossibleScenarios()
         {
             // All scenarios are added to the list even if they're not final / not great. Order doesn't matter here.
-            AddScenario(new ScenarioFacebook());
-            AddScenario(new ScenarioGmail());
-            AddScenario(new ScenarioMsn());
-            AddScenario(new ScenarioMsnbc());
-            AddScenario(new ScenarioOutlook());
-            AddScenario(new ScenarioReddit());
-            AddScenario(new ScenarioWikipedia());
-            AddScenario(new ScenarioYoutube());
-            AddScenario(new ScenarioAmazon());
-            AddScenario(new ScenarioGoogle());
+            AddScenario(new FacebookNewsfeedScroll());
+            AddScenario(new GmailGoThroughEmails());
+            AddScenario(new Msn());
+            AddScenario(new Msnbc());
+            AddScenario(new OutlookViewEmails());
+            AddScenario(new RedditSearchSubreddit());
+            AddScenario(new WikipediaUnitedStates());
+            AddScenario(new YoutubeWatchVideo());
+            AddScenario(new AmazonSearch());
+            AddScenario(new GoogleSearch());
         }
 
         private static void AddScenario(Scenario scenario)

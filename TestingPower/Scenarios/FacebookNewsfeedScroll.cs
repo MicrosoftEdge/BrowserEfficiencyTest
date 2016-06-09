@@ -5,9 +5,9 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class ScenarioFacebook : Scenario
+    class FacebookNewsfeedScroll : Scenario
     {
-        public ScenarioFacebook()
+        public FacebookNewsfeedScroll()
         {
             // Specify its name and the total time the scenario will take (in seconds)
             Name = "facebook";

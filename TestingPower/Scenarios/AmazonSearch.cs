@@ -6,9 +6,9 @@ using OpenQA.Selenium;
 
 namespace TestingPower
 {
-    class ScenarioAmazon : Scenario
+    class AmazonSearch : Scenario
     {
-        public ScenarioAmazon()
+        public AmazonSearch()
         {
             Name = "amazon";
             // Keep default time

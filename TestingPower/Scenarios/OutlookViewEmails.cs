@@ -9,9 +9,9 @@ using OpenQA.Selenium;
 
 namespace TestingPower
 {
-    class ScenarioOutlook : Scenario
+    class OutlookViewEmails : Scenario
     {
-        public ScenarioOutlook()
+        public OutlookViewEmails()
         {
             Name = "outlook";
             Duration = 60;

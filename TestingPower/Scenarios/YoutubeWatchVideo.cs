@@ -4,9 +4,9 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class ScenarioYoutube : Scenario
+    class YoutubeWatchVideo : Scenario
     {
-        public ScenarioYoutube()
+        public YoutubeWatchVideo()
         {
             this.Name = "youtube";
             // Leave the default time
