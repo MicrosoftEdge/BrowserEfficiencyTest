@@ -28,7 +28,6 @@ namespace TestingPower
 
             ProcessArgs(args);
 
-            // Get the login information from an external file
             List<UserInfo> logins = GetLoginsFromFile();
             
             // Core Execution Loop
