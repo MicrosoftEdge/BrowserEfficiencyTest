@@ -10,6 +10,8 @@ namespace TestingPower
 {
     class GmailGoThroughEmails : Scenario
     {
+        RemoteWebDriver driver;
+
         public GmailGoThroughEmails()
         {
             // Specify its name and total time the scenario will take (in seconds)
@@ -17,18 +19,23 @@ namespace TestingPower
             Duration = 80;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driverIn, string browser, List<UserInfo> logins)
         {
-            ////////////////////////
-            // Navigate to gmail //
-            //////////////////////
+            driver = driverIn;
+            NavigateToGmail();
+            Thread.Sleep(2 * 1000);
+            LogIn(logins);
+            Thread.Sleep(7 * 1000);
+            BrowseEmails(5);
+        }
 
+        private void NavigateToGmail()
+        {
             driver.Navigate().GoToUrl("http://www.gmail.com");
+        }
 
-            /////////////
-            // Log in //
-            ///////////
-
+        private void LogIn(List<UserInfo> logins)
+        {
             // Get the relevant username and password
             String username = "";
             String password = "";
@@ -89,15 +96,12 @@ namespace TestingPower
             driver.Keyboard.SendKeys(Keys.Tab);
             Thread.Sleep(2000);
             driver.Keyboard.SendKeys(Keys.Enter);
+        }
 
-            ///////////////////////
-            // Open some emails //
-            /////////////////////
-
-            Thread.Sleep(7 * 1000);
-
+        private void BrowseEmails(int numOfEmailsToBrowse)
+        {
             // Go through some emails
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < numOfEmailsToBrowse; i++)
             {
                 // Go into email
 
@@ -105,7 +109,7 @@ namespace TestingPower
                 // driver.FindElementsByClassName("zA").ElementAt(i).SendKeys(String.Empty);
                 // Simply using the shortcut keys worked pretty well though
                 driver.Keyboard.SendKeys("o");
-                
+
                 Thread.Sleep(4000);
                 // Go back to inbox
                 driver.Keyboard.SendKeys(Keys.Backspace);
@@ -115,6 +119,5 @@ namespace TestingPower
                 Thread.Sleep(2000);
             }
         }
-
     }
 }
