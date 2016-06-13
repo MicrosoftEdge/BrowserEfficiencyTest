@@ -16,7 +16,6 @@ namespace TestingPower
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            // Start by going to the Facebook homepage
             driver.Navigate().GoToUrl("http://www.facebook.com");
 
             // if not logged on, log on

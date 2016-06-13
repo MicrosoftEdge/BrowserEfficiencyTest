@@ -18,7 +18,6 @@ namespace TestingPower
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            // Go to Google
             driver.Navigate().GoToUrl("http://www.google.com");
 
             Thread.Sleep(5 * 1000);

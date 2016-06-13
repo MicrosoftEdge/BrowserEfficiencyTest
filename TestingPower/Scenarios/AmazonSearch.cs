@@ -16,7 +16,6 @@ namespace TestingPower
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            // Go to Amazon
             driver.Navigate().GoToUrl("http://www.amazon.com");
 
             // Give it more than enough time to load
