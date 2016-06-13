@@ -5,9 +5,9 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class OpenMsnbcAndScroll : Scenario
+    class Msnbc : Scenario
     {
-        public OpenMsnbcAndScroll ()
+        public Msnbc ()
         {
             Name = "msnbc";
             Duration = 50;

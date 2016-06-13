@@ -8,11 +8,12 @@ using OpenQA.Selenium;
 
 namespace TestingPower
 {
-    class SearchGoogle : Scenario
+    class GoogleSearch : Scenario
     {
-        public SearchGoogle()
+        public GoogleSearch()
         {
             Name = "google";
+            // Default time
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
@@ -21,6 +22,7 @@ namespace TestingPower
 
             Thread.Sleep(5 * 1000);
 
+            // Search for "Seattle" and hit enter
             var searchBox = driver.FindElementByXPath("//*[@title='Search']");
             foreach (char c in "Seattle")
             {
@@ -28,6 +30,8 @@ namespace TestingPower
                 Thread.Sleep(75);
             }
             driver.Keyboard.SendKeys(Keys.Enter);
+
+            // Simply yield control back to the main thread and look at results
         }
     }
 }
