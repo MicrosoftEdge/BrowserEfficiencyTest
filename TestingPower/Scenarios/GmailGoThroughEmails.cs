@@ -10,31 +10,28 @@ namespace TestingPower
 {
     class GmailGoThroughEmails : Scenario
     {
-        RemoteWebDriver driver;
 
         public GmailGoThroughEmails()
         {
-            // Specify its name and total time the scenario will take (in seconds)
             Name = "gmail";
             Duration = 80;
         }
 
-        public override void Run(RemoteWebDriver driverIn, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver = driverIn;
-            NavigateToGmail();
+            NavigateToGmail(driver);
             Thread.Sleep(2 * 1000);
-            LogIn(logins);
+            LogIn(driver, logins);
             Thread.Sleep(7 * 1000);
-            BrowseEmails(5);
+            BrowseEmails(driver, 5);
         }
 
-        private void NavigateToGmail()
+        private void NavigateToGmail(RemoteWebDriver driver)
         {
             driver.Navigate().GoToUrl("http://www.gmail.com");
         }
 
-        private void LogIn(List<UserInfo> logins)
+        private void LogIn(RemoteWebDriver driver, List<UserInfo> logins)
         {
             // Get the relevant username and password
             String username = "";
@@ -98,7 +95,7 @@ namespace TestingPower
             driver.Keyboard.SendKeys(Keys.Enter);
         }
 
-        private void BrowseEmails(int numOfEmailsToBrowse)
+        private void BrowseEmails(RemoteWebDriver driver, int numOfEmailsToBrowse)
         {
             // Go through some emails
             for (int i = 0; i < numOfEmailsToBrowse; i++)
