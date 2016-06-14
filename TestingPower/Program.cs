@@ -141,7 +141,6 @@ namespace TestingPower
                         {
                             // Specify the "official" runs, including order
                             scenarios.Add(possibleScenarios["youtube"]);
-                            scenarios.Add(possibleScenarios["cnn"]);
                             scenarios.Add(possibleScenarios["amazon"]);
                             // Reddit and amazon combined hang Opera.
                             // Re-ordering them causes the other to crash.

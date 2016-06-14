@@ -21,17 +21,21 @@ namespace TestingPower
             // Give it more than enough time to load
             Thread.Sleep(5000); 
 
-            // Open the top headline story
+            // Get the element that contains the headline story
             var headlineElement = driver.FindElementByClassName("zn-banner");
             var aRefElement = headlineElement.FindElement(By.TagName("a"));
+
+            // Get focus on the headline story link 
             aRefElement.SendKeys(String.Empty);
+
+            // Open the link to the headline story
             aRefElement.SendKeys(Keys.Enter);
 
             // And let that load
             Thread.Sleep(2 * 1000);
 
-            // Scroll down several times
-            Program.scrollPage(5);
+            // Scroll down multiple times
+            Program.scrollPage(10);
         }
     }
 }
