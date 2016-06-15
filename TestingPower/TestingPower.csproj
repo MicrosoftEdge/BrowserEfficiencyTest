@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomateWPR.cs" />
+    <Compile Include="Scenarios\CnnTopStory.cs" />
     <Compile Include="Scenarios\FacebookNewsfeedScroll.cs" />
     <Compile Include="Scenarios\GmailGoThroughEmails.cs" />
     <Compile Include="Scenarios\Msn.cs" />

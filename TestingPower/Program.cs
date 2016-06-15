@@ -93,6 +93,7 @@ namespace TestingPower
             AddScenario(new YoutubeWatchVideo());
             AddScenario(new AmazonSearch());
             AddScenario(new GoogleSearch());
+            AddScenario(new CnnTopStory());
         }
 
         private static void AddScenario(Scenario scenario)
