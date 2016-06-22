@@ -65,9 +65,16 @@ namespace TestingPower
                         // When we get control back, we sleep for the remaining time for the scenario. This ensures
                         // the total time for a scenario is always the same
                         var runTime = watch.Elapsed.Subtract(startTime);
+                        
                         // We even allow the exception to fall through and break the run if we pass a negative number
                         // in here (meaning the scenario took longer to return than the total time it expected)
-                        Thread.Sleep(TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime));
+                        var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
+                        
+                        if (timeLeft < TimeSpan.FromSeconds(0))
+                        {                            
+                            throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
+                        }
+                        Thread.Sleep(timeLeft);
                     }
                 }
 
@@ -94,6 +101,7 @@ namespace TestingPower
             AddScenario(new AmazonSearch());
             AddScenario(new GoogleSearch());
             AddScenario(new CnnTopStory());
+            AddScenario(new TechRadarSurfacePro4Review());
         }
 
         private static void AddScenario(Scenario scenario)
@@ -141,6 +149,8 @@ namespace TestingPower
                         {
                             // Specify the "official" runs, including order
                             scenarios.Add(possibleScenarios["youtube"]);
+                            scenarios.Add(possibleScenarios["cnn"]);
+                            scenarios.Add(possibleScenarios["techRadar"]);
                             scenarios.Add(possibleScenarios["amazon"]);
                             // Reddit and amazon combined hang Opera.
                             // Re-ordering them causes the other to crash.
@@ -150,6 +160,7 @@ namespace TestingPower
                             scenarios.Add(possibleScenarios["google"]);
                             scenarios.Add(possibleScenarios["gmail"]);
                             scenarios.Add(possibleScenarios["wikipedia"]);
+
                             break;
                         }
 
