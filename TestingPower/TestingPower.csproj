@@ -64,6 +64,7 @@
     <Compile Include="Scenarios\Msnbc.cs" />
     <Compile Include="Scenarios\OutlookViewEmails.cs" />
     <Compile Include="Scenarios\RedditSearchSubreddit.cs" />
+    <Compile Include="Scenarios\TechRadarSurfacePro4Review.cs" />
     <Compile Include="Scenarios\WikipediaUnitedStates.cs" />
     <Compile Include="Scenarios\YoutubeWatchVideo.cs" />
     <Compile Include="Program.cs" />
