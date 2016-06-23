@@ -30,8 +30,9 @@ using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using System.Threading;
 
-namespace TestingPower {
-   class WikipediaUnitedStates : Scenario
+namespace TestingPower
+{
+    internal class WikipediaUnitedStates : Scenario
     {
         public WikipediaUnitedStates()
         {
@@ -48,7 +49,7 @@ namespace TestingPower {
             if (browser == "firefox")
             {
                 // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
-                driver.FindElementById("firstHeading").SendKeys(String.Empty);
+                driver.FindElementById("firstHeading").SendKeys(string.Empty);
             }
 
             // Scroll a bit

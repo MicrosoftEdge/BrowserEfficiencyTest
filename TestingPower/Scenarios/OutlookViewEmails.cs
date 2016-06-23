@@ -31,8 +31,9 @@ using OpenQA.Selenium.Remote;
 using System.Threading;
 using OpenQA.Selenium;
 
-namespace TestingPower {
-   class OutlookViewEmails : Scenario
+namespace TestingPower
+{
+    internal class OutlookViewEmails : Scenario
     {
         public OutlookViewEmails()
         {

@@ -25,7 +25,7 @@
 //
 //--------------------------------------------------------------
 
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -40,13 +40,13 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class Program
+    internal class Program
     {
-        private static RemoteWebDriver driver;
-        private static string browser = string.Empty;
-        private static int loops = 1;
-        private static List<Scenario> scenarios = new List<Scenario>();
-        private static Dictionary<string, Scenario> possibleScenarios = new Dictionary<string, Scenario>();
+        private static RemoteWebDriver s_driver;
+        private static string s_browser = string.Empty;
+        private static int s_loops = 1;
+        private static List<Scenario> s_scenarios = new List<Scenario>();
+        private static Dictionary<string, Scenario> s_possibleScenarios = new Dictionary<string, Scenario>();
 
         private static void Main(string[] args)
         {
@@ -56,18 +56,18 @@ namespace TestingPower
             ProcessArgs(args);
 
             List<UserInfo> logins = GetLoginsFromFile();
-            
+
             // Core Execution Loop
-            using (var driver = CreateDriverAndMazimize(browser))
+            using (var driver = CreateDriverAndMazimize(s_browser))
             {
                 Stopwatch watch = Stopwatch.StartNew();
                 bool isFirstScenario = true;
 
                 // Allow multiple loops of all the scenarios if the user desires. Great for compounding small
                 // differences to make them easier to measure.
-                for (int loop = 0; loop < loops; loop++)
+                for (int loop = 0; loop < s_loops; loop++)
                 {
-                    foreach (var scenario in scenarios)
+                    foreach (var scenario in s_scenarios)
                     {
                         // We want every scenario to take the same amount of time total, even if there are changes in
                         // how long pages take to load. The biggest reason for this is so that you can measure energy
@@ -87,7 +87,7 @@ namespace TestingPower
                         }
 
                         // Here, control is handed to the scenario to navigate, and do whatever it wants
-                        scenario.Run(driver, browser, logins);
+                        scenario.Run(driver, s_browser, logins);
 
                         // When we get control back, we sleep for the remaining time for the scenario. This ensures
                         // the total time for a scenario is always the same
@@ -128,7 +128,7 @@ namespace TestingPower
 
         private static void AddScenario(Scenario scenario)
         {
-            possibleScenarios.Add(scenario.Name, scenario);
+            s_possibleScenarios.Add(scenario.Name, scenario);
         }
 
         /// <summary>
@@ -143,15 +143,15 @@ namespace TestingPower
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
 
             Console.WriteLine("Usage: TestingPower.exe -browser [chrome|edge|firefox|opera|operabeta] -scenario all|<scenario1> <scenario2> [-loops <loopcount>]");
-            for (int argNum = 0; argNum < args.Length;  argNum++)
+            for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
                 switch (arg)
                 {
                     case "-browser":
                         argNum++;
-                        browser = args[argNum].ToLowerInvariant();
-                        switch (browser)
+                        s_browser = args[argNum].ToLowerInvariant();
+                        switch (s_browser)
                         {
                             case "operabeta":
                             case "opera":
@@ -160,7 +160,7 @@ namespace TestingPower
                             case "edge":
                                 break;
                             default:
-                                throw new Exception($"Unexpected browser '{browser}'");
+                                throw new Exception($"Unexpected browser '{s_browser}'");
                         }
 
                         break;
@@ -170,14 +170,14 @@ namespace TestingPower
                         if (args[argNum] == "all")
                         {
                             // Specify the "official" runs, including order
-                            scenarios.Add(possibleScenarios["youtube"]);
-                            scenarios.Add(possibleScenarios["cnn"]);
-                            scenarios.Add(possibleScenarios["techRadar"]);
-                            scenarios.Add(possibleScenarios["amazon"]);
-                            scenarios.Add(possibleScenarios["facebook"]);
-                            scenarios.Add(possibleScenarios["google"]);
-                            scenarios.Add(possibleScenarios["gmail"]);
-                            scenarios.Add(possibleScenarios["wikipedia"]);
+                            s_scenarios.Add(s_possibleScenarios["youtube"]);
+                            s_scenarios.Add(s_possibleScenarios["cnn"]);
+                            s_scenarios.Add(s_possibleScenarios["techRadar"]);
+                            s_scenarios.Add(s_possibleScenarios["amazon"]);
+                            s_scenarios.Add(s_possibleScenarios["facebook"]);
+                            s_scenarios.Add(s_possibleScenarios["google"]);
+                            s_scenarios.Add(s_possibleScenarios["gmail"]);
+                            s_scenarios.Add(s_possibleScenarios["wikipedia"]);
 
                             break;
                         }
@@ -185,14 +185,14 @@ namespace TestingPower
                         while (argNum < args.Length)
                         {
                             var scenario = args[argNum];
-                            if (!possibleScenarios.ContainsKey(scenario))
+                            if (!s_possibleScenarios.ContainsKey(scenario))
                             {
                                 throw new Exception($"Unexpected scenario '{scenario}'");
                             }
 
-                            scenarios.Add(possibleScenarios[scenario]);
+                            s_scenarios.Add(s_possibleScenarios[scenario]);
                             int nextArgNum = argNum + 1;
-                            if (nextArgNum < args.Length && args[argNum+1].StartsWith("-"))
+                            if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
                             {
                                 break;
                             }
@@ -203,7 +203,7 @@ namespace TestingPower
                         break;
                     case "-loops":
                         argNum++;
-                        loops = int.Parse(args[argNum]);
+                        s_loops = int.Parse(args[argNum]);
                         break;
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
@@ -214,10 +214,9 @@ namespace TestingPower
         private static void CloseTabs()
         {
             // Simply go through and close every tab one by one.
-            foreach (var window in driver.WindowHandles)
+            foreach (var window in s_driver.WindowHandles)
             {
-                driver.SwitchTo().Window(window).Close();
-
+                s_driver.SwitchTo().Window(window).Close();
             }
         }
 
@@ -242,7 +241,7 @@ namespace TestingPower
             // Use the page down key.
             for (int i = 0; i < timesToScroll; i++)
             {
-                driver.Keyboard.SendKeys(Keys.PageDown);
+                s_driver.Keyboard.SendKeys(Keys.PageDown);
                 Thread.Sleep(1000);
             }
         }
@@ -253,26 +252,26 @@ namespace TestingPower
         private static void CreateNewTab()
         {
             // Sadly, we had to special case this a bit by browser because no mechanism behaved correctly for everyone
-            if (browser == "firefox")
+            if (s_browser == "firefox")
             {
                 // Use ctrl+t for Firefox. Send them to the body or else there can be focus problems.
-                IWebElement body = driver.FindElementByTagName("body");
-                body.SendKeys(Keys.Control + 't');                
+                IWebElement body = s_driver.FindElementByTagName("body");
+                body.SendKeys(Keys.Control + 't');
             }
             else
             {
                 // For other browsers, use some JS. Note that this means you have to disable popup blocking in Edge
                 // You actually have to in Opera too, but that's provided in a flag below
-                driver.ExecuteScript("window.open();");
+                s_driver.ExecuteScript("window.open();");
                 // Go to that tab
-                driver.SwitchTo().Window(driver.WindowHandles[driver.WindowHandles.Count-1]);
+                s_driver.SwitchTo().Window(s_driver.WindowHandles[s_driver.WindowHandles.Count - 1]);
             }
 
             // Give the browser more than enough time to open the tab and get to it so the next commands from the
             // scenario don't get lost
             Thread.Sleep(2000);
         }
-        
+
         private static RemoteWebDriver CreateDriverAndMazimize(string browser)
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
@@ -289,28 +288,28 @@ namespace TestingPower
                         // rather than depending on flaky hard-coded version in directory
                         oOption.BinaryLocation = @"C:\Program Files (x86)\Opera beta\38.0.2220.25\opera.exe";
                     }
-                    driver = new OperaDriver(oOption);
+                    s_driver = new OperaDriver(oOption);
                     break;
                 case "firefox":
-                    driver = new FirefoxDriver();
+                    s_driver = new FirefoxDriver();
                     break;
                 case "chrome":
                     ChromeOptions option = new ChromeOptions();
                     option.AddUserProfilePreference("profile.default_content_setting_values.notifications", 1);
-                    driver = new ChromeDriver(option);
+                    s_driver = new ChromeDriver(option);
                     break;
                 default:
                     EdgeOptions options = new EdgeOptions();
-                    options.PageLoadStrategy = EdgePageLoadStrategy.Normal;                    
-                    driver = new EdgeDriver(options);
+                    options.PageLoadStrategy = EdgePageLoadStrategy.Normal;
+                    s_driver = new EdgeDriver(options);
                     break;
             }
 
-            driver.Manage().Window.Maximize();
+            s_driver.Manage().Window.Maximize();
 
             Thread.Sleep(1000);
 
-            return driver;
+            return s_driver;
         }
         /// <summary>
         /// Here we do the work to finish the test, like quitting the driver.
@@ -320,7 +319,7 @@ namespace TestingPower
             // TODO: Capture power usage / results automatically
             try
             {
-                driver.Quit();
+                s_driver.Quit();
             }
             catch (Exception)
             {
@@ -332,7 +331,7 @@ namespace TestingPower
         {
             try
             {
-                driver.SwitchTo().Alert();
+                s_driver.SwitchTo().Alert();
                 return true;
             }
             catch (NoAlertPresentException)

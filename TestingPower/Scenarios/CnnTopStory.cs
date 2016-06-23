@@ -25,7 +25,7 @@
 //
 //--------------------------------------------------------------
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
@@ -33,7 +33,7 @@ using System.Threading;
 
 namespace TestingPower
 {
-    class CnnTopStory : Scenario
+    internal class CnnTopStory : Scenario
     {
         public CnnTopStory()
         {
@@ -48,13 +48,13 @@ namespace TestingPower
             driver.Navigate().GoToUrl("http://www.cnn.com");
 
             // Give it more than enough time to load
-            Thread.Sleep(5000); 
+            Thread.Sleep(5000);
 
             // Get the element that contains the headline story
             var headlineElement = driver.FindElementByClassName("js-screaming-banner");
 
             // Get focus on the headline story link
-            headlineElement.SendKeys(String.Empty);
+            headlineElement.SendKeys(string.Empty);
 
             // Open the link to the headline story
             headlineElement.SendKeys(Keys.Enter);

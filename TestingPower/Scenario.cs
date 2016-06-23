@@ -25,13 +25,12 @@
 //
 //--------------------------------------------------------------
 
-﻿using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
 
 namespace TestingPower
 {
-
-     // All scenarios will inherit from this class
+    // All scenarios will inherit from this class
     internal abstract class Scenario
     {
         public string Name { get; set; }
