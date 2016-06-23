@@ -50,13 +50,6 @@ namespace TestingPower
 
             string movieId = "movie_player";
             var player = driver.FindElementById(movieId);
-            
-            // Earlier iteration of this code could play OR pause. We may need that code again in future.
-            // if ((hitPlay && player.GetAttribute("class").Contains("paused-mode")) ||
-            //     (!hitPlay && player.GetAttribute("class").Contains("playing-mode")))
-            // {
-            //     player.Click();
-            // }
 
             // Play if it's paused
             if (player.GetAttribute("class").Contains("paused-mode"))

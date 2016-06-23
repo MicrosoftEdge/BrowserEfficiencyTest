@@ -36,7 +36,6 @@ namespace TestingPower
     {
         public FacebookNewsfeedScroll()
         {
-            // Specify its name and the total time the scenario will take (in seconds)
             Name = "facebook";
             Duration = 60;
         }

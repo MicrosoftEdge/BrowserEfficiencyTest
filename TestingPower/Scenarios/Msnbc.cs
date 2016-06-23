@@ -51,8 +51,6 @@ namespace TestingPower
             driver.ExecuteScript("return window.scrollTo(0,0);");
             Thread.Sleep(2000);
 
-            // TODO: Commented out clicking a subarticle link because it doesn't work on Edge and crashes on Chrome
-            // ClickMsnbcLink();
         }
 
         private static void ClickMsnbcLink(RemoteWebDriver driver)
