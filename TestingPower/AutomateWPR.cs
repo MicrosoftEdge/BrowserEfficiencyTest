@@ -83,9 +83,9 @@ namespace TestingPower
         {
             int retVal = -1;
 
-            string _commandLine = "-start " + _wprpFile;
+            string commandLine = "-start " + _wprpFile;
 
-            retVal = this.RunWpr(_commandLine);
+            retVal = this.RunWpr(commandLine);
             return retVal;
         }
 
