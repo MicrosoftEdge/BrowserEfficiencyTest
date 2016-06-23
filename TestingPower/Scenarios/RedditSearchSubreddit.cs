@@ -30,8 +30,9 @@ using OpenQA.Selenium.Remote;
 using System.Threading;
 using OpenQA.Selenium;
 
-namespace TestingPower {
-   class RedditSearchSubreddit : Scenario
+namespace TestingPower
+{
+    internal class RedditSearchSubreddit : Scenario
     {
         public RedditSearchSubreddit()
         {

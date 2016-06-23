@@ -25,13 +25,13 @@
 //
 //--------------------------------------------------------------
 
-﻿using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace TestingPower
 {
-    class YoutubeWatchVideo : Scenario
+    internal class YoutubeWatchVideo : Scenario
     {
         public YoutubeWatchVideo()
         {

@@ -25,14 +25,14 @@
 //
 //--------------------------------------------------------------
 
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 using System.Threading;
 
 namespace TestingPower
 {
-    class FacebookNewsfeedScroll : Scenario
+    internal class FacebookNewsfeedScroll : Scenario
     {
         public FacebookNewsfeedScroll()
         {

@@ -29,8 +29,9 @@ using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using System.Threading;
 
-namespace TestingPower {
-   class TechRadarSurfacePro4Review : Scenario
+namespace TestingPower
+{
+    internal class TechRadarSurfacePro4Review : Scenario
     {
         public TechRadarSurfacePro4Review()
         {

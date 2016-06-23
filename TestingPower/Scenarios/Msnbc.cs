@@ -25,16 +25,16 @@
 //
 //--------------------------------------------------------------
 
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace TestingPower
 {
-    class Msnbc : Scenario
+    internal class Msnbc : Scenario
     {
-        public Msnbc ()
+        public Msnbc()
         {
             Name = "msnbc";
             Duration = 50;
@@ -50,7 +50,6 @@ namespace TestingPower
             // first get back to the top
             driver.ExecuteScript("return window.scrollTo(0,0);");
             Thread.Sleep(2000);
-
         }
 
         private static void ClickMsnbcLink(RemoteWebDriver driver)

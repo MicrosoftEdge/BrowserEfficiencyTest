@@ -31,10 +31,10 @@ using System.Threading;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 
-namespace TestingPower {
-   class GmailGoThroughEmails : Scenario
+namespace TestingPower
+{
+    internal class GmailGoThroughEmails : Scenario
     {
-
         public GmailGoThroughEmails()
         {
             Name = "gmail";
@@ -58,8 +58,8 @@ namespace TestingPower {
         private void LogIn(RemoteWebDriver driver, List<UserInfo> logins)
         {
             // Get the relevant username and password
-            String username = "";
-            String password = "";
+            string username = "";
+            string password = "";
             foreach (UserInfo item in logins)
             {
                 if (item.Domain == "gmail.com")
@@ -84,7 +84,7 @@ namespace TestingPower {
                 // ...but if we couldn't find it, we apparently got sereved this other log in page.
                 // So catch the exception and get to the login page we're looking for
                 var signInButton = driver.FindElementByXPath("//*[@data-g-label='Sign in']");
-                signInButton.SendKeys(String.Empty);
+                signInButton.SendKeys(string.Empty);
                 driver.Keyboard.SendKeys(Keys.Enter);
                 Thread.Sleep(2 * 1000);
                 userElement = driver.FindElementById("Email");

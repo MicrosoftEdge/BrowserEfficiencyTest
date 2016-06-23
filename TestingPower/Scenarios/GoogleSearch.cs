@@ -30,8 +30,9 @@ using System.Threading;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 
-namespace TestingPower {
-   class GoogleSearch : Scenario
+namespace TestingPower
+{
+    internal class GoogleSearch : Scenario
     {
         public GoogleSearch()
         {

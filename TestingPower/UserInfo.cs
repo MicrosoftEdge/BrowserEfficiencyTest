@@ -25,11 +25,11 @@
 //
 //--------------------------------------------------------------
 
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace TestingPower
 {
-    class UserInfo
+    internal class UserInfo
     {
         [JsonProperty("Domain")]
         public string Domain { get; set; }
