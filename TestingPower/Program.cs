@@ -92,21 +92,16 @@ namespace TestingPower
                         // When we get control back, we sleep for the remaining time for the scenario. This ensures
                         // the total time for a scenario is always the same
                         var runTime = watch.Elapsed.Subtract(startTime);
-                        
-                        // We even allow the exception to fall through and break the run if we pass a negative number
-                        // in here (meaning the scenario took longer to return than the total time it expected)
                         var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
-                        
                         if (timeLeft < TimeSpan.FromSeconds(0))
-                        {                            
+                        {
+                            // Of course it's possible we don't get control back until after we were supposed to
+                            // continue to the next scenario. In that case, invalidate the run by throwing.
                             throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
                         }
                         Thread.Sleep(timeLeft);
                     }
                 }
-
-                // CloseTabs crashes Opera
-                // CloseTabs();
             }
         }
 
@@ -179,10 +174,6 @@ namespace TestingPower
                             scenarios.Add(possibleScenarios["cnn"]);
                             scenarios.Add(possibleScenarios["techRadar"]);
                             scenarios.Add(possibleScenarios["amazon"]);
-                            // Reddit and amazon combined hang Opera.
-                            // Re-ordering them causes the other to crash.
-                            // Choosing amazon per higher Alexa rating.
-                            // scenarios.Add(possibleScenarios["reddit"]);
                             scenarios.Add(possibleScenarios["facebook"]);
                             scenarios.Add(possibleScenarios["google"]);
                             scenarios.Add(possibleScenarios["gmail"]);
@@ -244,9 +235,10 @@ namespace TestingPower
         /// <param name="timesToScroll">An abstract quantification of how much to scroll</param>
         public static void scrollPage(int timesToScroll)
         {
-            // Webdriver examples had scrolling by executing Javascript. This seemed troublesome because the browser is
-            // scrolling in a way very different from how it would with a real user. This seemed to be the best
-            // compromise in terms of it behaving like a real user scrolling, and it working reliably across browsers.
+            // Webdriver examples had scrolling by executing Javascript. That approach seemed troublesome because the
+            // browser is scrolling in a way very different from how it would with a real user, so we don't do it.
+            // Page down seemed to be the best compromise in terms of it behaving like a real user scrolling, and it
+            // working reliably across browsers.
             // Use the page down key.
             for (int i = 0; i < timesToScroll; i++)
             {
@@ -254,6 +246,7 @@ namespace TestingPower
                 Thread.Sleep(1000);
             }
         }
+
         /// <summary>
         /// Creates a new tab and puts focus in it so the next navigation will be in the new tab
         /// </summary>
@@ -319,9 +312,12 @@ namespace TestingPower
 
             return driver;
         }
+        /// <summary>
+        /// Here we do the work to finish the test, like quitting the driver.
+        /// </summary>
         private static void Teardown()
         {
-            // 9)	STOP: Capture remaining battery - We’ll capture this through windows APIs
+            // TODO: Capture power usage / results automatically
             try
             {
                 driver.Quit();
@@ -331,6 +327,7 @@ namespace TestingPower
                 // Ignore errors if unable to close the browser
             }
         }
+
         private static bool IsAlertPresent()
         {
             try

@@ -89,7 +89,7 @@ namespace TestingPower {
                 Thread.Sleep(2 * 1000);
                 userElement = driver.FindElementById("Email");
             }
-            // So now, no matter which page we we're served originally, we're in the same place
+            // So now, no matter which page we were served originally, we're in the same place
             // Type in the user name
             foreach (char c in username)
             {
@@ -124,11 +124,8 @@ namespace TestingPower {
             // Go through some emails
             for (int i = 0; i < numOfEmailsToBrowse; i++)
             {
-                // Go into email
-
-                // This was to get focus, but it didn't work super reliably across browsers
-                // driver.FindElementsByClassName("zA").ElementAt(i).SendKeys(String.Empty);
-                // Simply using the shortcut keys worked pretty well though
+                // Simply using the shortcut keys worked pretty well.
+                // Note that they have to be enabled in the account you're using (gmail settings)
                 driver.Keyboard.SendKeys("o");
 
                 Thread.Sleep(4000);

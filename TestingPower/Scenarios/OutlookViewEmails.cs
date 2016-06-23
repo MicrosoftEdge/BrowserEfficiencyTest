@@ -81,7 +81,7 @@ namespace TestingPower {
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                // already logged on do nothing
+                // already logged on, do nothing
             }
 
             Thread.Sleep(2000);

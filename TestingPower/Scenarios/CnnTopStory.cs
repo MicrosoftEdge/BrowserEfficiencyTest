@@ -39,7 +39,7 @@ namespace TestingPower
         {
             Name = "cnn";
 
-            // Using 80 as sometimes Chrome takes just over 70 seconds to run            
+            // Using 80s as sometimes Chrome takes just over 70 seconds to run            
             Duration = 80;
         }
 
