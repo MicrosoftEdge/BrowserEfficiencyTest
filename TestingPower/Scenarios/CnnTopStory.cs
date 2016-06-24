@@ -39,19 +39,31 @@ namespace TestingPower
         {
             Name = "cnn";
 
-            // Using 80s as sometimes Chrome takes just over 70 seconds to run            
-            Duration = 80;
+            // Using 90s as sometimes Chrome takes just over 80 seconds to run
+            Duration = 90;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
+            IWebElement headlineElement = null;
+
             driver.Navigate().GoToUrl("http://www.cnn.com");
 
             // Give it more than enough time to load
             Thread.Sleep(5000);
 
             // Get the element that contains the headline story
-            var headlineElement = driver.FindElementByClassName("js-screaming-banner");
+            try
+            {
+                // CNN defaults to using js-screaming-banner as its top headline
+                headlineElement = driver.FindElementByClassName("js-screaming-banner");
+            }
+            catch(NoSuchElementException e)
+            {
+                // On big news events CNN changes to using zh-banner class for their headline
+                IWebElement znBannerElement = driver.FindElementByClassName("zn-banner");
+                headlineElement = znBannerElement.FindElement(By.TagName("a"));
+            }
 
             // Get focus on the headline story link
             headlineElement.SendKeys(string.Empty);
