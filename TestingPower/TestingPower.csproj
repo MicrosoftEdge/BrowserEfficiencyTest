@@ -57,6 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomateWPR.cs" />
+    <Compile Include="AutomateXPerf.cs" />
+    <Compile Include="E3Events.cs" />
+    <Compile Include="EnergyDataProcessor.cs" />
     <Compile Include="Scenarios\CnnTopStory.cs" />
     <Compile Include="Scenarios\FacebookNewsfeedScroll.cs" />
     <Compile Include="Scenarios\GmailGoThroughEmails.cs" />
