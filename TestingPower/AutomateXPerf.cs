@@ -48,6 +48,15 @@ namespace TestingPower
         }
 
         /// <summary>
+        /// Initializes a new instance of the AutomateXPerf class using the passed in path as the location of XPerf.
+        /// </summary>
+        /// <param name="xPerfPath">The folder path of where xperf.exe resides.</param>
+        public AutomateXPerf(string xPerfPath)
+        {
+            _XperfPath = System.IO.Path.Combine(xPerfPath, "xperf.exe");
+        }
+
+        /// <summary>
         /// Dumps the events in the passed in ETL file to a csv file.
         /// </summary>        
         /// <param name="etlFile">The ETL file to dump the events from.</param>
