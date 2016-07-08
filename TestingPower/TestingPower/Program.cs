@@ -36,6 +36,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Threading;
 
 namespace TestingPower
@@ -48,6 +49,16 @@ namespace TestingPower
         private static List<Scenario> s_scenarios = new List<Scenario>();
         private static Dictionary<string, Scenario> s_possibleScenarios = new Dictionary<string, Scenario>();
 
+        private static readonly List<string> s_SupportedBrowsers = new List<string> { "chrome", "edge", "firefox", "opera" };
+        private static bool s_doWarmup = false;
+        private static List<string> s_browsers = new List<string>();
+        private static int s_iterations = 1;
+        private static string s_scenarioName = "";
+        private static NamedPipeClientStream s_pipeStream = null; // new NamedPipeClientStream("TracingControllerPipe");
+        private static StreamReader s_pipeReader = null;
+        private static StreamWriter s_pipeWriter = null;
+        private static bool s_useTraceController = false;
+
         private static void Main(string[] args)
         {
             // A "Scenario" is opening up a tab and doing something (watch a youtube video, browse the facebook feed)
@@ -57,51 +68,107 @@ namespace TestingPower
 
             List<UserInfo> logins = GetLoginsFromFile();
 
-            // Core Execution Loop
-            using (var driver = CreateDriverAndMazimize(s_browser))
+            // A warmup pass is one run thru the selected scenarios and browsers.
+            // It allows the browsers to cache some content which helps reduce power variability from run to run.
+            //s_doWarmup =  true;
+            if (s_doWarmup)
             {
-                Stopwatch watch = Stopwatch.StartNew();
-                bool isFirstScenario = true;
-
-                // Allow multiple loops of all the scenarios if the user desires. Great for compounding small
-                // differences to make them easier to measure.
-                for (int loop = 0; loop < s_loops; loop++)
+                foreach (string browser in s_browsers)
                 {
-                    foreach (var scenario in s_scenarios)
+                    using (var driver = CreateDriverAndMaximize(browser))
                     {
-                        // We want every scenario to take the same amount of time total, even if there are changes in
-                        // how long pages take to load. The biggest reason for this is so that you can measure energy
-                        // or power and their ratios will be the same either way.
-                        // So start by getting the current time.
-                        var startTime = watch.Elapsed;
-
-                        // The first scenario naviagates in the browser's new tab / welcome page.
-                        // After that, scenarios open in their own tabs
-                        if (!isFirstScenario)
+                        foreach (var scenario in s_scenarios)
                         {
-                            CreateNewTab();
+                            // Execute the scenario                            
+                            scenario.Run(driver, browser, logins);
                         }
-                        else
-                        {
-                            isFirstScenario = false;
-                        }
-
-                        // Here, control is handed to the scenario to navigate, and do whatever it wants
-                        scenario.Run(driver, s_browser, logins);
-
-                        // When we get control back, we sleep for the remaining time for the scenario. This ensures
-                        // the total time for a scenario is always the same
-                        var runTime = watch.Elapsed.Subtract(startTime);
-                        var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
-                        if (timeLeft < TimeSpan.FromSeconds(0))
-                        {
-                            // Of course it's possible we don't get control back until after we were supposed to
-                            // continue to the next scenario. In that case, invalidate the run by throwing.
-                            throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
-                        }
-                        Thread.Sleep(timeLeft);
                     }
                 }
+            }
+
+            SendControllerMessage("PASS_START");
+
+            // Core Execution Loop
+            for (int iteration = 0; iteration < s_iterations; iteration++)
+            {
+                foreach (string browser in s_browsers)
+                {
+                    // TODO: s_browser is the older static variable holding the name of the browser to test with. The method 
+                    //  CreateNewTab currently uses the static s_browser. This should be changed to not use statics but pass
+                    //  in the browser.
+                    s_browser = browser;
+                    SendControllerMessage($"START_BROWSER {browser} ITERATION {iteration} SCENARIO_NAME {s_scenarioName}");
+
+                    using (var driver = CreateDriverAndMaximize(browser))
+                    {
+                        Stopwatch watch = Stopwatch.StartNew();
+                        bool isFirstScenario = true;
+
+                        // Allow multiple loops of all the scenarios if the user desires. Great for compounding small
+                        // differences to make them easier to measure.
+                        for (int loop = 0; loop < s_loops; loop++)
+                        {
+                            foreach (var scenario in s_scenarios)
+                            {
+                                // We want every scenario to take the same amount of time total, even if there are changes in
+                                // how long pages take to load. The biggest reason for this is so that you can measure energy
+                                // or power and their ratios will be the same either way.
+                                // So start by getting the current time.
+                                var startTime = watch.Elapsed;
+
+                                // The first scenario naviagates in the browser's new tab / welcome page.
+                                // After that, scenarios open in their own tabs
+                                if (!isFirstScenario)
+                                {
+                                    CreateNewTab();
+                                }
+                                else
+                                {
+                                    isFirstScenario = false;
+                                }
+
+                                // Here, control is handed to the scenario to navigate, and do whatever it wants
+                                scenario.Run(driver, browser, logins);
+
+                                // When we get control back, we sleep for the remaining time for the scenario. This ensures
+                                // the total time for a scenario is always the same
+                                var runTime = watch.Elapsed.Subtract(startTime);
+                                var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
+                                if (timeLeft < TimeSpan.FromSeconds(0))
+                                {
+                                    // Of course it's possible we don't get control back until after we were supposed to
+                                    // continue to the next scenario. In that case, invalidate the run by throwing.
+                                    throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
+                                }
+                                Thread.Sleep(timeLeft);
+                            }
+                        }
+                    }
+
+                    SendControllerMessage("END_BROWSER " + browser);
+                }
+            }
+
+            SendControllerMessage("PASS_END");
+
+        }
+
+        /// <summary>
+        /// Sends a message to to the tracing controller and waits for response from the tracing controller. If the tracing controller option is not used then this method returns immediately.
+        /// </summary>
+        /// <param name="message">A command message to send to the tracing controller</param>
+        private static void SendControllerMessage(string message)
+        {
+            string controllerResponse = "";
+
+            // It is cleaner here to check if the controller option is set to true rather than check before calling each time in the core loop.
+            if (s_useTraceController)
+            {
+                s_pipeWriter.WriteLine(message);
+                s_pipeWriter.Flush();
+
+                // wait for a response from the controller
+                controllerResponse = s_pipeReader.ReadLine();
             }
         }
 
@@ -149,22 +216,40 @@ namespace TestingPower
                 switch (arg)
                 {
                     case "-browser":
+                    case "-b":
                         argNum++;
-                        s_browser = args[argNum].ToLowerInvariant();
-                        switch (s_browser)
+
+                        if (args[argNum].ToLowerInvariant() == "all")
                         {
-                            case "operabeta":
-                            case "opera":
-                            case "chrome":
-                            case "firefox":
-                            case "edge":
+                            foreach (string browser in s_SupportedBrowsers)
+                            {
+                                s_browsers.Add(browser);
+                            }
+
+                            break;
+                        }
+
+                        while (argNum < args.Length)
+                        {
+                            string browser = args[argNum].ToLowerInvariant();
+                            if (!s_SupportedBrowsers.Contains(browser))
+                            {
+                                throw new Exception($"Unsupported browser '{browser}'");
+                            }
+
+                            s_browsers.Add(browser);
+                            int nextArgNum = argNum + 1;
+                            if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
+                            {
                                 break;
-                            default:
-                                throw new Exception($"Unexpected browser '{s_browser}'");
+                            }
+
+                            argNum++;
                         }
 
                         break;
                     case "-scenario":
+                    case "-s":
                         argNum++;
 
                         if (args[argNum] == "all")
@@ -191,6 +276,7 @@ namespace TestingPower
                             }
 
                             s_scenarios.Add(s_possibleScenarios[scenario]);
+                            s_scenarioName = s_scenarioName + "_" + scenario;
                             int nextArgNum = argNum + 1;
                             if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
                             {
@@ -205,6 +291,30 @@ namespace TestingPower
                         argNum++;
                         s_loops = int.Parse(args[argNum]);
                         break;
+                    case "-tracecontrolled":
+                    case "-tc":
+                        s_useTraceController = true;
+
+                        s_pipeStream = new NamedPipeClientStream("TracingControllerPipe");
+
+                        Console.WriteLine("Attempting to connect with the trace controller...");
+                        s_pipeStream.Connect(10 * 1000);
+
+                        Console.WriteLine("Successfully connected to trace controller.");
+                        s_pipeReader = new StreamReader(s_pipeStream);
+                        s_pipeWriter = new StreamWriter(s_pipeStream);
+
+                        break;
+                    case "-warmup":
+                    case "-w":
+                        s_doWarmup = true;
+                        break;
+                    case "-iterations":
+                    case "-i":
+                        argNum++;
+                        s_iterations = int.Parse(args[argNum]);
+                        break;
+
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
@@ -272,7 +382,12 @@ namespace TestingPower
             Thread.Sleep(2000);
         }
 
-        private static RemoteWebDriver CreateDriverAndMazimize(string browser)
+        /// <summary>
+        /// Instantiates a RemoteWebDriver instance based on the browser passed to this method. Opens the browser and maximizes its window.
+        /// </summary>
+        /// <param name="browser">The browser to get instantiate the Web Driver for.</param>
+        /// <returns>The RemoteWebDriver of the browser passed in to the method.</returns>
+        private static RemoteWebDriver CreateDriverAndMaximize(string browser)
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             switch (browser)
