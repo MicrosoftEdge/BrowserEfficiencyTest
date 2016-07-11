@@ -58,7 +58,7 @@ namespace TestingPower
                 // CNN defaults to using js-screaming-banner as its top headline
                 headlineElement = driver.FindElementByClassName("js-screaming-banner");
             }
-            catch(NoSuchElementException e)
+            catch(NoSuchElementException)
             {
                 // On big news events CNN changes to using zh-banner class for their headline
                 IWebElement znBannerElement = driver.FindElementByClassName("zn-banner");

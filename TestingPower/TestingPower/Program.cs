@@ -25,6 +25,7 @@
 //
 //--------------------------------------------------------------
 
+using Elevator;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -44,7 +45,6 @@ namespace TestingPower
     internal class Program
     {
         private static RemoteWebDriver s_driver;
-        private static string s_browser = string.Empty;
         private static int s_loops = 1;
         private static List<Scenario> s_scenarios = new List<Scenario>();
         private static Dictionary<string, Scenario> s_possibleScenarios = new Dictionary<string, Scenario>();
@@ -54,10 +54,7 @@ namespace TestingPower
         private static List<string> s_browsers = new List<string>();
         private static int s_iterations = 1;
         private static string s_scenarioName = "";
-        private static NamedPipeClientStream s_pipeStream = null; // new NamedPipeClientStream("TracingControllerPipe");
-        private static StreamReader s_pipeReader = null;
-        private static StreamWriter s_pipeWriter = null;
-        private static bool s_useTraceController = false;
+        private static bool s_useTraceController;
 
         private static void Main(string[] args)
         {
@@ -86,92 +83,71 @@ namespace TestingPower
                 }
             }
 
-            SendControllerMessage("PASS_START");
-
-            // Core Execution Loop
-            for (int iteration = 0; iteration < s_iterations; iteration++)
+            using (var elevatorClient = ElevatorClient.Create(s_useTraceController))
             {
-                foreach (string browser in s_browsers)
+                elevatorClient.SendControllerMessage("PASS_START");
+
+                // Core Execution Loop
+                for (int iteration = 0; iteration < s_iterations; iteration++)
                 {
-                    // TODO: s_browser is the older static variable holding the name of the browser to test with. The method 
-                    //  CreateNewTab currently uses the static s_browser. This should be changed to not use statics but pass
-                    //  in the browser.
-                    s_browser = browser;
-                    SendControllerMessage($"START_BROWSER {browser} ITERATION {iteration} SCENARIO_NAME {s_scenarioName}");
-
-                    using (var driver = CreateDriverAndMaximize(browser))
+                    foreach (string browser in s_browsers)
                     {
-                        Stopwatch watch = Stopwatch.StartNew();
-                        bool isFirstScenario = true;
+                        elevatorClient.SendControllerMessage($"START_BROWSER {browser} ITERATION {iteration} SCENARIO_NAME {s_scenarioName}");
 
-                        // Allow multiple loops of all the scenarios if the user desires. Great for compounding small
-                        // differences to make them easier to measure.
-                        for (int loop = 0; loop < s_loops; loop++)
+                        using (var driver = CreateDriverAndMaximize(browser))
                         {
-                            foreach (var scenario in s_scenarios)
+                            Stopwatch watch = Stopwatch.StartNew();
+                            bool isFirstScenario = true;
+
+                            // Allow multiple loops of all the scenarios if the user desires. Great for compounding small
+                            // differences to make them easier to measure.
+                            for (int loop = 0; loop < s_loops; loop++)
                             {
-                                // We want every scenario to take the same amount of time total, even if there are changes in
-                                // how long pages take to load. The biggest reason for this is so that you can measure energy
-                                // or power and their ratios will be the same either way.
-                                // So start by getting the current time.
-                                var startTime = watch.Elapsed;
-
-                                // The first scenario naviagates in the browser's new tab / welcome page.
-                                // After that, scenarios open in their own tabs
-                                if (!isFirstScenario)
+                                foreach (var scenario in s_scenarios)
                                 {
-                                    CreateNewTab();
-                                }
-                                else
-                                {
-                                    isFirstScenario = false;
-                                }
+                                    // We want every scenario to take the same amount of time total, even if there are changes in
+                                    // how long pages take to load. The biggest reason for this is so that you can measure energy
+                                    // or power and their ratios will be the same either way.
+                                    // So start by getting the current time.
+                                    var startTime = watch.Elapsed;
 
-                                // Here, control is handed to the scenario to navigate, and do whatever it wants
-                                scenario.Run(driver, browser, logins);
+                                    // The first scenario naviagates in the browser's new tab / welcome page.
+                                    // After that, scenarios open in their own tabs
+                                    if (!isFirstScenario)
+                                    {
+                                        CreateNewTab(browser);
+                                    }
+                                    else
+                                    {
+                                        isFirstScenario = false;
+                                    }
 
-                                // When we get control back, we sleep for the remaining time for the scenario. This ensures
-                                // the total time for a scenario is always the same
-                                var runTime = watch.Elapsed.Subtract(startTime);
-                                var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
-                                if (timeLeft < TimeSpan.FromSeconds(0))
-                                {
-                                    // Of course it's possible we don't get control back until after we were supposed to
-                                    // continue to the next scenario. In that case, invalidate the run by throwing.
-                                    throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
+                                    // Here, control is handed to the scenario to navigate, and do whatever it wants
+                                    scenario.Run(driver, browser, logins);
+
+                                    // When we get control back, we sleep for the remaining time for the scenario. This ensures
+                                    // the total time for a scenario is always the same
+                                    var runTime = watch.Elapsed.Subtract(startTime);
+                                    var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
+                                    if (timeLeft < TimeSpan.FromSeconds(0))
+                                    {
+                                        // Of course it's possible we don't get control back until after we were supposed to
+                                        // continue to the next scenario. In that case, invalidate the run by throwing.
+                                        throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
+                                    }
+                                    Thread.Sleep(timeLeft);
                                 }
-                                Thread.Sleep(timeLeft);
                             }
                         }
+
+                        elevatorClient.SendControllerMessage("END_BROWSER " + browser);
                     }
-
-                    SendControllerMessage("END_BROWSER " + browser);
                 }
-            }
 
-            SendControllerMessage("PASS_END");
-
-        }
-
-        /// <summary>
-        /// Sends a message to to the tracing controller and waits for response from the tracing controller. If the tracing controller option is not used then this method returns immediately.
-        /// </summary>
-        /// <param name="message">A command message to send to the tracing controller</param>
-        private static void SendControllerMessage(string message)
-        {
-            string controllerResponse = "";
-
-            // It is cleaner here to check if the controller option is set to true rather than check before calling each time in the core loop.
-            if (s_useTraceController)
-            {
-                s_pipeWriter.WriteLine(message);
-                s_pipeWriter.Flush();
-
-                // wait for a response from the controller
-                controllerResponse = s_pipeReader.ReadLine();
+                elevatorClient.SendControllerMessage("PASS_END");
             }
         }
-
+        
         /// <summary>
         /// All scenarios must be instantiated and added to the list of possible scenarios in this method.
         /// The order doensn't matter.
@@ -295,15 +271,6 @@ namespace TestingPower
                     case "-tc":
                         s_useTraceController = true;
 
-                        s_pipeStream = new NamedPipeClientStream("TracingControllerPipe");
-
-                        Console.WriteLine("Attempting to connect with the trace controller...");
-                        s_pipeStream.Connect(10 * 1000);
-
-                        Console.WriteLine("Successfully connected to trace controller.");
-                        s_pipeReader = new StreamReader(s_pipeStream);
-                        s_pipeWriter = new StreamWriter(s_pipeStream);
-
                         break;
                     case "-warmup":
                     case "-w":
@@ -359,10 +326,13 @@ namespace TestingPower
         /// <summary>
         /// Creates a new tab and puts focus in it so the next navigation will be in the new tab
         /// </summary>
-        private static void CreateNewTab()
+        /// <param name="browser">
+        /// The browser that the new tab is being created in.
+        /// </param>
+        private static void CreateNewTab(string browser)
         {
             // Sadly, we had to special case this a bit by browser because no mechanism behaved correctly for everyone
-            if (s_browser == "firefox")
+            if (browser == "firefox")
             {
                 // Use ctrl+t for Firefox. Send them to the body or else there can be focus problems.
                 IWebElement body = s_driver.FindElementByTagName("body");

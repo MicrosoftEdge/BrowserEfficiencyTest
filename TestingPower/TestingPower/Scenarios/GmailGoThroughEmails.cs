@@ -79,7 +79,7 @@ namespace TestingPower
                 // One of the pages had this element...
                 userElement = driver.FindElementById("Email");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // ...but if we couldn't find it, we apparently got sereved this other log in page.
                 // So catch the exception and get to the login page we're looking for
