@@ -85,14 +85,14 @@ namespace TestingPower
 
             using (var elevatorClient = ElevatorClient.Create(s_useTraceController))
             {
-                elevatorClient.SendControllerMessage("PASS_START");
+                elevatorClient.SendControllerMessageAsync("PASS_START").RunSynchronously();
 
                 // Core Execution Loop
                 for (int iteration = 0; iteration < s_iterations; iteration++)
                 {
                     foreach (string browser in s_browsers)
                     {
-                        elevatorClient.SendControllerMessage($"START_BROWSER {browser} ITERATION {iteration} SCENARIO_NAME {s_scenarioName}");
+                        elevatorClient.SendControllerMessageAsync($"START_BROWSER {browser} ITERATION {iteration} SCENARIO_NAME {s_scenarioName}").RunSynchronously();
 
                         using (var driver = CreateDriverAndMaximize(browser))
                         {
@@ -140,11 +140,11 @@ namespace TestingPower
                             }
                         }
 
-                        elevatorClient.SendControllerMessage("END_BROWSER " + browser);
+                        elevatorClient.SendControllerMessageAsync("END_BROWSER " + browser).RunSynchronously();
                     }
                 }
 
-                elevatorClient.SendControllerMessage("PASS_END");
+                elevatorClient.SendControllerMessageAsync("PASS_END").RunSynchronously();
             }
         }
         
