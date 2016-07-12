@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TestingPower</RootNamespace>
     <AssemblyName>TestingPower</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ElevatorClient">
+      <HintPath>..\..\..\elevator\ElevatorClient\bin\Debug\ElevatorClient.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -59,10 +63,7 @@
     <Compile Include="AutomateWPR.cs" />
     <Compile Include="AutomateXPerf.cs" />
     <Compile Include="E3Events.cs" />
-    <Compile Include="ElevatorClient.cs" />
-    <Compile Include="ElevatorMock.cs" />
     <Compile Include="EnergyDataProcessor.cs" />
-    <Compile Include="IElevatorClient.cs" />
     <Compile Include="Scenarios\CnnTopStory.cs" />
     <Compile Include="Scenarios\FacebookNewsfeedScroll.cs" />
     <Compile Include="Scenarios\GmailGoThroughEmails.cs" />
