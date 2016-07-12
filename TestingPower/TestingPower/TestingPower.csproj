@@ -60,7 +60,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutomateWPR.cs" />
     <Compile Include="AutomateXPerf.cs" />
     <Compile Include="E3Events.cs" />
     <Compile Include="EnergyDataProcessor.cs" />

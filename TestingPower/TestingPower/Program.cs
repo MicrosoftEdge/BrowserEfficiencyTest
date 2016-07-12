@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Threading;
 
 namespace TestingPower
@@ -147,8 +148,49 @@ namespace TestingPower
 
                 elevatorClient.SendControllerMessageAsync(Elevator.Commands.END_PASS).Wait();
             }
+
+            // process the E3 Energy data from test traces if tracing controller was used
+            if (s_useTraceController)
+            {
+                ProcessEnergyData();
+            }
         }
-        
+
+        /// <summary>
+        /// Extracts the E3 Energy data from ETL files created during the test, aggregates the data and saves it to csv files.
+        /// </summary>
+        private static void ProcessEnergyData()
+        {
+            IEnumerable<string> etlFiles = null;
+            AutomateXPerf xPerf = new AutomateXPerf();
+            EnergyDataProcessor energyProcessor = new EnergyDataProcessor(); // TODO: Refactor EnergyDataProcessor
+
+            Console.WriteLine("Starting processing of energy data.");
+
+            etlFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.etl");
+
+            if (etlFiles.Count() == 0)
+            {
+                Console.WriteLine("No ETL files were found. Unable to process E3 Energy data.");
+                return;
+            }
+
+            foreach (var etl in etlFiles)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(etl);
+
+                xPerf.DumpEtlEventsToFile(etl, Path.ChangeExtension(fileName, ".csv"));
+
+                energyProcessor.ProcessEnergyData(Path.ChangeExtension(fileName, ".csv"));
+
+                energyProcessor.SaveCompononentEnergyDataToCsv(Path.ChangeExtension(fileName + "_componentEnergy", ".csv"));
+
+                energyProcessor.SaveProcessEnergyDataToCsv(Path.ChangeExtension(fileName + "_processEnergy", ".csv"));
+            }
+
+            Console.WriteLine("Completed processing of energy data.");
+        }
+
         /// <summary>
         /// All scenarios must be instantiated and added to the list of possible scenarios in this method.
         /// The order doensn't matter.
