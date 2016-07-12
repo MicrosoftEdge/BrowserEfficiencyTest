@@ -228,7 +228,7 @@ namespace TestingPower
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
 
-            Console.WriteLine("Usage: TestingPower.exe -browser [chrome|edge|firefox|opera|operabeta] -scenario all|<scenario1> <scenario2> [-loops <loopcount>]");
+            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc] [-warmup|-w]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
