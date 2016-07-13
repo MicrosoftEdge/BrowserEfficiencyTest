@@ -40,18 +40,10 @@ namespace TestingPower
         private string _XperfPath;
 
         /// <summary>
-        /// Initializes a new instance of the AutomateXPerf class.
-        /// </summary>
-        public AutomateXPerf()
-        {
-            _XperfPath = @"C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\xperf.exe";
-        }
-
-        /// <summary>
         /// Initializes a new instance of the AutomateXPerf class using the passed in path as the location of XPerf.
         /// </summary>
-        /// <param name="xPerfPath">The folder path of where xperf.exe resides.</param>
-        public AutomateXPerf(string xPerfPath)
+        /// <param name="xPerfPath">The folder path of where xperf.exe resides. Defaults to C:\Program Files (x86)\Window Kits\10\Windows Performance Toolkit\</param>
+        public AutomateXPerf(string xPerfPath = @"C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\")
         {
             _XperfPath = System.IO.Path.Combine(xPerfPath, "xperf.exe");
         }

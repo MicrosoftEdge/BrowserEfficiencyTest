@@ -25,6 +25,7 @@
 //
 //--------------------------------------------------------------
 
+using Elevator;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -36,6 +37,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
+using System.Linq;
 using System.Threading;
 
 namespace TestingPower
@@ -43,10 +46,16 @@ namespace TestingPower
     internal class Program
     {
         private static RemoteWebDriver s_driver;
-        private static string s_browser = string.Empty;
         private static int s_loops = 1;
         private static List<Scenario> s_scenarios = new List<Scenario>();
         private static Dictionary<string, Scenario> s_possibleScenarios = new Dictionary<string, Scenario>();
+
+        private static readonly List<string> s_SupportedBrowsers = new List<string> { "chrome", "edge", "firefox", "opera" };
+        private static bool s_doWarmup = false;
+        private static List<string> s_browsers = new List<string>();
+        private static int s_iterations = 1;
+        private static string s_scenarioName = "";
+        private static bool s_useTraceController;
 
         private static void Main(string[] args)
         {
@@ -57,52 +66,129 @@ namespace TestingPower
 
             List<UserInfo> logins = GetLoginsFromFile();
 
-            // Core Execution Loop
-            using (var driver = CreateDriverAndMazimize(s_browser))
+            // A warmup pass is one run thru the selected scenarios and browsers.
+            // It allows the browsers to cache some content which helps reduce power variability from run to run.
+            //s_doWarmup =  true;
+            if (s_doWarmup)
             {
-                Stopwatch watch = Stopwatch.StartNew();
-                bool isFirstScenario = true;
-
-                // Allow multiple loops of all the scenarios if the user desires. Great for compounding small
-                // differences to make them easier to measure.
-                for (int loop = 0; loop < s_loops; loop++)
+                foreach (string browser in s_browsers)
                 {
-                    foreach (var scenario in s_scenarios)
+                    using (var driver = CreateDriverAndMaximize(browser))
                     {
-                        // We want every scenario to take the same amount of time total, even if there are changes in
-                        // how long pages take to load. The biggest reason for this is so that you can measure energy
-                        // or power and their ratios will be the same either way.
-                        // So start by getting the current time.
-                        var startTime = watch.Elapsed;
-
-                        // The first scenario naviagates in the browser's new tab / welcome page.
-                        // After that, scenarios open in their own tabs
-                        if (!isFirstScenario)
+                        foreach (var scenario in s_scenarios)
                         {
-                            CreateNewTab();
+                            // Execute the scenario                            
+                            scenario.Run(driver, browser, logins);
                         }
-                        else
-                        {
-                            isFirstScenario = false;
-                        }
-
-                        // Here, control is handed to the scenario to navigate, and do whatever it wants
-                        scenario.Run(driver, s_browser, logins);
-
-                        // When we get control back, we sleep for the remaining time for the scenario. This ensures
-                        // the total time for a scenario is always the same
-                        var runTime = watch.Elapsed.Subtract(startTime);
-                        var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
-                        if (timeLeft < TimeSpan.FromSeconds(0))
-                        {
-                            // Of course it's possible we don't get control back until after we were supposed to
-                            // continue to the next scenario. In that case, invalidate the run by throwing.
-                            throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
-                        }
-                        Thread.Sleep(timeLeft);
                     }
                 }
             }
+
+            using (var elevatorClient = ElevatorClient.Create(s_useTraceController))
+            {
+                elevatorClient.ConnectAsync().Wait();
+                elevatorClient.SendControllerMessageAsync(Elevator.Commands.START_PASS).Wait();
+
+                // Core Execution Loop
+                for (int iteration = 0; iteration < s_iterations; iteration++)
+                {
+                    foreach (string browser in s_browsers)
+                    {
+                        elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {s_scenarioName}").Wait();
+
+                        using (var driver = CreateDriverAndMaximize(browser))
+                        {
+                            Stopwatch watch = Stopwatch.StartNew();
+                            bool isFirstScenario = true;
+
+                            // Allow multiple loops of all the scenarios if the user desires. Great for compounding small
+                            // differences to make them easier to measure.
+                            for (int loop = 0; loop < s_loops; loop++)
+                            {
+                                foreach (var scenario in s_scenarios)
+                                {
+                                    // We want every scenario to take the same amount of time total, even if there are changes in
+                                    // how long pages take to load. The biggest reason for this is so that you can measure energy
+                                    // or power and their ratios will be the same either way.
+                                    // So start by getting the current time.
+                                    var startTime = watch.Elapsed;
+
+                                    // The first scenario naviagates in the browser's new tab / welcome page.
+                                    // After that, scenarios open in their own tabs
+                                    if (!isFirstScenario)
+                                    {
+                                        CreateNewTab(browser);
+                                    }
+                                    else
+                                    {
+                                        isFirstScenario = false;
+                                    }
+
+                                    // Here, control is handed to the scenario to navigate, and do whatever it wants
+                                    scenario.Run(driver, browser, logins);
+
+                                    // When we get control back, we sleep for the remaining time for the scenario. This ensures
+                                    // the total time for a scenario is always the same
+                                    var runTime = watch.Elapsed.Subtract(startTime);
+                                    var timeLeft = TimeSpan.FromSeconds(scenario.Duration).Subtract(runTime);
+                                    if (timeLeft < TimeSpan.FromSeconds(0))
+                                    {
+                                        // Of course it's possible we don't get control back until after we were supposed to
+                                        // continue to the next scenario. In that case, invalidate the run by throwing.
+                                        throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
+                                    }
+                                    Thread.Sleep(timeLeft);
+                                }
+                            }
+                        }
+
+                        elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
+                    }
+                }
+
+                elevatorClient.SendControllerMessageAsync(Elevator.Commands.END_PASS).Wait();
+            }
+
+            // process the E3 Energy data from test traces if tracing controller was used
+            if (s_useTraceController)
+            {
+                ProcessEnergyData();
+            }
+        }
+
+        /// <summary>
+        /// Extracts the E3 Energy data from ETL files created during the test, aggregates the data and saves it to csv files.
+        /// </summary>
+        private static void ProcessEnergyData()
+        {
+            IEnumerable<string> etlFiles = null;
+            AutomateXPerf xPerf = new AutomateXPerf();
+            EnergyDataProcessor energyProcessor = new EnergyDataProcessor(); // TODO: Refactor EnergyDataProcessor
+
+            Console.WriteLine("Starting processing of energy data.");
+
+            etlFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.etl");
+
+            if (etlFiles.Count() == 0)
+            {
+                Console.WriteLine("No ETL files were found. Unable to process E3 Energy data.");
+                return;
+            }
+
+            foreach (var etl in etlFiles)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(etl);
+
+                xPerf.DumpEtlEventsToFile(etl, Path.ChangeExtension(fileName, ".csv"));
+
+                energyProcessor.ProcessEnergyData(Path.ChangeExtension(fileName, ".csv"));
+
+                energyProcessor.SaveCompononentEnergyDataToCsv(Path.ChangeExtension(fileName + "_componentEnergy", ".csv"));
+
+                energyProcessor.SaveProcessEnergyDataToCsv(Path.ChangeExtension(fileName + "_processEnergy", ".csv"));
+            }
+
+            Console.WriteLine("Completed processing of energy data.");
         }
 
         /// <summary>
@@ -142,29 +228,47 @@ namespace TestingPower
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
 
-            Console.WriteLine("Usage: TestingPower.exe -browser [chrome|edge|firefox|opera|operabeta] -scenario all|<scenario1> <scenario2> [-loops <loopcount>]");
+            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc] [-warmup|-w]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
                 switch (arg)
                 {
                     case "-browser":
+                    case "-b":
                         argNum++;
-                        s_browser = args[argNum].ToLowerInvariant();
-                        switch (s_browser)
+
+                        if (args[argNum].ToLowerInvariant() == "all")
                         {
-                            case "operabeta":
-                            case "opera":
-                            case "chrome":
-                            case "firefox":
-                            case "edge":
+                            foreach (string browser in s_SupportedBrowsers)
+                            {
+                                s_browsers.Add(browser);
+                            }
+
+                            break;
+                        }
+
+                        while (argNum < args.Length)
+                        {
+                            string browser = args[argNum].ToLowerInvariant();
+                            if (!s_SupportedBrowsers.Contains(browser))
+                            {
+                                throw new Exception($"Unsupported browser '{browser}'");
+                            }
+
+                            s_browsers.Add(browser);
+                            int nextArgNum = argNum + 1;
+                            if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
+                            {
                                 break;
-                            default:
-                                throw new Exception($"Unexpected browser '{s_browser}'");
+                            }
+
+                            argNum++;
                         }
 
                         break;
                     case "-scenario":
+                    case "-s":
                         argNum++;
 
                         if (args[argNum] == "all")
@@ -191,6 +295,7 @@ namespace TestingPower
                             }
 
                             s_scenarios.Add(s_possibleScenarios[scenario]);
+                            s_scenarioName = s_scenarioName + "_" + scenario;
                             int nextArgNum = argNum + 1;
                             if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
                             {
@@ -205,6 +310,21 @@ namespace TestingPower
                         argNum++;
                         s_loops = int.Parse(args[argNum]);
                         break;
+                    case "-tracecontrolled":
+                    case "-tc":
+                        s_useTraceController = true;
+
+                        break;
+                    case "-warmup":
+                    case "-w":
+                        s_doWarmup = true;
+                        break;
+                    case "-iterations":
+                    case "-i":
+                        argNum++;
+                        s_iterations = int.Parse(args[argNum]);
+                        break;
+
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
@@ -249,10 +369,13 @@ namespace TestingPower
         /// <summary>
         /// Creates a new tab and puts focus in it so the next navigation will be in the new tab
         /// </summary>
-        private static void CreateNewTab()
+        /// <param name="browser">
+        /// The browser that the new tab is being created in.
+        /// </param>
+        private static void CreateNewTab(string browser)
         {
             // Sadly, we had to special case this a bit by browser because no mechanism behaved correctly for everyone
-            if (s_browser == "firefox")
+            if (browser == "firefox")
             {
                 // Use ctrl+t for Firefox. Send them to the body or else there can be focus problems.
                 IWebElement body = s_driver.FindElementByTagName("body");
@@ -272,7 +395,12 @@ namespace TestingPower
             Thread.Sleep(2000);
         }
 
-        private static RemoteWebDriver CreateDriverAndMazimize(string browser)
+        /// <summary>
+        /// Instantiates a RemoteWebDriver instance based on the browser passed to this method. Opens the browser and maximizes its window.
+        /// </summary>
+        /// <param name="browser">The browser to get instantiate the Web Driver for.</param>
+        /// <returns>The RemoteWebDriver of the browser passed in to the method.</returns>
+        private static RemoteWebDriver CreateDriverAndMaximize(string browser)
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             switch (browser)
