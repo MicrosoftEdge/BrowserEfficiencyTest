@@ -47,20 +47,32 @@ namespace TestingPower
         {
             IWebElement headlineElement = null;
 
-            driver.Navigate().GoToUrl("http://www.cnn.com");
+            driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(30));
 
-            // Give it more than enough time to load
-            Thread.Sleep(5000);
+            // Occasionally CNN never completes loading or doesn't seem to report it has loaded. Here, we work around
+            // this issue by catching a webdriver timeout exception and respond with sending the ESC key which
+            // will stop the page from continuing to load
+            try
+            {
+                driver.Navigate().GoToUrl("http://www.cnn.com");
+            }
+            catch (WebDriverTimeoutException)
+            {
+                Thread.Sleep(3 * 1000);
+                driver.Keyboard.SendKeys(Keys.Escape);
+            }
 
             // Get the element that contains the headline story
             try
             {
                 // CNN defaults to using js-screaming-banner as its top headline
+                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
                 headlineElement = driver.FindElementByClassName("js-screaming-banner");
             }
             catch(NoSuchElementException)
             {
                 // On big news events CNN changes to using zh-banner class for their headline
+                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
                 IWebElement znBannerElement = driver.FindElementByClassName("zn-banner");
                 headlineElement = znBannerElement.FindElement(By.TagName("a"));
             }
@@ -69,13 +81,23 @@ namespace TestingPower
             headlineElement.SendKeys(string.Empty);
 
             // Open the link to the headline story
-            headlineElement.SendKeys(Keys.Enter);
+            // Same as above case where CNN occasionally never returns after sending a key. Here we catch
+            // this exception and send the ESC key if it occurs.
+            try
+            {
+                headlineElement.SendKeys(Keys.Enter);
+            }
+            catch(WebDriverTimeoutException)
+            {
+                Thread.Sleep(3 * 1000);
+                driver.Keyboard.SendKeys(Keys.Escape);
+            }
 
             // And let that load
-            Thread.Sleep(2 * 1000);
+            Thread.Sleep(5 * 1000);
 
             // Scroll down multiple times
-            Program.scrollPage(10);
+            Program.scrollPage(driver, 10);
         }
     }
 }
