@@ -69,17 +69,21 @@ namespace TestingPower
             string[] nameTokens = null;
             Dictionary<string, E3EnergyData> e3EnergyByProcess = null;
             E3EnergyData e3EnergyByComponent;
+            string etlFileName = "";
 
             LoadEnergyEventsFromFile(energyCsvFile);
 
             e3EnergyByProcess = AggregateEnergyDataByProcess(_E3EnergyEstimateEvents);
             e3EnergyByComponent = AggregateEnergyDataByComponent(_E3EnergyEstimateEvents);
 
-            // the ETL filename contains the browser, scenario, iteration, datestamp and timestamp information split by underscores
+            // the filename contains the browser, scenario, iteration, datestamp and timestamp information split by underscores
             nameTokens = Path.GetFileNameWithoutExtension(energyCsvFile).Split('_');
 
+            // the original ETL filename is the same as the energy CSV file but with a different extension
+            etlFileName = Path.ChangeExtension(energyCsvFile, ".etl");
+
             E3BrowserTestRunEnergyByComponent testRunEnergyByComponent = new E3BrowserTestRunEnergyByComponent();
-            testRunEnergyByComponent.EtlFileName = Path.ChangeExtension(energyCsvFile, ".etl");
+            testRunEnergyByComponent.EtlFileName = etlFileName;
             testRunEnergyByComponent.Scenario = nameTokens[1];
             testRunEnergyByComponent.Iteration = Convert.ToInt32(nameTokens[2]);
             testRunEnergyByComponent.Browser = nameTokens[0];
@@ -88,7 +92,7 @@ namespace TestingPower
             testRunEnergyByComponent.E3ComponentEnergy = e3EnergyByComponent;
 
             E3BrowserTestRunEnergyByProcess testRunEnergyByProcess = new E3BrowserTestRunEnergyByProcess();
-            testRunEnergyByProcess.EtlFileName = Path.ChangeExtension(energyCsvFile, ".etl");
+            testRunEnergyByProcess.EtlFileName = etlFileName;
             testRunEnergyByProcess.Scenario = nameTokens[1];
             testRunEnergyByProcess.Iteration = Convert.ToInt32(nameTokens[2]);
             testRunEnergyByProcess.Browser = nameTokens[0];
