@@ -45,7 +45,6 @@ namespace TestingPower
 {
     internal class Program
     {
-        private static RemoteWebDriver s_driver;
         private static int s_loops = 1;
         private static List<Scenario> s_scenarios = new List<Scenario>();
         private static Dictionary<string, Scenario> s_possibleScenarios = new Dictionary<string, Scenario>();
@@ -56,6 +55,7 @@ namespace TestingPower
         private static int s_iterations = 1;
         private static string s_scenarioName = "";
         private static bool s_useTraceController;
+        private static string s_etlPath = "";
 
         private static void Main(string[] args)
         {
@@ -68,20 +68,35 @@ namespace TestingPower
 
             // A warmup pass is one run thru the selected scenarios and browsers.
             // It allows the browsers to cache some content which helps reduce power variability from run to run.
-            //s_doWarmup =  true;
             if (s_doWarmup)
             {
+                Console.WriteLine("[{0}] - Starting warmup pass -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
                 foreach (string browser in s_browsers)
                 {
                     using (var driver = CreateDriverAndMaximize(browser))
                     {
                         foreach (var scenario in s_scenarios)
                         {
-                            // Execute the scenario                            
+                            Console.WriteLine("[{0}] - Warmup - Browser: {1}  Scenario: {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, scenario.Name);
+
                             scenario.Run(driver, browser, logins);
+
+                            Thread.Sleep(1 * 1000);
                         }
+                        driver.Quit();
                     }
                 }
+                Console.WriteLine("[{0}] - Completed warmup pass -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+
+            if (s_useTraceController)
+            {
+                Console.WriteLine("[{0}] - Waiting briefly to let E3 system clear out data from before running the test.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
+                // that the browser energy data reported by E3 going forward is from this test run and not from warmup or before running the test pass.
+                Thread.Sleep(12 * 1000);
             }
 
             using (var elevatorClient = ElevatorClient.Create(s_useTraceController))
@@ -89,12 +104,16 @@ namespace TestingPower
                 elevatorClient.ConnectAsync().Wait();
                 elevatorClient.SendControllerMessageAsync(Elevator.Commands.START_PASS).Wait();
 
+                Console.WriteLine("[{0}] - Starting Test Pass -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
                 // Core Execution Loop
                 for (int iteration = 0; iteration < s_iterations; iteration++)
                 {
                     foreach (string browser in s_browsers)
                     {
                         elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {s_scenarioName}").Wait();
+
+                        Console.WriteLine("[{0}] - Launching Browser Driver {1} -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser);
 
                         using (var driver = CreateDriverAndMaximize(browser))
                         {
@@ -117,12 +136,14 @@ namespace TestingPower
                                     // After that, scenarios open in their own tabs
                                     if (!isFirstScenario)
                                     {
-                                        CreateNewTab(browser);
+                                        CreateNewTab(driver, browser);
                                     }
                                     else
                                     {
                                         isFirstScenario = false;
                                     }
+
+                                    Console.WriteLine("[{0}] - Executing - Iteration: {1}  Browser: {2}  Scenario: {3}.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Name);
 
                                     // Here, control is handed to the scenario to navigate, and do whatever it wants
                                     scenario.Run(driver, browser, logins);
@@ -135,43 +156,59 @@ namespace TestingPower
                                     {
                                         // Of course it's possible we don't get control back until after we were supposed to
                                         // continue to the next scenario. In that case, invalidate the run by throwing.
-                                        throw new Exception("Scenario ran longer than expected! The browser ran slower than expected or the duration of the scenario is too short.");
+                                        throw new Exception(string.Format("Scenario ran longer than expected! The browser ran for {0}s. The timeout for this scenario is {1}s.", runTime.TotalSeconds, scenario.Duration));
                                     }
+
+                                    Console.WriteLine("[{0}] - Completed - Iteration: {1}  Browser: {2}  Scenario: {3}. Scenario ran for {4} seconds.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Name, runTime.TotalSeconds);
+
                                     Thread.Sleep(timeLeft);
                                 }
                             }
+
+                            Console.WriteLine("[{0}] - Completed Browser: {1}  Iteration: {2} ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, iteration);
+
+                            driver.Quit();
+                        }
+
+                        if (s_useTraceController)
+                        {
+                            Console.WriteLine("[{0}] - Pausing for E3 System Events to clear -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+
+                            // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
+                            // that the browser energy data reported by E3 for this run is only for this run and does not bleed into any other runs.
+                            Thread.Sleep(12 * 1000);
                         }
 
                         elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
                     }
                 }
-
+                Console.WriteLine("[{0}] - Ending Test Pass -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 elevatorClient.SendControllerMessageAsync(Elevator.Commands.END_PASS).Wait();
             }
 
             // process the E3 Energy data from test traces if tracing controller was used
             if (s_useTraceController)
             {
-                ProcessEnergyData();
+                ProcessEnergyData(s_etlPath);
             }
         }
 
         /// <summary>
         /// Extracts the E3 Energy data from ETL files created during the test, aggregates the data and saves it to csv files.
         /// </summary>
-        private static void ProcessEnergyData()
+        private static void ProcessEnergyData(string etlPath)
         {
             IEnumerable<string> etlFiles = null;
             AutomateXPerf xPerf = new AutomateXPerf();
-            EnergyDataProcessor energyProcessor = new EnergyDataProcessor(); // TODO: Refactor EnergyDataProcessor
+            EnergyDataProcessor energyProcessor = new EnergyDataProcessor();
 
-            Console.WriteLine("Starting processing of energy data.");
+            Console.WriteLine("[{0}] - Starting processing of energy data. -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
-            etlFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.etl");
+            etlFiles = Directory.EnumerateFiles(etlPath, "*.etl");
 
             if (etlFiles.Count() == 0)
             {
-                Console.WriteLine("No ETL files were found. Unable to process E3 Energy data.");
+                Console.WriteLine("No ETL files were found! Unable to process E3 Energy data.");
                 return;
             }
 
@@ -182,13 +219,12 @@ namespace TestingPower
                 xPerf.DumpEtlEventsToFile(etl, Path.ChangeExtension(fileName, ".csv"));
 
                 energyProcessor.ProcessEnergyData(Path.ChangeExtension(fileName, ".csv"));
-
-                energyProcessor.SaveCompononentEnergyDataToCsv(Path.ChangeExtension(fileName + "_componentEnergy", ".csv"));
-
-                energyProcessor.SaveProcessEnergyDataToCsv(Path.ChangeExtension(fileName + "_processEnergy", ".csv"));
             }
 
-            Console.WriteLine("Completed processing of energy data.");
+            energyProcessor.SaveCompononentEnergyToFile(Path.ChangeExtension("componentEnergy_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"), ".csv"));
+            energyProcessor.SaveProcessEnergyToFile(Path.ChangeExtension("processEnergy_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"), ".csv"));
+
+            Console.WriteLine("[{0}] - Completed processing of energy data. -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
         /// <summary>
@@ -228,7 +264,7 @@ namespace TestingPower
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
 
-            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc] [-warmup|-w]");
+            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -282,7 +318,7 @@ namespace TestingPower
                             s_scenarios.Add(s_possibleScenarios["google"]);
                             s_scenarios.Add(s_possibleScenarios["gmail"]);
                             s_scenarios.Add(s_possibleScenarios["wikipedia"]);
-
+                            s_scenarioName = "all";
                             break;
                         }
 
@@ -295,7 +331,16 @@ namespace TestingPower
                             }
 
                             s_scenarios.Add(s_possibleScenarios[scenario]);
-                            s_scenarioName = s_scenarioName + "_" + scenario;
+
+                            if (string.IsNullOrEmpty(s_scenarioName))
+                            {
+                                s_scenarioName = scenario;
+                            }
+                            else
+                            {
+                                s_scenarioName = s_scenarioName + "_" + scenario;
+                            }
+
                             int nextArgNum = argNum + 1;
                             if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
                             {
@@ -313,7 +358,8 @@ namespace TestingPower
                     case "-tracecontrolled":
                     case "-tc":
                         s_useTraceController = true;
-
+                        argNum++;
+                        s_etlPath = args[argNum];
                         break;
                     case "-warmup":
                     case "-w":
@@ -331,12 +377,13 @@ namespace TestingPower
             }
         }
 
-        private static void CloseTabs()
+        private static void CloseTabs(RemoteWebDriver driver)
         {
             // Simply go through and close every tab one by one.
-            foreach (var window in s_driver.WindowHandles)
+            //foreach (var window in s_driver.WindowHandles)
+            foreach (var window in driver.WindowHandles)
             {
-                s_driver.SwitchTo().Window(window).Close();
+                driver.SwitchTo().Window(window).Close();
             }
         }
 
@@ -352,7 +399,7 @@ namespace TestingPower
         /// Utility function for scenarios to call into to scroll the page
         /// </summary>
         /// <param name="timesToScroll">An abstract quantification of how much to scroll</param>
-        public static void scrollPage(int timesToScroll)
+        public static void scrollPage(RemoteWebDriver driver, int timesToScroll)
         {
             // Webdriver examples had scrolling by executing Javascript. That approach seemed troublesome because the
             // browser is scrolling in a way very different from how it would with a real user, so we don't do it.
@@ -361,7 +408,7 @@ namespace TestingPower
             // Use the page down key.
             for (int i = 0; i < timesToScroll; i++)
             {
-                s_driver.Keyboard.SendKeys(Keys.PageDown);
+                driver.Keyboard.SendKeys(Keys.PageDown);
                 Thread.Sleep(1000);
             }
         }
@@ -372,22 +419,22 @@ namespace TestingPower
         /// <param name="browser">
         /// The browser that the new tab is being created in.
         /// </param>
-        private static void CreateNewTab(string browser)
+        private static void CreateNewTab(RemoteWebDriver driver, string browser)
         {
             // Sadly, we had to special case this a bit by browser because no mechanism behaved correctly for everyone
             if (browser == "firefox")
             {
                 // Use ctrl+t for Firefox. Send them to the body or else there can be focus problems.
-                IWebElement body = s_driver.FindElementByTagName("body");
+                IWebElement body = driver.FindElementByTagName("body");
                 body.SendKeys(Keys.Control + 't');
             }
             else
             {
                 // For other browsers, use some JS. Note that this means you have to disable popup blocking in Edge
                 // You actually have to in Opera too, but that's provided in a flag below
-                s_driver.ExecuteScript("window.open();");
+                driver.ExecuteScript("window.open();");
                 // Go to that tab
-                s_driver.SwitchTo().Window(s_driver.WindowHandles[s_driver.WindowHandles.Count - 1]);
+                driver.SwitchTo().Window(driver.WindowHandles[driver.WindowHandles.Count - 1]);
             }
 
             // Give the browser more than enough time to open the tab and get to it so the next commands from the
@@ -403,6 +450,7 @@ namespace TestingPower
         private static RemoteWebDriver CreateDriverAndMaximize(string browser)
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
+            RemoteWebDriver driver = null;
             switch (browser)
             {
                 case "opera":
@@ -416,38 +464,39 @@ namespace TestingPower
                         // rather than depending on flaky hard-coded version in directory
                         oOption.BinaryLocation = @"C:\Program Files (x86)\Opera beta\38.0.2220.25\opera.exe";
                     }
-                    s_driver = new OperaDriver(oOption);
+                    driver = new OperaDriver(oOption);
                     break;
                 case "firefox":
-                    s_driver = new FirefoxDriver();
+                    driver = new FirefoxDriver();
                     break;
                 case "chrome":
                     ChromeOptions option = new ChromeOptions();
                     option.AddUserProfilePreference("profile.default_content_setting_values.notifications", 1);
-                    s_driver = new ChromeDriver(option);
+                    driver = new ChromeDriver(option);
                     break;
                 default:
                     EdgeOptions options = new EdgeOptions();
                     options.PageLoadStrategy = EdgePageLoadStrategy.Normal;
-                    s_driver = new EdgeDriver(options);
+                    driver = new EdgeDriver(options);
                     break;
             }
 
-            s_driver.Manage().Window.Maximize();
+            driver.Manage().Window.Maximize();
 
             Thread.Sleep(1000);
 
-            return s_driver;
+            return driver;
         }
+
         /// <summary>
         /// Here we do the work to finish the test, like quitting the driver.
         /// </summary>
-        private static void Teardown()
+        private static void Teardown(RemoteWebDriver driver)
         {
             // TODO: Capture power usage / results automatically
             try
             {
-                s_driver.Quit();
+                driver.Quit();
             }
             catch (Exception)
             {
@@ -455,11 +504,11 @@ namespace TestingPower
             }
         }
 
-        private static bool IsAlertPresent()
+        private static bool IsAlertPresent(RemoteWebDriver driver)
         {
             try
             {
-                s_driver.SwitchTo().Alert();
+                driver.SwitchTo().Alert();
                 return true;
             }
             catch (NoAlertPresentException)

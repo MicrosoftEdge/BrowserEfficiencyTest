@@ -52,7 +52,7 @@ namespace TestingPower
 
         private void NavigateToGmail(RemoteWebDriver driver)
         {
-            driver.Navigate().GoToUrl("http://www.gmail.com");
+            driver.Navigate().GoToUrl("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/#identifier");
         }
 
         private void LogIn(RemoteWebDriver driver, List<UserInfo> logins)
@@ -72,23 +72,9 @@ namespace TestingPower
             // Log in with them
             IWebElement userElement = null;
 
-            // We were getting two different log in pages from gmail and it didn't seem very deterministic which one
-            // to expect, so, currently handling this with a try/catch.
-            try
-            {
-                // One of the pages had this element...
-                userElement = driver.FindElementById("Email");
-            }
-            catch (Exception)
-            {
-                // ...but if we couldn't find it, we apparently got sereved this other log in page.
-                // So catch the exception and get to the login page we're looking for
-                var signInButton = driver.FindElementByXPath("//*[@data-g-label='Sign in']");
-                signInButton.SendKeys(string.Empty);
-                driver.Keyboard.SendKeys(Keys.Enter);
-                Thread.Sleep(2 * 1000);
-                userElement = driver.FindElementById("Email");
-            }
+            driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
+            userElement = driver.FindElementById("Email");
+
             // So now, no matter which page we were served originally, we're in the same place
             // Type in the user name
             foreach (char c in username)
@@ -97,13 +83,13 @@ namespace TestingPower
                 Thread.Sleep(75);
             }
 
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
 
             // Tab down and hit next button
             driver.Keyboard.SendKeys(Keys.Tab);
             driver.Keyboard.SendKeys(Keys.Enter);
 
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
 
             // Enter password
             var passwordElement = driver.FindElementById("Passwd");
