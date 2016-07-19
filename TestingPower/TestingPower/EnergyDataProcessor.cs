@@ -107,7 +107,7 @@ namespace TestingPower
             // Make sure we have data to work with.
             if (e3EnergyEstimateEvents.Count == 0)
             {
-                return null;
+                throw new Exception("No E3 Energy data to aggregate!");
             }
 
             var processEnergyData = (from e in e3EnergyEstimateEvents
@@ -139,7 +139,7 @@ namespace TestingPower
             // Make sure we have data to work with.
             if (e3EnergyEstimateEvents.Count == 0)
             {
-                return new E3EnergyData();
+                throw new Exception("No E3 Energy data to aggregate!");
             }
 
             E3EnergyData E3ComponentEnergy = new E3EnergyData() {
