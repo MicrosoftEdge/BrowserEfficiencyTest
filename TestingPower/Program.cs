@@ -45,6 +45,7 @@ namespace TestingPower
 {
     internal class Program
     {
+        private static string s_profilePath = "";
         private static int s_loops = 1;
         private static List<Scenario> s_scenarios = new List<Scenario>();
         private static Dictionary<string, Scenario> s_possibleScenarios = new Dictionary<string, Scenario>();
@@ -264,7 +265,7 @@ namespace TestingPower
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
 
-            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w]");
+            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -370,7 +371,15 @@ namespace TestingPower
                         argNum++;
                         s_iterations = int.Parse(args[argNum]);
                         break;
-
+                    case "-profile":
+                    case "-p":
+                        argNum++;
+                        s_profilePath = args[argNum];
+                        if(!Directory.Exists(s_profilePath))
+                        {
+                            throw new DirectoryNotFoundException("The profile path does not exist!");
+                        }
+                        break;
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
@@ -472,6 +481,12 @@ namespace TestingPower
                 case "chrome":
                     ChromeOptions option = new ChromeOptions();
                     option.AddUserProfilePreference("profile.default_content_setting_values.notifications", 1);
+
+                    if (!string.IsNullOrEmpty(s_profilePath))
+                    {
+                        option.AddArgument("--user-data-dir=" + s_profilePath);
+                    }
+
                     driver = new ChromeDriver(option);
                     break;
                 default:
