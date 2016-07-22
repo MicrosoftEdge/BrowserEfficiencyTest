@@ -72,24 +72,30 @@ namespace TestingPower
             // Log in with them
             IWebElement userElement = null;
 
-            driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-            userElement = driver.FindElementById("Email");
-
-            // So now, no matter which page we were served originally, we're in the same place
-            // Type in the user name
-            foreach (char c in username)
+            try
             {
-                userElement.SendKeys(c.ToString());
-                Thread.Sleep(75);
+                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
+                userElement = driver.FindElementById("Email");
+
+                // Type in the user name
+                foreach (char c in username)
+                {
+                    userElement.SendKeys(c.ToString());
+                    Thread.Sleep(75);
+                }
+
+                Thread.Sleep(1000);
+
+                // Tab down and hit next button
+                driver.Keyboard.SendKeys(Keys.Tab);
+                driver.Keyboard.SendKeys(Keys.Enter);
+
+                Thread.Sleep(1000);
             }
-
-            Thread.Sleep(3000);
-
-            // Tab down and hit next button
-            driver.Keyboard.SendKeys(Keys.Tab);
-            driver.Keyboard.SendKeys(Keys.Enter);
-
-            Thread.Sleep(3000);
+            catch (ElementNotVisibleException)
+            {
+                // If using profiles, the Email element will not be found and user will be able to enter the password
+            }
 
             // Enter password
             var passwordElement = driver.FindElementById("Passwd");
