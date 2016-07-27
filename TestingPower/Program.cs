@@ -362,15 +362,13 @@ namespace TestingPower
                         argNum++;
                         string etlPath = args[argNum];
 
-                        if (Directory.Exists(etlPath))
-                        {
-                            s_etlPath = Path.GetFullPath(etlPath);
-                        }
-                        else
+                        if (!Directory.Exists(etlPath))
                         {
                             Directory.CreateDirectory(etlPath);
-                            s_etlPath = Path.GetFullPath(etlPath);
                         }
+
+                        s_etlPath = Path.GetFullPath(etlPath);
+
                         break;
                     case "-warmup":
                     case "-w":
