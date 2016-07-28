@@ -103,7 +103,7 @@ namespace TestingPower
             using (var elevatorClient = ElevatorClient.Create(s_useTraceController))
             {
                 elevatorClient.ConnectAsync().Wait();
-                elevatorClient.SendControllerMessageAsync(Elevator.Commands.START_PASS).Wait();
+                elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_PASS} {s_etlPath}").Wait();
 
                 Console.WriteLine("[{0}] - Starting Test Pass -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
@@ -215,11 +215,11 @@ namespace TestingPower
 
             foreach (var etl in etlFiles)
             {
-                string fileName = Path.GetFileNameWithoutExtension(etl);
+                string csvFileName = Path.ChangeExtension(etl, ".csv");
 
-                xPerf.DumpEtlEventsToFile(etl, Path.ChangeExtension(fileName, ".csv"));
+                xPerf.DumpEtlEventsToFile(etl, csvFileName);
 
-                energyProcessor.ProcessEnergyData(Path.ChangeExtension(fileName, ".csv"));
+                energyProcessor.ProcessEnergyData(csvFileName);
             }
 
             energyProcessor.SaveCompononentEnergyToFile(Path.ChangeExtension("componentEnergy_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"), ".csv"));
@@ -360,7 +360,15 @@ namespace TestingPower
                     case "-tc":
                         s_useTraceController = true;
                         argNum++;
-                        s_etlPath = args[argNum];
+                        string etlPath = args[argNum];
+
+                        if (!Directory.Exists(etlPath))
+                        {
+                            Directory.CreateDirectory(etlPath);
+                        }
+
+                        s_etlPath = Path.GetFullPath(etlPath);
+
                         break;
                     case "-warmup":
                     case "-w":
