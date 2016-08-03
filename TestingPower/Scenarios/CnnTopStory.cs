@@ -97,7 +97,7 @@ namespace TestingPower
             Thread.Sleep(5 * 1000);
 
             // Scroll down multiple times
-            Program.scrollPage(driver, 10);
+            driver.ScrollPage(10);
         }
     }
 }

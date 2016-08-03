@@ -53,7 +53,7 @@ namespace TestingPower
             }
 
             // Scroll a bit
-            Program.scrollPage(driver, 15);
+            driver.ScrollPage(15);
         }
     }
 }
