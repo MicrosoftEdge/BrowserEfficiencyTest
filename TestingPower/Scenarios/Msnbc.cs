@@ -44,7 +44,7 @@ namespace TestingPower
         {
             driver.Navigate().GoToUrl("http://www.msnbc.com");
             // and scroll up / down
-            Program.scrollPage(driver, 10);
+            driver.ScrollPage(10);
 
             // click on one of the links on the page
             // first get back to the top

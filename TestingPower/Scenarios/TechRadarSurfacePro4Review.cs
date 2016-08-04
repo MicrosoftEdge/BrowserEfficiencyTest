@@ -53,7 +53,7 @@ namespace TestingPower
                 // Navigate to the Surface Pro 4 review on TechRadar.
                 driver.Navigate().GoToUrl("http://www.techradar.com/us/reviews/pc-mac/tablets/microsoft-surface-pro-4-1290285/review");
             }
-            catch (WebDriverTimeoutException e)
+            catch (WebDriverTimeoutException)
             {
                 Thread.Sleep(3 * 1000);
                 driver.Keyboard.SendKeys(Keys.Escape);
@@ -63,7 +63,7 @@ namespace TestingPower
             Thread.Sleep(5 * 1000);
 
             // Scroll down multiple times
-            Program.scrollPage(driver, 10);
+            driver.ScrollPage(10);
         }
     }
 }

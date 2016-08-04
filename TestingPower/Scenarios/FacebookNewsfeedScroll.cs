@@ -87,7 +87,7 @@ namespace TestingPower
             // Once we're logged in, all we're going to do is scroll through the page
             // We're simply measuring a user looking through their news feed for a minute
 
-            Program.scrollPage(driver, 20);
+            driver.ScrollPage(20);
         }
     }
 }

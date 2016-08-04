@@ -60,7 +60,7 @@ namespace TestingPower
             driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/?ref=search_subreddits");
             Thread.Sleep(5000);
 
-            Program.scrollPage(driver, 3);
+            driver.ScrollPage(3);
 
             var subredditThread = driver.FindElementByClassName("thumbnail");
 
@@ -68,7 +68,7 @@ namespace TestingPower
             driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/comments/4luknw/rank_upteam_buildingawakening_post/");
             Thread.Sleep(10000);
 
-            Program.scrollPage(driver, 15);
+            driver.ScrollPage(15);
         }
     }
 }

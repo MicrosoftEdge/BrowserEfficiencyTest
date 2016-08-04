@@ -68,7 +68,7 @@ namespace TestingPower
             Thread.Sleep(2 * 1000);
 
             // Scroll down to reviews
-            Program.scrollPage(driver, 5);
+            driver.ScrollPage(5);
         }
     }
 }
