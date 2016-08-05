@@ -38,9 +38,9 @@ namespace TestingPower
         {
             Arguments arguments = new Arguments(args);
 
-            //ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
+            ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
 
-            //scenarioRunner.Run();
+            scenarioRunner.Run();
 
             ProcessEnergyData(arguments);
         }
