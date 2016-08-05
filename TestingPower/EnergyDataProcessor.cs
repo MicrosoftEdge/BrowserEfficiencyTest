@@ -40,10 +40,14 @@ namespace TestingPower
     /// </summary>
     internal class EnergyDataProcessor
     {
+        // TODO: Move EnergyDataProcessor to its own project and make it a DLL.
+        // TODO: Refactor to improve the interface. As it is now it is clunky and requires code using this class to know about some of its inner mechanics.
+        // TODO: Refactor the structs used by EnergyDataProcessor (E3BrowserTestRunEnergyByProcess, E3BrowserTestRunEnergyByComponent, E3EnergyData) to be classes.
         private List<E3EnergyEstimateEvent> _E3EnergyEstimateEvents;
         private List<E3UnknownEnergyEvent> _E3UnknownEnergyEvents;
         public List<E3BrowserTestRunEnergyByProcess> TestPassProcessEnergy;
         public List<E3BrowserTestRunEnergyByComponent> TestPassComponentEnergy;
+        public List<E3BrowserTestRunEnergyByProcess> TestPassHardwareMeasuredEnergy;
 
         /// <summary>
         /// Initializes a new instance of the EnergyDataProcessor class.
@@ -54,6 +58,7 @@ namespace TestingPower
             _E3UnknownEnergyEvents = new List<E3UnknownEnergyEvent>();
             TestPassProcessEnergy = new List<E3BrowserTestRunEnergyByProcess>();
             TestPassComponentEnergy = new List<E3BrowserTestRunEnergyByComponent>();
+            TestPassHardwareMeasuredEnergy = new List<E3BrowserTestRunEnergyByProcess>();
         }
 
         /// <summary>
@@ -66,15 +71,32 @@ namespace TestingPower
         /// <param name="energyCsvFile">The filename containing the E3 event data in CSV format.</param>
         public void ProcessEnergyData(string energyCsvFile)
         {
+            List<E3EnergyEstimateEvent> hardwareMeasuredE3Events = null;
+            List<E3EnergyEstimateEvent> filteredE3EstimateEvents = null;
             string[] nameTokens = null;
             Dictionary<string, E3EnergyData> e3EnergyByProcess = null;
+            Dictionary<string, E3EnergyData> hardwareE3EnergyByMeter = null;
             E3EnergyData e3EnergyByComponent;
             string etlFileName = "";
 
             LoadEnergyEventsFromFile(energyCsvFile);
 
-            e3EnergyByProcess = AggregateEnergyDataByProcess(_E3EnergyEstimateEvents);
-            e3EnergyByComponent = AggregateEnergyDataByComponent(_E3EnergyEstimateEvents);
+            // We need to separate any hardware energy measurements from the rest of the E3 energy data to prevent
+            // them from being aggregated and summed with the rest of the E3 energy data resulting in erroneous
+            // energy values.
+            // Hardware measurements are reported by E3 as a process with the names beginning with "EMI_".
+            hardwareMeasuredE3Events = (from e in _E3EnergyEstimateEvents
+                                       where e.ProcessName.StartsWith("EMI_")
+                                       select e).ToList();
+
+            filteredE3EstimateEvents = (from e in _E3EnergyEstimateEvents
+                                        where !e.ProcessName.StartsWith("EMI_")
+                                        select e).ToList();
+
+            // perform the various data aggregation tasks
+            e3EnergyByProcess = AggregateEnergyDataByProcess(filteredE3EstimateEvents);
+            e3EnergyByComponent = AggregateEnergyDataByComponent(filteredE3EstimateEvents);
+            hardwareE3EnergyByMeter = AggregateEnergyDataByProcess(hardwareMeasuredE3Events);
 
             // the filename contains the browser, scenario, iteration, datestamp and timestamp information split by underscores
             nameTokens = Path.GetFileNameWithoutExtension(energyCsvFile).Split('_');
@@ -82,39 +104,30 @@ namespace TestingPower
             // the original ETL filename is the same as the energy CSV file but with a different extension
             etlFileName = Path.ChangeExtension(energyCsvFile, ".etl");
 
-            E3BrowserTestRunEnergyByComponent testRunEnergyByComponent = new E3BrowserTestRunEnergyByComponent();
-            testRunEnergyByComponent.EtlFileName = etlFileName;
-            testRunEnergyByComponent.Scenario = nameTokens[1];
-            testRunEnergyByComponent.Iteration = Convert.ToInt32(nameTokens[2]);
-            testRunEnergyByComponent.Browser = nameTokens[0];
-            testRunEnergyByComponent.DateStamp = nameTokens[3];
-            testRunEnergyByComponent.TimeStamp = nameTokens[4];
-            testRunEnergyByComponent.E3ComponentEnergy = e3EnergyByComponent;
+            // store the aggregated energy data combined with the test run information
+            E3BrowserTestRunEnergyByComponent testRunEnergyByComponent = new E3BrowserTestRunEnergyByComponent(etlFileName, nameTokens[1], Convert.ToInt32(nameTokens[2]), nameTokens[0], nameTokens[3], nameTokens[4], e3EnergyByComponent);
+            E3BrowserTestRunEnergyByProcess testRunEnergyByProcess = new E3BrowserTestRunEnergyByProcess(etlFileName, nameTokens[1], Convert.ToInt32(nameTokens[2]), nameTokens[0], nameTokens[3], nameTokens[4], e3EnergyByProcess);
+            E3BrowserTestRunEnergyByProcess testRunHardwareEnergyByMeter = new E3BrowserTestRunEnergyByProcess(etlFileName, nameTokens[1], Convert.ToInt32(nameTokens[2]), nameTokens[0], nameTokens[3], nameTokens[4], hardwareE3EnergyByMeter);
 
-            E3BrowserTestRunEnergyByProcess testRunEnergyByProcess = new E3BrowserTestRunEnergyByProcess();
-            testRunEnergyByProcess.EtlFileName = etlFileName;
-            testRunEnergyByProcess.Scenario = nameTokens[1];
-            testRunEnergyByProcess.Iteration = Convert.ToInt32(nameTokens[2]);
-            testRunEnergyByProcess.Browser = nameTokens[0];
-            testRunEnergyByProcess.DateStamp = nameTokens[3];
-            testRunEnergyByProcess.TimeStamp = nameTokens[4];
-            testRunEnergyByProcess.E3EnergyByProcess = e3EnergyByProcess;
-
+            // add the test run data in with the rest of the complete test pass data set
             TestPassProcessEnergy.Add(testRunEnergyByProcess);
             TestPassComponentEnergy.Add(testRunEnergyByComponent);
+            TestPassHardwareMeasuredEnergy.Add(testRunHardwareEnergyByMeter);
         }
 
         // Aggregates the energy data by process name. 
         // The resulting data is stored in the EnergyByProcessName property.
         private static Dictionary<string, E3EnergyData> AggregateEnergyDataByProcess(List<E3EnergyEstimateEvent> e3EnergyEstimateEvents)
         {
+            Dictionary<string, E3EnergyData> energyByProcess = new Dictionary<string, E3EnergyData>();
+
             // Make sure we have data to work with.
             if (e3EnergyEstimateEvents.Count == 0)
             {
-                throw new Exception("No E3 Energy data to aggregate!");
+                return energyByProcess;
             }
 
-            var processEnergyData = (from e in e3EnergyEstimateEvents
+            energyByProcess = (from e in e3EnergyEstimateEvents
                                      group e by e.ProcessName into g
                                      select new {
                                          ProcessName = g.Key,
@@ -133,20 +146,21 @@ namespace TestingPower
                                          }
                                      }).ToDictionary(k => k.ProcessName, d => d.EnergyData);
 
-            return processEnergyData;
+            return energyByProcess;
         }
 
-        // Aggregates the energy data by system component. 
-        // The resulting data is stored in the EnergyByComponent property.
+        // Sums the energy data by system component. 
         private static E3EnergyData AggregateEnergyDataByComponent(List<E3EnergyEstimateEvent> e3EnergyEstimateEvents)
         {
+            E3EnergyData componentEnergy = new E3EnergyData();
+
             // Make sure we have data to work with.
             if (e3EnergyEstimateEvents.Count == 0)
             {
-                throw new Exception("No E3 Energy data to aggregate!");
+                return componentEnergy;
             }
 
-            E3EnergyData E3ComponentEnergy = new E3EnergyData() {
+            componentEnergy = new E3EnergyData() {
                 CpuEnergy = (uint)e3EnergyEstimateEvents.Sum(s => s.CpuEnergy),
                 SocEnergy = (uint)e3EnergyEstimateEvents.Sum(s => s.SocEnergy),
                 DisplayEnergy = (uint)e3EnergyEstimateEvents.Sum(s => s.DisplayEnergy),
@@ -157,10 +171,9 @@ namespace TestingPower
                 OtherEnergy = (uint)e3EnergyEstimateEvents.Sum(s => s.OtherEnergy),
                 EmiEnergy = (uint)e3EnergyEstimateEvents.Sum(s => s.EmiEnergy),
                 TotalEnergy = (uint)e3EnergyEstimateEvents.Sum(s => s.TotalEnergy),
-                TimeInMSec = (uint)e3EnergyEstimateEvents.Sum(s => s.TimeInMSec)
-            };
+                TimeInMSec = (uint)e3EnergyEstimateEvents.Sum(s => s.TimeInMSec)};
 
-            return E3ComponentEnergy;
+            return componentEnergy;
         }
 
         // Opens a csv file containing E3 event data and extracts the E3 events
@@ -227,84 +240,86 @@ namespace TestingPower
         }
 
         /// <summary>
-        /// Saves the processed component and process energy data to two csv files.
+        /// Saves the processed energy data to three files in csv format.
+        ///  - Saves the aggregated component energy data to E3ComponentEnergyData_[DateStamp]_[TimeStamp].csv
+        ///  - Saves the aggregated process energy data to E3ProcessEnergyData_[DateStamp]_[TimeStamp].csv
+        ///  - Saves the hardware measured energy data to HardwareMeterEnergyData_[DateStamp]_[TimeStamp].csv
         /// </summary>
-        /// <param name="csvFileName">The name to prefix the saved csv files.</param>
-        public void SaveToCsv(string csvFileName)
+        /// <param name="filePath">The directory path of where to save the csv files.</param>
+        public void SaveProcessedDataToFiles(string filePath)
         {
-            string e3ProcessDataCsvFileName = "";
-            string e3ComponentDataCsvFileName = "";
-
-            e3ProcessDataCsvFileName = System.IO.Path.Combine(csvFileName, "_E3ProcessData.csv");
-            e3ComponentDataCsvFileName = System.IO.Path.Combine(csvFileName, "_E3ComponentData.csv");
+            string e3ProcessDataCsvFileName = System.IO.Path.Combine(filePath, "E3ProcessEnergyData_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
+            string e3ComponentDataCsvFileName = System.IO.Path.Combine(filePath, "E3ComponentEnergyData_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
+            string e3HardwareMeterDataCsvFileName = System.IO.Path.Combine(filePath, "HardwareMeterEnergyData_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
 
             if (!SaveProcessEnergyToFile(e3ProcessDataCsvFileName))
             {
                 Console.WriteLine("There was a problem saving the aggregated process energy data!");
             }
 
-            if (SaveCompononentEnergyToFile(e3ComponentDataCsvFileName))
+            if (!SaveComponentEnergyToFile(e3ComponentDataCsvFileName))
             {
                 Console.WriteLine("There was a problem saving the aggregated component energy data!");
             }
+
+            if (!SaveHardwareMeterEnergyToFile(e3HardwareMeterDataCsvFileName))
+            {
+                Console.WriteLine("There was a problem saving the hardware meter energy data!");
+            }
         }
 
-        /// <summary>
-        /// Saves the energy data aggregated by process to a file in csv format.
-        /// </summary>
-        /// <param name="fileName">The name to save the file as.</param>
-        /// <returns>Returns true if the data was successfully saved.</returns>
-        public bool SaveProcessEnergyToFile(string fileName)
+        // Formats the hardware measured energy as CSV strings and saves the data to a file.
+        private bool SaveHardwareMeterEnergyToFile(string fileName)
         {
             bool success = false;
-            string dataRow = "";
-            string headerRow = "";
-            string testPassData = "";
+            List<string> dataRows = null;
+            string headerRow = "EtlFileName,Scenario,Iteration,Browser,DateStamp,TimeStamp,HardwareMeter,CpuEnergy,SocEnergy,DisplayEnergy,DiskEnergy,NetworkEnergy,MbbEnergy,LossEnergy,OtherEnergy,EmiEnergy,TotalEnergy,TimeInMilliSec";
 
-            // first check that there is processed energy data to save
+            // Check that there is hardware measured energy data to save.
+            if (TestPassHardwareMeasuredEnergy.Count == 0)
+            {
+                return false;
+            }
+
+            // Format the data as strings of comma separated values.
+            dataRows = (from testRun in TestPassHardwareMeasuredEnergy
+                        from process in testRun.E3EnergyByProcess
+                        select testRun.EtlFileName + "," + testRun.Scenario + "," + testRun.Iteration + "," + testRun.Browser + "," + testRun.DateStamp + "," + testRun.TimeStamp + "," + process.Key + "," + process.Value.CpuEnergy + "," + process.Value.SocEnergy + "," + process.Value.DisplayEnergy + "," + process.Value.DiskEnergy + "," + process.Value.NetworkEnergy + "," + process.Value.MbbEnergy + "," + process.Value.LossEnergy + "," + process.Value.OtherEnergy + "," + process.Value.EmiEnergy + "," + process.Value.TotalEnergy + "," + process.Value.TimeInMSec).ToList();
+
+            success = SaveToFile(fileName, headerRow, dataRows);
+
+            return success;
+        }
+
+        // Formats the energy data aggregated by process as CSV strings and saves the data to a file.
+        private bool SaveProcessEnergyToFile(string fileName)
+        {
+            bool success = false;
+            List<string> dataRows = null;
+            string headerRow = "EtlFileName,Scenario,Iteration,Browser,DateStamp,TimeStamp,ProcessName,FriendlyName,CpuEnergy,SocEnergy,DisplayEnergy,DiskEnergy,NetworkEnergy,MbbEnergy,LossEnergy,OtherEnergy,EmiEnergy,TotalEnergy,TimeInMilliSec";
+
+            // Check that there is process energy data to save.
             if (TestPassProcessEnergy.Count == 0)
             {
                 return false;
             }
 
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(fileName))
-                {
-                    headerRow = "EtlFileName,Scenario,Iteration,Browser,DateStamp,TimeStamp,ProcessName,CpuEnergy,SocEnergy,DisplayEnergy,DiskEnergy,NetworkEnergy,MbbEnergy,LossEnergy,OtherEnergy,EmiEnergy,TotalEnergy,TimeInMilliSec";
-                    sw.WriteLine(headerRow);
+            // Format the data as strings of comma separated values.
+            dataRows = (from testRun in TestPassProcessEnergy
+                        from process in testRun.E3EnergyByProcess
+                        select testRun.EtlFileName + "," + testRun.Scenario + "," + testRun.Iteration + "," + testRun.Browser + "," + testRun.DateStamp + "," + testRun.TimeStamp + "," + process.Key + "," + process.Key.Split('\\').Last() + "," + process.Value.CpuEnergy + "," + process.Value.SocEnergy + "," + process.Value.DisplayEnergy + "," + process.Value.DiskEnergy + "," + process.Value.NetworkEnergy + "," + process.Value.MbbEnergy + "," + process.Value.LossEnergy + "," + process.Value.OtherEnergy + "," + process.Value.EmiEnergy + "," + process.Value.TotalEnergy + "," + process.Value.TimeInMSec).ToList();
 
-                    foreach (var pass in TestPassProcessEnergy)
-                    {
-                        testPassData = pass.EtlFileName + "," + pass.Scenario + "," + pass.Iteration + "," + pass.Browser + "," + pass.DateStamp + "," + pass.TimeStamp;
-                        foreach (var processEnergy in pass.E3EnergyByProcess)
-                        {
-                            dataRow = testPassData + "," + processEnergy.Key + "," + processEnergy.Value.CpuEnergy + "," + processEnergy.Value.SocEnergy + "," + processEnergy.Value.DisplayEnergy + "," + processEnergy.Value.DiskEnergy + "," + processEnergy.Value.NetworkEnergy + "," + processEnergy.Value.MbbEnergy + "," + processEnergy.Value.LossEnergy + "," + processEnergy.Value.OtherEnergy + "," + processEnergy.Value.EmiEnergy + "," + processEnergy.Value.TotalEnergy + "," + processEnergy.Value.TimeInMSec;
-                            sw.WriteLine(dataRow);
-                        }
-                    }
-                }
-                success = true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception writing process energy to file. Exception Message: {0}", e.Message);
-                return false;
-            }
+            success = SaveToFile(fileName, headerRow, dataRows);
 
             return success;
         }
 
-        /// <summary>
-        /// Saves the energy data aggregated by component to a file in csv format.
-        /// </summary>
-        /// <param name="fileName">The name to save the file as.</param>
-        /// <returns>Returns true if the data was successfully saved.</returns>
-        public bool SaveCompononentEnergyToFile(string fileName)
+        // Formats the energy data aggregated by component as CSV strings and saves the data a file.
+        private bool SaveComponentEnergyToFile(string fileName)
         {
             bool success = false;
-            string dataRow = "";
-            string headerRow = "";
+            List<string> dataRows = null;
+            string headerRow = "EtlFileName,Scenario,Iteration,Browser,DateStamp,TimeStamp,CpuEnergy,SocEnergy,DisplayEnergy,DiskEnergy,NetworkEnergy,MbbEnergy,LossEnergy,OtherEnergy,EmiEnergy,TotalEnergy,TimeInMilliSec";
 
             // first check that there is component energy data to save
             if (TestPassComponentEnergy.Count == 0)
@@ -312,24 +327,41 @@ namespace TestingPower
                 return false;
             }
 
+            dataRows = (from testRun in TestPassComponentEnergy
+                       select testRun.EtlFileName + "," + testRun.Scenario + "," + testRun.Iteration + "," + testRun.Browser + "," + testRun.DateStamp + "," + testRun.TimeStamp + "," + testRun.E3ComponentEnergy.CpuEnergy + "," + testRun.E3ComponentEnergy.SocEnergy + "," + testRun.E3ComponentEnergy.DisplayEnergy + "," + testRun.E3ComponentEnergy.DiskEnergy + "," + testRun.E3ComponentEnergy.NetworkEnergy + "," + testRun.E3ComponentEnergy.MbbEnergy + "," + testRun.E3ComponentEnergy.LossEnergy + "," + testRun.E3ComponentEnergy.OtherEnergy + "," + testRun.E3ComponentEnergy.EmiEnergy + "," + testRun.E3ComponentEnergy.TotalEnergy + "," + testRun.E3ComponentEnergy.TimeInMSec).ToList();
+
+            success = SaveToFile(fileName, headerRow, dataRows);
+
+            return success;
+        }
+
+        // Saves the passed in header and data rows as text to a file.
+        private bool SaveToFile(string fileName, string headerRow, List<string> dataRows)
+        {
+            bool success = false;
+
+            // If there is no file name, header row or data rows then exit without saving to file.
+            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(headerRow) || (dataRows == null))
+            {
+                return false;
+            }
+
             try
             {
                 using (StreamWriter sw = new StreamWriter(fileName))
                 {
-                    headerRow = "EtlFileName,Scenario,Iteration,Browser,DateStamp,TimeStamp,CpuEnergy,SocEnergy,DisplayEnergy,DiskEnergy,NetworkEnergy,MbbEnergy,LossEnergy,OtherEnergy,EmiEnergy,TotalEnergy,TimeInMilliSec";
                     sw.WriteLine(headerRow);
 
-                    foreach (var component in TestPassComponentEnergy)
+                    foreach (var row in dataRows)
                     {
-                        dataRow = component.EtlFileName + "," + component.Scenario + "," + component.Iteration + "," + component.Browser + "," + component.DateStamp + "," + component.TimeStamp + "," + component.E3ComponentEnergy.CpuEnergy + "," + component.E3ComponentEnergy.SocEnergy + "," + component.E3ComponentEnergy.DisplayEnergy + "," + component.E3ComponentEnergy.DiskEnergy + "," + component.E3ComponentEnergy.NetworkEnergy + "," + component.E3ComponentEnergy.MbbEnergy + "," + component.E3ComponentEnergy.LossEnergy + "," + component.E3ComponentEnergy.OtherEnergy + "," + component.E3ComponentEnergy.EmiEnergy + "," + component.E3ComponentEnergy.TotalEnergy + "," + component.E3ComponentEnergy.TimeInMSec;
-                        sw.WriteLine(dataRow);
+                        sw.WriteLine(row);
                     }
                 }
                 success = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception writing component energy to file. Exception Message: {0}", e.Message);
+                Console.WriteLine("Exception writing to file. Exception Message: {0}", e.Message);
                 return false;
             }
 
@@ -350,6 +382,17 @@ namespace TestingPower
         public string DateStamp;
         public string TimeStamp;
         public E3EnergyData E3ComponentEnergy;
+
+        public E3BrowserTestRunEnergyByComponent(string etlFileName, string scenario, int iteration, string browser, string dateStamp, string timeStamp, E3EnergyData e3ComponentEnergy)
+        {
+            EtlFileName = etlFileName;
+            Scenario = scenario;
+            Iteration = iteration;
+            Browser = browser;
+            DateStamp = dateStamp;
+            TimeStamp = timeStamp;
+            E3ComponentEnergy = e3ComponentEnergy;
+        }
     }
 
     /// <summary>
@@ -364,8 +407,18 @@ namespace TestingPower
         public string Browser;
         public string DateStamp;
         public string TimeStamp;
-
         public Dictionary<string, E3EnergyData> E3EnergyByProcess;
+
+        public E3BrowserTestRunEnergyByProcess(string etlFileName, string scenario, int iteration, string browser, string dateStamp, string timeStamp, Dictionary<string, E3EnergyData> e3EnergyByProcess)
+        {
+            EtlFileName = etlFileName;
+            Scenario = scenario;
+            Iteration = iteration;
+            Browser = browser;
+            DateStamp = dateStamp;
+            TimeStamp = timeStamp;
+            E3EnergyByProcess = e3EnergyByProcess;
+        }
     }
 
     /// <summary>
