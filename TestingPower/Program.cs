@@ -75,8 +75,7 @@ namespace TestingPower
                     energyProcessor.ProcessEnergyData(csvFileName);
                 }
 
-                energyProcessor.SaveCompononentEnergyToFile(Path.ChangeExtension("componentEnergy_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"), ".csv"));
-                energyProcessor.SaveProcessEnergyToFile(Path.ChangeExtension("processEnergy_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"), ".csv"));
+                energyProcessor.SaveProcessedDataToFiles(args.EtlPath);
 
                 Console.WriteLine("[{0}] - Completed processing of energy data. -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             }
