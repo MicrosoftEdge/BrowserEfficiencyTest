@@ -146,8 +146,8 @@ namespace TestingPower
                         {
                             // Specify the "official" runs, including order
                             _scenarios.Add(_possibleScenarios["youtube"]);
-                            _scenarios.Add(_possibleScenarios["cnn"]);
-                            _scenarios.Add(_possibleScenarios["techRadar"]);
+                            _scenarios.Add(_possibleScenarios["bbcNews"]);
+                            _scenarios.Add(_possibleScenarios["yahooNews"]);
                             _scenarios.Add(_possibleScenarios["amazon"]);
                             _scenarios.Add(_possibleScenarios["facebook"]);
                             _scenarios.Add(_possibleScenarios["google"]);
