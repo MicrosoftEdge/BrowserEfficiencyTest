@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Arguments.cs" />
     <Compile Include="AutomateXPerf.cs" />
+    <Compile Include="BbcNews.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />
     <Compile Include="E3Events.cs" />
     <Compile Include="EnergyDataProcessor.cs" />
