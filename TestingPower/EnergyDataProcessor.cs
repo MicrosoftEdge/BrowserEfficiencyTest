@@ -41,13 +41,14 @@ namespace TestingPower
     internal class EnergyDataProcessor
     {
         // TODO: Move EnergyDataProcessor to its own project and make it a DLL.
-        // TODO: Refactor to improve the interface. As it is now it is clunky and requires code using this class to know about some of its inner mechanics.
+        // TODO: Refactor to improve the interface. As it is now it is clunky and requires code using this class to know about some of its inner mechanics. Example: The name of the CSV file passed in to ProcessEnergyData must match the ETL filename.
         // TODO: Refactor the structs used by EnergyDataProcessor (E3BrowserTestRunEnergyByProcess, E3BrowserTestRunEnergyByComponent, E3EnergyData) to be classes.
         private List<E3EnergyEstimateEvent> _E3EnergyEstimateEvents;
         private List<E3UnknownEnergyEvent> _E3UnknownEnergyEvents;
         public List<E3BrowserTestRunEnergyByProcess> TestPassProcessEnergy;
         public List<E3BrowserTestRunEnergyByComponent> TestPassComponentEnergy;
         public List<E3BrowserTestRunEnergyByProcess> TestPassHardwareMeasuredEnergy;
+        public Dictionary<string, Dictionary<string, uint>> ProcessEnergyByEtl;
 
         /// <summary>
         /// Initializes a new instance of the EnergyDataProcessor class.
@@ -59,6 +60,37 @@ namespace TestingPower
             TestPassProcessEnergy = new List<E3BrowserTestRunEnergyByProcess>();
             TestPassComponentEnergy = new List<E3BrowserTestRunEnergyByComponent>();
             TestPassHardwareMeasuredEnergy = new List<E3BrowserTestRunEnergyByProcess>();
+            ProcessEnergyByEtl = new Dictionary<string, Dictionary<string, uint>>();
+        }
+
+        /// <summary>
+        /// Creates a data structure where the energy data is organized by process first and then ETL.
+        /// This method must be called after all the ETL data has been loaded and processed.
+        /// </summary>
+        public void ProcessDataByEtl()
+        {
+            ProcessEnergyByEtl = new Dictionary<string, Dictionary<string, uint>>();
+
+            // populate the data structure
+            // go through each E3BrowserTestRunEnergyByProcess which is holding the process/app energy for each individual test run
+            //  - add the process/app to the data structure
+            //  - add the corresponding ETL e3 data to the data of that process/app
+            foreach (var run in TestPassProcessEnergy)
+            {
+                foreach (var process in run.E3EnergyByProcess)
+                {
+                    if (!ProcessEnergyByEtl.ContainsKey(process.Key))
+                    {
+                        // there is not an entry for the current process in our data structure so create it and add the data to it
+                        ProcessEnergyByEtl.Add(process.Key, (new Dictionary<string, uint>() { { run.EtlFileName.ToString(), process.Value.TotalEnergy } }));
+                    }
+                    else
+                    {
+                        // there is already an entry for the current process in our data structure so just add the current ETL data to it.
+                        ProcessEnergyByEtl[process.Key].Add(run.EtlFileName.ToString(), process.Value.TotalEnergy);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -103,6 +135,7 @@ namespace TestingPower
 
             // the original ETL filename is the same as the energy CSV file but with a different extension
             etlFileName = Path.ChangeExtension(energyCsvFile, ".etl");
+            etlFileName = Path.GetFileName(etlFileName);
 
             // store the aggregated energy data combined with the test run information
             E3BrowserTestRunEnergyByComponent testRunEnergyByComponent = new E3BrowserTestRunEnergyByComponent(etlFileName, nameTokens[1], Convert.ToInt32(nameTokens[2]), nameTokens[0], nameTokens[3], nameTokens[4], e3EnergyByComponent);
@@ -251,6 +284,7 @@ namespace TestingPower
             string e3ProcessDataCsvFileName = System.IO.Path.Combine(filePath, "E3ProcessEnergyData_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
             string e3ComponentDataCsvFileName = System.IO.Path.Combine(filePath, "E3ComponentEnergyData_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
             string e3HardwareMeterDataCsvFileName = System.IO.Path.Combine(filePath, "HardwareMeterEnergyData_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
+            string e3ProcessEnergyByEtlCsvFileName = System.IO.Path.Combine(filePath, "E3ProcessEnergyByEtl_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
 
             if (!SaveProcessEnergyToFile(e3ProcessDataCsvFileName))
             {
@@ -266,6 +300,55 @@ namespace TestingPower
             {
                 Console.WriteLine("There was a problem saving the hardware meter energy data!");
             }
+
+            if (!SaveProcessEnergyByEtlToFile(e3ProcessEnergyByEtlCsvFileName))
+            {
+                Console.WriteLine("There was a problem saving the hardware meter energy data!");
+            }
+        }
+
+        // Formats the process energy by etl as CSV strings and saves the data to a file.
+        private bool SaveProcessEnergyByEtlToFile(string fileName)
+        {
+            bool success = false;
+            List<string> dataRows = new List<string>();
+            string headerRow = "ProcessName";
+            List<string> etlFiles = new List<string>();
+            string columnData = "";
+
+            // Check that there is data to save.
+            if (ProcessEnergyByEtl.Count == 0)
+            {
+                return false;
+            }
+
+            //create a list of the ETL files included in this data set
+            etlFiles = TestPassProcessEnergy.Select( s => s.EtlFileName).ToList();
+
+            // create the header row using the ETL file names as columns
+            headerRow = headerRow + "," + string.Join(",", etlFiles);
+
+            // Format the data as strings of comma separated values.
+            foreach (var process in ProcessEnergyByEtl)
+            {
+                columnData = process.Key;
+                foreach (var etlFile in etlFiles)
+                {
+                    if(process.Value.ContainsKey(etlFile))
+                    {
+                        columnData = columnData + "," + process.Value[etlFile].ToString();
+                    }
+                    else
+                    {
+                        // insert a blank value instead of zero to indicate that there is no process entry for this etl
+                        columnData = columnData + ",";
+                    }
+                }
+                dataRows.Add(columnData);
+            }
+
+            success = SaveToFile(fileName, headerRow, dataRows);
+            return success;
         }
 
         // Formats the hardware measured energy as CSV strings and saves the data to a file.

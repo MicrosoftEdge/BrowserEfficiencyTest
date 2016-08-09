@@ -75,6 +75,9 @@ namespace TestingPower
                     energyProcessor.ProcessEnergyData(csvFileName);
                 }
 
+                // TODO: Refactor EnergyDatProcessor so that this method call is not needed.
+                energyProcessor.ProcessDataByEtl();
+
                 energyProcessor.SaveProcessedDataToFiles(args.EtlPath);
 
                 Console.WriteLine("[{0}] - Completed processing of energy data. -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
