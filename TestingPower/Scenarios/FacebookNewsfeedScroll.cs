@@ -44,6 +44,8 @@ namespace TestingPower
         {
             driver.Navigate().GoToUrl("http://www.facebook.com");
 
+            Thread.Sleep(5000);
+
             // if not logged on, log on
             var elems = driver.FindElements(By.CssSelector("H2"));
             foreach (IWebElement elem in elems)
