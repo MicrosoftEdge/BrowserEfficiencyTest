@@ -122,7 +122,7 @@ namespace TestingPower
 
                 Thread.Sleep(4000);
                 // Go back to inbox
-                driver.Keyboard.SendKeys(Keys.Backspace);
+                driver.Keyboard.SendKeys("u");
                 Thread.Sleep(2000);
                 // Select next email with the "cursor". Do this with the j key in gmail
                 driver.Keyboard.SendKeys("j");
