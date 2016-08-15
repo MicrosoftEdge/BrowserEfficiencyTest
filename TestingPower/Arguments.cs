@@ -250,6 +250,7 @@ namespace TestingPower
             AddScenario(new TechRadarSurfacePro4Review());
             AddScenario(new YahooNews());
             AddScenario(new BbcNews());
+            AddScenario(new CnnOneStory());
         }
         
         private void AddScenario(Scenario scenario)
