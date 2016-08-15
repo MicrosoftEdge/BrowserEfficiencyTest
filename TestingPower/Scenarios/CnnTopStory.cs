@@ -37,7 +37,7 @@ namespace TestingPower
     {
         public CnnTopStory()
         {
-            Name = "cnn";
+            Name = "cnnTopStory";
 
             // Using 90s as sometimes Chrome takes just over 80 seconds to run
             Duration = 90;

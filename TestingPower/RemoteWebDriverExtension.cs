@@ -31,6 +31,7 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
+using System.Net.Http;
 using System.Threading;
 
 namespace TestingPower
@@ -140,9 +141,11 @@ namespace TestingPower
                     driver = new ChromeDriver(option);
                     break;
                 default:
-                    EdgeOptions options = new EdgeOptions();
-                    options.PageLoadStrategy = EdgePageLoadStrategy.Normal;
-                    driver = new EdgeDriver(options);
+                    // Warning: this blows away all Edge data, including bookmarks, cookies, passwords, etc
+                    EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
+                    driver = new EdgeDriver(svc);
+                    HttpClient client = new HttpClient();
+                    client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();
                     break;
             }
 

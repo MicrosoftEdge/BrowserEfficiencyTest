@@ -30,6 +30,10 @@ Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scena
  -warmup|-w            For use with tracecontrolled runs. Runs the specified scenarios once before running the main set of iterations with the trace tracecontroller (ElevatorServer.exe).
  -profile|-p           Enables the Chrome driver to use the passed in profile. Requires passing in the path to the Chrome profile.
 ```
+
+> **WARNING**
+> When run on Microsoft Edge, this will delete all browser data, including bookmarks, saved passwords, and form fill.
+
 #Examples
 Run the CNN scenario on Edge
 

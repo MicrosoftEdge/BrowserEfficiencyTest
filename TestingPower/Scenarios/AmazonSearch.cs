@@ -38,7 +38,7 @@ namespace TestingPower
         public AmazonSearch()
         {
             Name = "amazon";
-            // Keep default time
+            Duration = 45;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
@@ -46,7 +46,7 @@ namespace TestingPower
             driver.Navigate().GoToUrl("http://www.amazon.com");
 
             // Give it more than enough time to load
-            Thread.Sleep(5000);
+            Thread.Sleep(5 * 1000);
 
             // Type "Game of Thrones" in the search box and hit enter
             var searchbox = driver.FindElementById("twotabsearchtextbox");
@@ -56,8 +56,8 @@ namespace TestingPower
             }
             searchbox.SendKeys(Keys.Enter);
 
-            // Give the results lots of time to load
-            Thread.Sleep(6 * 1000);
+            // Give the results time to load
+            Thread.Sleep(5 * 1000);
 
             // Click into "Game of Thrones Season 1"
             var bookLink = driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']");
