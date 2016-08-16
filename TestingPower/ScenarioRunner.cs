@@ -206,7 +206,7 @@ namespace TestingPower
 
                             Console.WriteLine("[{0}] - Completed Browser: {1}  Iteration: {2} ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, iteration);
 
-                            driver.Quit();
+                            driver.CloseAllTabs(browser);
                         }
 
                         if (_usingTraceController)

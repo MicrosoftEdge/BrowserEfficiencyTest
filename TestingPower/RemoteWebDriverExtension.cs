@@ -73,13 +73,17 @@ namespace TestingPower
         /// <summary>
         /// Closes all browser tabs.
         /// </summary>
-        public static void CloseAllTabs(this RemoteWebDriver remoteWebDriver)
+        public static void CloseAllTabs(this RemoteWebDriver remoteWebDriver, string browser)
         {
-            // Simply go through and close every tab one by one.
-            //foreach (var window in s_driver.WindowHandles)
-            foreach (var window in remoteWebDriver.WindowHandles)
+            if (browser == "opera")
             {
-                remoteWebDriver.SwitchTo().Window(window).Close();
+                // Opera wouldn't close the window using .Quit() Instead, thespeed dial would remain open, which
+                // would interfere with other tests. This key combination is used as a workaround.
+                remoteWebDriver.FindElement(By.TagName("body")).SendKeys(Keys.Control + Keys.Shift + 'x');
+            }
+            else
+            {
+                remoteWebDriver.Quit();
             }
         }
 
@@ -118,6 +122,8 @@ namespace TestingPower
                     OperaOptions oOption = new OperaOptions();
                     oOption.AddArgument("--disable-popup-blocking");
                     oOption.AddArgument("--power-save-mode=on");
+                    // TODO: This shouldn't be a hardcoded path, but Opera appeared to need this speficied directly to run well
+                    oOption.BinaryLocation = @"C:\Program Files (x86)\Opera\launcher.exe";
                     if (browser == "operabeta")
                     {
                         // TODO: Ideally, this code would look inside the Opera beta folder for opera.exe
