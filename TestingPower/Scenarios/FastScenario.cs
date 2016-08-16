@@ -34,16 +34,20 @@ using OpenQA.Selenium.Remote;
 
 namespace TestingPower
 {
-    class CnnOneStory : Scenario
+    /// <summary>
+    /// This scenario is designed to end quickly, and is for testing
+    /// </summary>
+    class FastScenario : Scenario
     {
-        public CnnOneStory()
+        public FastScenario()
         {
-            Name = "cnnOneStory";
+            Name = "fastScenario";
+            Duration = 10;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://bleacherreport.com/articles/2657513-tim-duncan-declined-olympic-invitation-from-president-obama?utm_source=cnn.com&utm_medium=referral&utm_campaign=editorial");
+            driver.Navigate().GoToUrl("http://www.google.com");
         }
     }
 }
