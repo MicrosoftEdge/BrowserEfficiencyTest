@@ -251,6 +251,7 @@ namespace TestingPower
             AddScenario(new YahooNews());
             AddScenario(new BbcNews());
             AddScenario(new CnnOneStory());
+            AddScenario(new FastScenario());
         }
         
         private void AddScenario(Scenario scenario)
