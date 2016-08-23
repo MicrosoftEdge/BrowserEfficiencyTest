@@ -23,7 +23,6 @@ Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scena
 
  -browser|-b           Selects the browser or browsers to run the scenarios with. For multiple browsers, separate each browser with a space.
  -scenario|-s 	       Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space.
- -loops                Causes the test to run the specified scenario n times as specified in the loop but with each loop run in a new tab building on the previous loop.
  -iterations|-i        Runs the specified scenarios n times with each iteration being a unique run.
  -tracecontrolled|-tc  Runs the specified scenarios while running a WPR trace session. Requires running with ElevatorServer.exe.
                        The path specified is where the ETL files and processed data files will be saved to. If the path does not exist, it will be created.
