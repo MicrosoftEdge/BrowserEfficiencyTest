@@ -49,7 +49,6 @@ namespace TestingPower
         public int Iterations { get; private set; }
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
-        public int Loops { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -87,7 +86,6 @@ namespace TestingPower
             Iterations = 1;
             UsingTraceController = false;
             EtlPath = "";
-            Loops = 1;
 
             CreatePossibleScenarios();
             ProcessArgs(args);
@@ -99,7 +97,7 @@ namespace TestingPower
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>]");
+            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -187,10 +185,6 @@ namespace TestingPower
                         }
 
                         break;
-                    case "-loops":
-                        argNum++;
-                        Loops = int.Parse(args[argNum]);
-                        break;
                     case "-tracecontrolled":
                     case "-tc":
                         UsingTraceController = true;
@@ -251,6 +245,7 @@ namespace TestingPower
             AddScenario(new YahooNews());
             AddScenario(new BbcNews());
             AddScenario(new CnnOneStory());
+            AddScenario(new FastScenario());
         }
         
         private void AddScenario(Scenario scenario)

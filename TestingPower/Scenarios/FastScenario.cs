@@ -1,4 +1,4 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
 // Microsoft Edge Power Test
 // Copyright(c) Microsoft Corporation
@@ -27,33 +27,27 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OpenQA.Selenium.Remote;
-using System.Threading;
 
 namespace TestingPower
 {
-    internal class WikipediaUnitedStates : Scenario
+    /// <summary>
+    /// This scenario is designed to end quickly, and is for testing
+    /// </summary>
+    class FastScenario : Scenario
     {
-        public WikipediaUnitedStates()
+        public FastScenario()
         {
-            // Specifify name and that it's 30s
-            Name = "wikipedia";
-            Duration = 30;
+            Name = "fastScenario";
+            Duration = 10;
         }
+
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            // Nagivate to wikipedia
-            driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
-
-            Thread.Sleep(2 * 1000);
-            if (browser == "firefox")
-            {
-                // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
-                driver.FindElementById("firstHeading").SendKeys(string.Empty);
-            }
-
-            // Scroll a bit
-            driver.ScrollPage(12);
+            driver.Navigate().GoToUrl("http://www.google.com");
         }
     }
 }
