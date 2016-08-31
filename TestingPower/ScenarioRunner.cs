@@ -43,7 +43,7 @@ namespace TestingPower
     {
         private bool _doWarmup;
         private int _iterations;
-        private int _attempts = 3;
+        private int _attempts;
         private string _browserProfilePath;
         private bool _usingTraceController;
         private string _etlPath;
@@ -68,6 +68,7 @@ namespace TestingPower
             _browserProfilePath = args.BrowserProfilePath;
             _usingTraceController = args.UsingTraceController;
             _etlPath = args.EtlPath;
+            _attempts = args.Attempts;
 
             _scenarios = args.Scenarios.ToList();
             _browsers = args.Browsers.ToList();

@@ -19,7 +19,7 @@ Using the XPerf and WPR modules requires the [Windows Performance Toolkit.](http
 ## Usage
 
 ```
-Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-loops <loopcount>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>]
+Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]
 
  -browser|-b           Selects the browser or browsers to run the scenarios with. For multiple browsers, separate each browser with a space.
  -scenario|-s 	       Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space.
@@ -28,6 +28,7 @@ Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scena
                        The path specified is where the ETL files and processed data files will be saved to. If the path does not exist, it will be created.
  -warmup|-w            For use with tracecontrolled runs. Runs the specified scenarios once before running the main set of iterations with the trace tracecontroller (ElevatorServer.exe).
  -profile|-p           Enables the Chrome driver to use the passed in profile. Requires passing in the path to the Chrome profile.
+ -attempts|-a          Defines the number of attempts to make per iteration. If an exception is caught, the trace is discarded and a new attempt is made. Default 3
 ```
 
 > **WARNING**
