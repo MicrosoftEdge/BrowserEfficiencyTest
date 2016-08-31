@@ -148,6 +148,10 @@ namespace TestingPower
                 // Core Execution Loop
                 for (int iteration = 0; iteration < _iterations; iteration++)
                 {
+                    // Randomize the order the browsers each iteration to reduce systematic bias in the test
+                    Random rand = new Random();
+                    _browsers = _browsers.OrderBy(a => rand.Next()).ToList<String>();
+
                     foreach (string browser in _browsers)
                     {
                         bool everyAttemptFailed = false;
