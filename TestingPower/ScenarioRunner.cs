@@ -43,7 +43,7 @@ namespace TestingPower
     {
         private bool _doWarmup;
         private int _iterations;
-        private int _attempts;
+        private int _maxAttempts;
         private string _browserProfilePath;
         private bool _usingTraceController;
         private string _etlPath;
@@ -68,7 +68,7 @@ namespace TestingPower
             _browserProfilePath = args.BrowserProfilePath;
             _usingTraceController = args.UsingTraceController;
             _etlPath = args.EtlPath;
-            _attempts = args.Attempts;
+            _maxAttempts = args.MaxAttempts;
 
             _scenarios = args.Scenarios.ToList();
             _browsers = args.Browsers.ToList();
@@ -156,7 +156,7 @@ namespace TestingPower
                     {
                         bool everyAttemptFailed = false;
                         bool newAttemptNeeded = true;
-                        for (int attemptNumber = 0; attemptNumber < _attempts && newAttemptNeeded; attemptNumber++)
+                        for (int attemptNumber = 0; attemptNumber < _maxAttempts && newAttemptNeeded; attemptNumber++)
                         {
                             newAttemptNeeded = false;
                             if (attemptNumber > 0)
@@ -232,7 +232,7 @@ namespace TestingPower
                                         exceptionOnCloseTabs = closeTabsEx;
                                     }
                                     newAttemptNeeded = true;
-                                    if (attemptNumber + 1 == _attempts)
+                                    if (attemptNumber + 1 == _maxAttempts)
                                     {
                                         everyAttemptFailed = true;
                                     }

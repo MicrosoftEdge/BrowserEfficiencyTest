@@ -49,7 +49,7 @@ namespace TestingPower
         public int Iterations { get; private set; }
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
-        public int Attempts { get; private set;  }
+        public int MaxAttempts { get; private set;  }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -87,7 +87,7 @@ namespace TestingPower
             Iterations = 1;
             UsingTraceController = false;
             EtlPath = "";
-            Attempts = 3;
+            MaxAttempts = 3;
 
             CreatePossibleScenarios();
             ProcessArgs(args);
@@ -213,7 +213,7 @@ namespace TestingPower
                     case "-attempts":
                     case "-a":
                         argNum++;
-                        Attempts = int.Parse(args[argNum]);
+                        MaxAttempts = int.Parse(args[argNum]);
                         break;
                     case "-profile":
                     case "-p":
