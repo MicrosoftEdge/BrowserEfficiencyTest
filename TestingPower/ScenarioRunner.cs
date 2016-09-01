@@ -222,15 +222,7 @@ namespace TestingPower
                                     // If something goes wrong and we get an exception halfway through the scenario, we clean up
                                     // and put everything back into a state where we can start the next iteration.
                                     elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS);
-                                    Exception exceptionOnCloseTabs = null;
-                                    try
-                                    {
-                                        driver.CloseAllTabs(browser);
-                                    }
-                                    catch (Exception closeTabsEx)
-                                    {
-                                        exceptionOnCloseTabs = closeTabsEx;
-                                    }
+                                    driver.CloseAllTabs(browser);
                                     newAttemptNeeded = true;
                                     if (attemptNumber + 1 == _maxAttempts)
                                     {
@@ -242,12 +234,6 @@ namespace TestingPower
                                     if (_usingTraceController)
                                     {
                                         Console.WriteLine("Trace has been discarded");
-                                    }
-                                    if (exceptionOnCloseTabs != null)
-                                    {
-                                        Console.WriteLine("---------------------------------------------------------");
-                                        Console.WriteLine("Also caught exception while trying to close tabs:");
-                                        Console.WriteLine(exceptionOnCloseTabs);
                                     }
                                     Console.WriteLine("\\-------------------------------------------------------/");
                                 }
