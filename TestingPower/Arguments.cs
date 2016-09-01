@@ -49,6 +49,7 @@ namespace TestingPower
         public int Iterations { get; private set; }
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
+        public int MaxAttempts { get; private set;  }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -86,6 +87,7 @@ namespace TestingPower
             Iterations = 1;
             UsingTraceController = false;
             EtlPath = "";
+            MaxAttempts = 3;
 
             CreatePossibleScenarios();
             ProcessArgs(args);
@@ -97,7 +99,7 @@ namespace TestingPower
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>]");
+            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -207,6 +209,11 @@ namespace TestingPower
                     case "-i":
                         argNum++;
                         Iterations = int.Parse(args[argNum]);
+                        break;
+                    case "-attempts":
+                    case "-a":
+                        argNum++;
+                        MaxAttempts = int.Parse(args[argNum]);
                         break;
                     case "-profile":
                     case "-p":
