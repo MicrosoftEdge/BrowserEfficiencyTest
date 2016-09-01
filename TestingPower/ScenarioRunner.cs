@@ -154,11 +154,9 @@ namespace TestingPower
 
                     foreach (string browser in _browsers)
                     {
-                        bool everyAttemptFailed = false;
-                        bool newAttemptNeeded = true;
-                        for (int attemptNumber = 0; attemptNumber < _maxAttempts && newAttemptNeeded; attemptNumber++)
+                        bool passSucceeded = false;
+                        for (int attemptNumber = 0; attemptNumber < _maxAttempts && !passSucceeded; attemptNumber++)
                         {
-                            newAttemptNeeded = false;
                             if (attemptNumber > 0)
                             {
                                 Console.WriteLine("[{0}] - Attempting again...", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -216,6 +214,7 @@ namespace TestingPower
                                     Console.WriteLine("[{0}] - Completed Browser: {1}  Iteration: {2} ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, iteration);
 
                                     driver.CloseAllTabs(browser);
+                                    passSucceeded = true;
                                 }
                                 catch (Exception ex)
                                 {
@@ -223,11 +222,6 @@ namespace TestingPower
                                     // and put everything back into a state where we can start the next iteration.
                                     elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS);
                                     driver.CloseAllTabs(browser);
-                                    newAttemptNeeded = true;
-                                    if (attemptNumber + 1 == _maxAttempts)
-                                    {
-                                        everyAttemptFailed = true;
-                                    }
                                     Console.WriteLine("/-EXCEPTION---------------------------------------------\\");
                                     Console.WriteLine("[{0}] - Caught exception while trying to run scenario. Exception:", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                                     Console.WriteLine(ex);
@@ -251,7 +245,7 @@ namespace TestingPower
                             }
                         }
 
-                        if (!everyAttemptFailed)
+                        if (passSucceeded)
                         {
                             elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
                         }
