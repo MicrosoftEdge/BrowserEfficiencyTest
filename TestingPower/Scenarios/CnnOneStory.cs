@@ -34,7 +34,7 @@ using OpenQA.Selenium.Remote;
 
 namespace TestingPower
 {
-    class CnnOneStory : Scenario
+    internal class CnnOneStory : Scenario
     {
         public CnnOneStory()
         {

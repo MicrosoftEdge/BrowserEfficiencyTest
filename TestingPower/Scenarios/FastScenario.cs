@@ -37,7 +37,7 @@ namespace TestingPower
     /// <summary>
     /// This scenario is designed to end quickly, and is for testing
     /// </summary>
-    class FastScenario : Scenario
+    internal class FastScenario : Scenario
     {
         public FastScenario()
         {

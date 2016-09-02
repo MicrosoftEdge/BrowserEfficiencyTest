@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WpaProfileContainer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2" xmlns="http://tempuri.org/SerializableElement.xsd">
+  <Content xsi:type="WpaProfile2">
+    <Sessions>
+      <Session Index="0">
+        <FileReferences />
+      </Session>
+    </Sessions>
+    <Views>
+      <View Guid="85eea065-d0a0-4414-944c-4f7de70d705b" Title="Analysis" IsVisible="true">
+        <Graphs>
+          <Graph Guid="21214383-88f8-4603-9eac-2a6422756b11" LayoutStyle="DataTable" Color="#FF5FC7C7" GraphHeight="125" IsMinimized="false" IsShown="true" IsExpanded="true">
+            <Preset Name="Throughput over Time" BarGraphIntervalCount="50" AggregationOverTime="Rate" IsThreadActivityTable="false" GraphColumnCount="11" KeyColumnCount="3" LeftFrozenColumnCount="8" RightFrozenColumnCount="10" InitialFilterQuery="([Event Type]:=Send OR [Event Type]:=Receive OR [Event Type]:=Retransmit)" InitialFilterShouldKeep="true" GraphFilterColumnGuid="b1ff4098-d080-48a4-ab78-5ebf571e6cf0" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+              <MetadataEntries>
+                <MetadataEntry Guid="869dba43-0f44-4572-9994-29d61aa43280" Name="Time" ColumnMetadata="StartTime" />
+              </MetadataEntries>
+              <HighlightEntries />
+              <Columns>
+                <Column Guid="2ccdf1ec-969a-4b64-949d-f128d64bce6e" Name="Event SubType" AggregationMode="UniqueCount" SortPriority="1" Width="120" IsVisible="false" />
+                <Column Guid="aa0b9d88-5a52-4781-93cb-617fe9171bfb" Name="Event Process" SortPriority="2" Width="140" IsVisible="false" />
+                <Column Guid="b1ff4098-d080-48a4-ab78-5ebf571e6cf0" Name="Connection Id" SortPriority="3" Width="120" IsVisible="false" />
+                <Column Guid="bfdd92db-9783-49a1-9627-3562e237ea57" Name="Owning Process" SortPriority="4" Width="365" IsVisible="true" />
+                <Column Guid="399c8e56-3484-493e-83c3-8a21acc24601" Name="Owning Process Name" SortPriority="0" Width="150" IsVisible="true" />
+                <Column Guid="aabbf5f7-fc6a-4ff6-af78-0d90f340968f" Name="Event Type" SortPriority="5" Width="120" IsVisible="true" />
+                <Column Guid="08b8fe6b-4261-494a-9a03-b71f0c7c954e" Name="Protocol" SortPriority="6" Width="120" IsVisible="true" />
+                <Column Guid="5d5c7263-fce9-41ad-9ea3-4c5d5962a53e" Name="Duration" SortPriority="8" Width="120" IsVisible="false" />
+                <Column Guid="ae3f2bb9-4d8e-4d72-8536-b42ecfca6b93" Name="Bytes" AggregationMode="Sum" SortPriority="20" Width="120" IsVisible="true" />
+              </Columns>
+            </Preset>
+          </Graph>
+        </Graphs>
+        <SessionIndices>
+          <SessionIndex>0</SessionIndex>
+        </SessionIndices>
+      </View>
+    </Views>
+    <ModifiedGraphs>
+      <GraphSchema Guid="21214383-88f8-4603-9eac-2a6422756b11">
+        <ModifiedPresets />
+        <PersistedPresets>
+          <Preset Name="Throughput over Time" BarGraphIntervalCount="50" AggregationOverTime="Rate" IsThreadActivityTable="false" GraphColumnCount="11" KeyColumnCount="3" LeftFrozenColumnCount="8" RightFrozenColumnCount="10" InitialFilterQuery="([Event Type]:=Send OR [Event Type]:=Receive OR [Event Type]:=Retransmit)" InitialFilterShouldKeep="true" GraphFilterColumnGuid="b1ff4098-d080-48a4-ab78-5ebf571e6cf0" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="869dba43-0f44-4572-9994-29d61aa43280" Name="Time" ColumnMetadata="StartTime" />
+            </MetadataEntries>
+            <HighlightEntries />
+            <Columns>
+              <Column Guid="2ccdf1ec-969a-4b64-949d-f128d64bce6e" Name="Event SubType" AggregationMode="UniqueCount" SortPriority="1" Width="120" IsVisible="false" />
+              <Column Guid="aa0b9d88-5a52-4781-93cb-617fe9171bfb" Name="Event Process" SortPriority="2" Width="140" IsVisible="false" />
+              <Column Guid="b1ff4098-d080-48a4-ab78-5ebf571e6cf0" Name="Connection Id" SortPriority="3" Width="120" IsVisible="false" />
+              <Column Guid="bfdd92db-9783-49a1-9627-3562e237ea57" Name="Owning Process" SortPriority="4" Width="365" IsVisible="true" />
+              <Column Guid="399c8e56-3484-493e-83c3-8a21acc24601" Name="Owning Process Name" SortPriority="0" Width="150" IsVisible="true" />
+              <Column Guid="aabbf5f7-fc6a-4ff6-af78-0d90f340968f" Name="Event Type" SortPriority="5" Width="120" IsVisible="true" />
+              <Column Guid="08b8fe6b-4261-494a-9a03-b71f0c7c954e" Name="Protocol" SortPriority="6" Width="120" IsVisible="true" />
+              <Column Guid="5d5c7263-fce9-41ad-9ea3-4c5d5962a53e" Name="Duration" SortPriority="8" Width="120" IsVisible="false" />
+              <Column Guid="ae3f2bb9-4d8e-4d72-8536-b42ecfca6b93" Name="Bytes" AggregationMode="Sum" SortPriority="20" Width="120" IsVisible="true" />
+            </Columns>
+          </Preset>
+        </PersistedPresets>
+      </GraphSchema>
+    </ModifiedGraphs>
+  </Content>
+</WpaProfileContainer>

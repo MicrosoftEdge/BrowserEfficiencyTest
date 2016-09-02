@@ -42,45 +42,11 @@ namespace TestingPower
 
             scenarioRunner.Run();
 
-            ProcessEnergyData(arguments);
-        }
-
-        /// <summary>
-        /// Extracts the E3 Energy data from ETL files created during the test, aggregates the data and saves it to csv files.
-        /// </summary>
-        private static void ProcessEnergyData(Arguments args)
-        {
-            if (args.UsingTraceController)
+            if (arguments.UsingTraceController)
             {
-                IEnumerable<string> etlFiles = null;
-                AutomateXPerf xPerf = new AutomateXPerf();
-                EnergyDataProcessor energyProcessor = new EnergyDataProcessor();
+                PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
 
-                Console.WriteLine("[{0}] - Starting processing of energy data. -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-                etlFiles = Directory.EnumerateFiles(args.EtlPath, "*.etl");
-
-                if (etlFiles.Count() == 0)
-                {
-                    Console.WriteLine("No ETL files were found! Unable to process E3 Energy data.");
-                    return;
-                }
-
-                foreach (var etl in etlFiles)
-                {
-                    string csvFileName = Path.ChangeExtension(etl, ".csv");
-
-                    xPerf.DumpEtlEventsToFile(etl, csvFileName);
-
-                    energyProcessor.ProcessEnergyData(csvFileName);
-                }
-
-                // TODO: Refactor EnergyDatProcessor so that this method call is not needed.
-                energyProcessor.ProcessDataByEtl();
-
-                energyProcessor.SaveProcessedDataToFiles(args.EtlPath);
-
-                Console.WriteLine("[{0}] - Completed processing of energy data. -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                perfProcessor.Execute(arguments.EtlPath);
             }
         }
     }

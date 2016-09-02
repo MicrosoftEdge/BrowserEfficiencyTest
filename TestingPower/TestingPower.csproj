@@ -41,6 +41,10 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PerfProcessor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PerfProcessor\bin\Debug\PerfProcessor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -61,13 +65,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
-    <Compile Include="AutomateXPerf.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />
-    <Compile Include="E3Events.cs" />
-    <Compile Include="EnergyDataProcessor.cs" />
     <Compile Include="RemoteWebDriverExtension.cs" />
     <Compile Include="ScenarioRunner.cs" />
     <Compile Include="Scenarios\CnnTopStory.cs" />
@@ -95,6 +96,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(SolutionDir)\PerfProcessor\$(OutDir)\MeasureSetDefinitionAssets\*.*" "$(TargetDir)\MeasureSetDefinitionAssets\*"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -33,7 +33,6 @@ using System.Threading;
 
 namespace TestingPower
 {
-
     internal class YahooNews : Scenario
     {
         public YahooNews()
@@ -61,7 +60,6 @@ namespace TestingPower
             IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
             articleLink.SendKeys(String.Empty);
             articleLink.SendKeys(Keys.Enter);
-
         }
     }
 }

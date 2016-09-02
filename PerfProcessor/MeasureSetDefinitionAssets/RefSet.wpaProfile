@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WpaProfileContainer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2" xmlns="http://tempuri.org/SerializableElement.xsd">
+  <Content xsi:type="WpaProfile2">
+    <Sessions>
+      <Session Index="0">
+        <FileReferences />
+      </Session>
+    </Sessions>
+    <Views>
+      <View Guid="2c59d8a5-6be8-4b2e-8a9e-8e7698ece9f8" Title="Analysis" IsVisible="true">
+        <Graphs>
+          <Graph Guid="bc4f0890-4a76-4fe7-b014-6ae70677f8f5" LayoutStyle="DataTable" Color="#FF0000FF" GraphHeight="125" IsMinimized="false" IsShown="true" IsExpanded="false">
+            <Preset Name="RefSet_without_PagePool" BarGraphIntervalCount="50" AggregationOverTime="OutstandingPeak" IsThreadActivityTable="false" GraphColumnCount="10" KeyColumnCount="7" LeftFrozenColumnCount="8" RightFrozenColumnCount="9" InitialFilterQuery="[Impact Type]:=Impacting AND [Page Category]:&lt;&gt;PagedPool" InitialFilterShouldKeep="true" InitialExpansionQuery="[Series Name]:=&quot;Allocation Stack Tag&quot; OR [Series Name]:=&quot;Category Class&quot; OR [Series Name]:=&quot;Process Name&quot;" GraphFilterColumnGuid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+              <MetadataEntries>
+                <MetadataEntry Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" ColumnMetadata="StartTime" />
+                <MetadataEntry Guid="fc96be34-cd0d-4613-98e9-fcf128170c6f" Name="Release Time (Mark Adjusted)" ColumnMetadata="EndTime" />
+              </MetadataEntries>
+              <HighlightEntries>
+                <HighlightEntry StartTimeColumnGuid="953f3733-3f8e-469f-b6d7-6e37898d1a08" StartTimeColumnName="Mark End Time" HighlightColor="#FFFF0000" />
+              </HighlightEntries>
+              <Columns>
+                <Column Guid="c80413d0-4bd8-4396-98d5-19e083cda74b" Name="Process" SortPriority="0" Width="263" IsVisible="true" />
+                <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="0" Width="150" IsVisible="true" />
+                <Column Guid="16415fd3-fb10-407a-80e4-fad3232b998f" Name="Category Class" SortPriority="2" Width="120" IsVisible="true" />
+                <Column Guid="accde649-ca35-462e-ac5d-fd751bcd3ff5" Name="Page Category" SortPriority="3" Width="127" IsVisible="true" />
+                <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="4" Width="150" IsVisible="false" />
+                <Column Guid="ab6e4fb4-2574-4171-be05-98c981c70f70" Name="Allocation Stack" SortPriority="5" Width="160" IsVisible="true">
+                  <StackOptionsParameter Mode="StackTag" />
+                </Column>
+                <Column Guid="4fd7469d-d529-4fd3-9c27-57d4cb81b36e" Name="Impact Type" SortPriority="6" Width="136" IsVisible="true" />
+                <Column Guid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" Name="Impact Size w/o Offer (System View)" AggregationMode="Sum" SortPriority="7" Width="258" IsVisible="true" />
+              </Columns>
+            </Preset>
+          </Graph>
+        </Graphs>
+        <SessionIndices>
+          <SessionIndex>0</SessionIndex>
+        </SessionIndices>
+      </View>
+    </Views>
+    <ModifiedGraphs>
+      <GraphSchema Guid="bc4f0890-4a76-4fe7-b014-6ae70677f8f5">
+        <ModifiedPresets>
+          <Preset Name="browser_impacting_dynamic_without_pagedpool" BarGraphIntervalCount="50" AggregationOverTime="OutstandingPeak" IsThreadActivityTable="false" GraphColumnCount="9" KeyColumnCount="6" LeftFrozenColumnCount="7" RightFrozenColumnCount="8" InitialFilterQuery="[Impact Type]:=Impacting AND [Category Class]:=Dynamic AND [Page Category]:&lt;&gt;PagedPool AND ([Process Name]:~=&quot;iexplore.exe&quot; OR [Process Name]:~=&quot;spartan.exe&quot; OR [Process Name]:~=&quot;spartan_edge.exe&quot; OR [Process Name]:~=&quot;spartan_legacy.exe&quot; OR [Process Name]:~=&quot;browser_broker.exe&quot; OR [Process Name]:~=&quot;webcache.exe&quot; OR [Process Name]:~=&quot;microsoftedge.exe&quot; OR [Process Name]:~=&quot;microsoftedgecp.exe&quot;)" InitialFilterShouldKeep="true" InitialExpansionQuery="[Series Name]:=&quot;Allocation Stack Tag&quot;" GraphFilterColumnGuid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" ColumnMetadata="StartTime" />
+              <MetadataEntry Guid="fc96be34-cd0d-4613-98e9-fcf128170c6f" Name="Release Time (Mark Adjusted)" ColumnMetadata="EndTime" />
+            </MetadataEntries>
+            <HighlightEntries>
+              <HighlightEntry StartTimeColumnGuid="953f3733-3f8e-469f-b6d7-6e37898d1a08" StartTimeColumnName="Mark End Time" HighlightColor="#FFFF0000" />
+            </HighlightEntries>
+            <Columns>
+              <Column Guid="c80413d0-4bd8-4396-98d5-19e083cda74b" Name="Process" SortPriority="4" Width="158" IsVisible="true" />
+              <Column Guid="16415fd3-fb10-407a-80e4-fad3232b998f" Name="Category Class" SortPriority="2" Width="120" IsVisible="true" />
+              <Column Guid="accde649-ca35-462e-ac5d-fd751bcd3ff5" Name="Page Category" SortPriority="3" Width="127" IsVisible="true" />
+              <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="1" Width="150" IsVisible="false" />
+              <Column Guid="ab6e4fb4-2574-4171-be05-98c981c70f70" Name="Allocation Stack" SortPriority="5" Width="160" IsVisible="true">
+                <StackOptionsParameter Mode="StackTag" />
+              </Column>
+              <Column Guid="4fd7469d-d529-4fd3-9c27-57d4cb81b36e" Name="Impact Type" SortPriority="6" Width="136" IsVisible="true" />
+              <Column Guid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" Name="Impact Size w/o Offer (System View)" AggregationMode="Sum" SortOrder="Descending" SortPriority="0" Width="120" IsVisible="true" />
+            </Columns>
+          </Preset>
+          <Preset Name="RefSet_without_PagePool" BarGraphIntervalCount="50" AggregationOverTime="OutstandingPeak" IsThreadActivityTable="false" GraphColumnCount="10" KeyColumnCount="7" LeftFrozenColumnCount="8" RightFrozenColumnCount="9" InitialFilterQuery="[Impact Type]:=Impacting AND [Page Category]:&lt;&gt;PagedPool" InitialFilterShouldKeep="true" InitialExpansionQuery="[Series Name]:=&quot;Allocation Stack Tag&quot; OR [Series Name]:=&quot;Category Class&quot; OR [Series Name]:=&quot;Process Name&quot;" GraphFilterColumnGuid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" ColumnMetadata="StartTime" />
+              <MetadataEntry Guid="fc96be34-cd0d-4613-98e9-fcf128170c6f" Name="Release Time (Mark Adjusted)" ColumnMetadata="EndTime" />
+            </MetadataEntries>
+            <HighlightEntries>
+              <HighlightEntry StartTimeColumnGuid="953f3733-3f8e-469f-b6d7-6e37898d1a08" HighlightColor="#FFFF0000" />
+            </HighlightEntries>
+            <Columns>
+              <Column Guid="c80413d0-4bd8-4396-98d5-19e083cda74b" Name="Process" SortPriority="0" Width="263" IsVisible="true" />
+              <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="0" Width="150" IsVisible="true" />
+              <Column Guid="16415fd3-fb10-407a-80e4-fad3232b998f" Name="Category Class" SortPriority="2" Width="120" IsVisible="true" />
+              <Column Guid="accde649-ca35-462e-ac5d-fd751bcd3ff5" Name="Page Category" SortPriority="3" Width="127" IsVisible="true" />
+              <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="4" Width="150" IsVisible="false" />
+              <Column Guid="ab6e4fb4-2574-4171-be05-98c981c70f70" Name="Allocation Stack Tag" SortPriority="5" Width="160" IsVisible="true">
+                <StackOptionsParameter Mode="StackTag" />
+              </Column>
+              <Column Guid="4fd7469d-d529-4fd3-9c27-57d4cb81b36e" Name="Impact Type" SortPriority="6" Width="136" IsVisible="true" />
+              <Column Guid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" Name="Impact Size w/o Offer (System View)" AggregationMode="Sum" SortPriority="7" Width="258" IsVisible="true" />
+            </Columns>
+          </Preset>
+        </ModifiedPresets>
+        <PersistedPresets>
+          <Preset Name="Outstanding Size by Process" BarGraphIntervalCount="50" AggregationOverTime="OutstandingPeak" IsThreadActivityTable="false" GraphColumnCount="41" KeyColumnCount="7" LeftFrozenColumnCount="37" RightFrozenColumnCount="38" InitialFilterShouldKeep="true" GraphFilterColumnGuid="843b7f8e-51a4-48c7-a6ae-b93064aa803a" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" ColumnMetadata="StartTime" />
+              <MetadataEntry Guid="fc96be34-cd0d-4613-98e9-fcf128170c6f" Name="Release Time (Mark Adjusted)" ColumnMetadata="EndTime" />
+            </MetadataEntries>
+            <HighlightEntries>
+              <HighlightEntry StartTimeColumnGuid="953f3733-3f8e-469f-b6d7-6e37898d1a08" HighlightQuery="LastMarkEvent:=True" HighlightColor="#FFFF0000" />
+            </HighlightEntries>
+            <Columns>
+              <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="1" Width="150" IsVisible="false" />
+              <Column Guid="7d74163f-ec35-426c-a37b-f2961a0b2486" Name="Mark Name" SortPriority="2" Width="120" IsVisible="false" />
+              <Column Guid="ce56c43b-5624-4640-9b81-f6ded75235ba" Name="Access/Release" SortPriority="3" Width="80" IsVisible="false" />
+              <Column Guid="ab6e4fb4-2574-4171-be05-98c981c70f70" Name="Allocation Stack" SortPriority="4" Width="160" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="04839862-83e0-4b19-a0fb-afe212ac7342" Name="Impacting Stack" SortPriority="5" Width="335" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="fa2db657-c240-4ab8-8e21-38d295678761" Name="Path Tree" SortPriority="6" Width="200" IsVisible="false" />
+              <Column Guid="cbbf9e85-fe8b-4fe2-b6c6-cb86d2c8b484" Name="Page Count w/o Offer (Process View)" AggregationMode="Sum" SortPriority="7" Width="120" IsVisible="false" />
+              <Column Guid="c80413d0-4bd8-4396-98d5-19e083cda74b" Name="Process" SortOrder="Ascending" SortPriority="0" Width="243" IsVisible="true" />
+              <Column Guid="4fd7469d-d529-4fd3-9c27-57d4cb81b36e" Name="Impact Type" SortPriority="8" Width="98" IsVisible="true" />
+              <Column Guid="16415fd3-fb10-407a-80e4-fad3232b998f" Name="Category Class" SortPriority="9" Width="96" IsVisible="true" />
+              <Column Guid="accde649-ca35-462e-ac5d-fd751bcd3ff5" Name="Page Category" SortPriority="10" Width="119" IsVisible="true" />
+              <Column Guid="16415fd3-fb10-407a-80e4-fad3232b998f" Name="Category Class" SortPriority="11" Width="120" IsVisible="true" />
+              <Column Guid="6cae6dc0-c9e5-4ebc-a220-682ad95cd549" Name="Description" SortPriority="12" Width="203" IsVisible="true" />
+              <Column Guid="9b830232-0a6c-40e3-bd64-36796bb49e1a" Name="Type" SortPriority="13" Width="40" IsVisible="true" />
+              <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="14" Width="80" IsVisible="false" />
+              <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="15" Width="80" IsVisible="false" />
+              <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="16" Width="80" IsVisible="false" />
+              <Column Guid="4794a096-1db2-4741-ada3-ca8fe711d838" Name="Access Priority" SortPriority="17" Width="50" IsVisible="false" />
+              <Column Guid="78434f28-83f7-4515-99d1-ac9e0a1c316e" Name="Address/Offset/Pfn" SortPriority="18" Width="120" CellFormat="x" IsVisible="false" />
+              <Column Guid="1524fd1c-d9dd-4818-9f8a-6e0d1f65eef2" Name="Allocation Time" SortPriority="19" Width="120" IsVisible="false" />
+              <Column Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" SortPriority="20" Width="120" IsVisible="true" />
+              <Column Guid="84a0c97e-a447-4a1b-baa6-f043fd6e3e12" Name="Release Time" SortPriority="21" Width="120" IsVisible="true" />
+              <Column Guid="0e19279f-fac3-464d-9da3-9a342fa6d0c6" Name="LastMarkEvent" SortPriority="22" Width="200" IsVisible="false" />
+              <Column Guid="5311541e-c7ab-47a4-95e2-239f294fb328" Name="Session Key" SortPriority="23" Width="120" IsVisible="false" />
+              <Column Guid="b3e10bb2-1108-4ae5-acbf-2263c9096398" Name="Mapped Address (Shareable Page)" SortPriority="24" Width="120" CellFormat="x" IsVisible="false" />
+              <Column Guid="5584255e-9f56-455b-af0a-d33c83cdd822" Name="Current Process (Access Context)" SortPriority="25" Width="140" IsVisible="false" />
+              <Column Guid="070dba84-4113-492b-8c43-135ccfcb4586" Name="Current Process (Release Context)" SortPriority="26" Width="140" IsVisible="false" />
+              <Column Guid="93968fd2-fde9-4f69-97b5-3f69d41e7c66" Name="Reaccess" SortPriority="27" Width="162" IsVisible="false" />
+              <Column Guid="1b50dc84-4a5d-47a1-b86a-2dd012394a8f" Name="Page Count w/o Offer (Raw)" AggregationMode="Sum" SortPriority="28" Width="120" IsVisible="false" />
+              <Column Guid="35fdd1b5-9f50-4230-8137-7669dfa71578" Name="Accessing Thread ID" SortPriority="29" Width="50" IsVisible="false" />
+              <Column Guid="ed3b1ef2-0a4b-4527-bea0-238f01f95e8d" Name="Releasing Thread ID" SortPriority="30" Width="50" IsVisible="false" />
+              <Column Guid="66f6bb0a-7c9c-4027-b818-88d4300d96c3" Name="Access Stack" SortPriority="31" Width="253" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="655ad3eb-fd75-4a49-b5ed-a32727a50e47" Name="Release Stack" SortPriority="32" Width="160" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="4dd4e7a4-b9a6-4ae0-9254-6a7368ebb357" Name="Access Reason" SortPriority="33" Width="120" IsVisible="false" />
+              <Column Guid="0af079e8-0d0b-480a-a30a-c1e56eb53a7f" Name="Release Reason" SortPriority="34" Width="120" IsVisible="false" />
+              <Column Guid="953f3733-3f8e-469f-b6d7-6e37898d1a08" Name="Mark End Time" SortPriority="35" Width="97" IsVisible="true" />
+              <Column Guid="daea3e94-6a23-42cd-83fc-72fe695018b5" Name="Impact Size (Process View)" SortPriority="36" Width="165" CellFormat="N3" IsVisible="true" />
+              <Column Guid="e2184e32-2380-46c0-a3cf-b26c4bf06910" Name="Size (Process View)" SortPriority="37" Width="120" CellFormat="N3" IsVisible="true" />
+            </Columns>
+          </Preset>
+          <Preset Name="Outstanding Size by Category" BarGraphIntervalCount="50" AggregationOverTime="OutstandingPeak" IsThreadActivityTable="false" GraphColumnCount="39" KeyColumnCount="13" LeftFrozenColumnCount="36" RightFrozenColumnCount="37" InitialFilterQuery="[Impact Type]:=Impacting AND [Page Category]:&lt;&gt;PagedPool" InitialFilterShouldKeep="true" GraphFilterColumnGuid="677b9c86-c09c-49d8-847f-fda900b7c50c" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" ColumnMetadata="StartTime" />
+              <MetadataEntry Guid="fc96be34-cd0d-4613-98e9-fcf128170c6f" Name="Release Time (Mark Adjusted)" ColumnMetadata="EndTime" />
+            </MetadataEntries>
+            <HighlightEntries>
+              <HighlightEntry StartTimeColumnGuid="953f3733-3f8e-469f-b6d7-6e37898d1a08" HighlightQuery="LastMarkEvent:=True" HighlightColor="#FFFF0000" />
+            </HighlightEntries>
+            <Columns>
+              <Column Guid="16415fd3-fb10-407a-80e4-fad3232b998f" Name="Category Class" SortPriority="1" Width="120" IsVisible="true" />
+              <Column Guid="c80413d0-4bd8-4396-98d5-19e083cda74b" Name="Process" SortOrder="Ascending" SortPriority="0" Width="158" IsVisible="true" />
+              <Column Guid="accde649-ca35-462e-ac5d-fd751bcd3ff5" Name="Page Category" SortPriority="2" Width="179" IsVisible="true" />
+              <Column Guid="4fd7469d-d529-4fd3-9c27-57d4cb81b36e" Name="Impact Type" SortPriority="3" Width="131" IsVisible="true" />
+              <Column Guid="7d74163f-ec35-426c-a37b-f2961a0b2486" Name="Mark Name" SortPriority="4" Width="120" IsVisible="false" />
+              <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="5" Width="150" IsVisible="false" />
+              <Column Guid="ce56c43b-5624-4640-9b81-f6ded75235ba" Name="Access/Release" SortPriority="6" Width="80" IsVisible="false" />
+              <Column Guid="ab6e4fb4-2574-4171-be05-98c981c70f70" Name="Allocation Stack" SortPriority="7" Width="160" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="04839862-83e0-4b19-a0fb-afe212ac7342" Name="Impacting Stack" SortPriority="8" Width="335" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="fa2db657-c240-4ab8-8e21-38d295678761" Name="Path Tree" SortPriority="9" Width="200" IsVisible="false" />
+              <Column Guid="9b830232-0a6c-40e3-bd64-36796bb49e1a" Name="Type" SortPriority="10" Width="138" IsVisible="true" />
+              <Column Guid="6cae6dc0-c9e5-4ebc-a220-682ad95cd549" Name="Description" SortPriority="11" Width="203" IsVisible="true" />
+              <Column Guid="677b9c86-c09c-49d8-847f-fda900b7c50c" Name="Page Count w/o Offer (System View)" AggregationMode="Sum" SortPriority="12" Width="120" IsVisible="false" />
+              <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="13" Width="80" IsVisible="false" />
+              <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="14" Width="80" IsVisible="false" />
+              <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="15" Width="80" IsVisible="false" />
+              <Column Guid="4794a096-1db2-4741-ada3-ca8fe711d838" Name="Access Priority" SortPriority="16" Width="50" IsVisible="false" />
+              <Column Guid="78434f28-83f7-4515-99d1-ac9e0a1c316e" Name="Address/Offset/Pfn" SortPriority="17" Width="120" CellFormat="x" IsVisible="false" />
+              <Column Guid="1524fd1c-d9dd-4818-9f8a-6e0d1f65eef2" Name="Allocation Time" SortPriority="18" Width="120" IsVisible="false" />
+              <Column Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" SortPriority="19" Width="120" IsVisible="false" />
+              <Column Guid="84a0c97e-a447-4a1b-baa6-f043fd6e3e12" Name="Release Time" SortPriority="20" Width="120" IsVisible="false" />
+              <Column Guid="0e19279f-fac3-464d-9da3-9a342fa6d0c6" Name="LastMarkEvent" SortPriority="21" Width="200" IsVisible="false" />
+              <Column Guid="5311541e-c7ab-47a4-95e2-239f294fb328" Name="Session Key" SortPriority="22" Width="120" IsVisible="false" />
+              <Column Guid="b3e10bb2-1108-4ae5-acbf-2263c9096398" Name="Mapped Address (Shareable Page)" SortPriority="23" Width="120" CellFormat="x" IsVisible="false" />
+              <Column Guid="66f6bb0a-7c9c-4027-b818-88d4300d96c3" Name="Access Stack" SortPriority="24" Width="253" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="655ad3eb-fd75-4a49-b5ed-a32727a50e47" Name="Release Stack" SortPriority="25" Width="160" IsVisible="false">
+                <StackOptionsParameter />
+              </Column>
+              <Column Guid="5584255e-9f56-455b-af0a-d33c83cdd822" Name="Current Process (Access Context)" SortPriority="26" Width="140" IsVisible="false" />
+              <Column Guid="070dba84-4113-492b-8c43-135ccfcb4586" Name="Current Process (Release Context)" SortPriority="27" Width="140" IsVisible="false" />
+              <Column Guid="93968fd2-fde9-4f69-97b5-3f69d41e7c66" Name="Reaccess" SortPriority="28" Width="162" IsVisible="false" />
+              <Column Guid="1b50dc84-4a5d-47a1-b86a-2dd012394a8f" Name="Page Count w/o Offer (Raw)" AggregationMode="Sum" SortPriority="29" Width="120" IsVisible="false" />
+              <Column Guid="35fdd1b5-9f50-4230-8137-7669dfa71578" Name="Accessing Thread ID" SortPriority="30" Width="50" IsVisible="false" />
+              <Column Guid="ed3b1ef2-0a4b-4527-bea0-238f01f95e8d" Name="Releasing Thread ID" SortPriority="31" Width="50" IsVisible="false" />
+              <Column Guid="4dd4e7a4-b9a6-4ae0-9254-6a7368ebb357" Name="Access Reason" SortPriority="32" Width="120" IsVisible="false" />
+              <Column Guid="0af079e8-0d0b-480a-a30a-c1e56eb53a7f" Name="Release Reason" SortPriority="33" Width="120" IsVisible="false" />
+              <Column Guid="953f3733-3f8e-469f-b6d7-6e37898d1a08" Name="Mark End Time" SortPriority="34" Width="93" IsVisible="true" />
+              <Column Guid="8554acf2-d92b-40c0-9d1c-cb038776cc45" Name="Impact Size (System View)" AggregationMode="Sum" SortPriority="35" Width="120" CellFormat="N3" IsVisible="true" />
+              <Column Guid="5788391e-cb6b-44fd-a5a7-1c5124d1265a" Name="Size (System View)" AggregationMode="Sum" SortPriority="36" Width="120" CellFormat="N3" IsVisible="true" />
+            </Columns>
+          </Preset>
+          <Preset Name="browser_impacting_dynamic" BarGraphIntervalCount="50" AggregationOverTime="OutstandingPeak" IsThreadActivityTable="false" GraphColumnCount="9" KeyColumnCount="6" LeftFrozenColumnCount="7" RightFrozenColumnCount="8" InitialFilterQuery="[Impact Type]:=Impacting AND [Category Class]:=Dynamic AND [Page Category]:=PagedPool AND ([Process Name]:~=&quot;iexplore.exe&quot; OR [Process Name]:~=&quot;spartan.exe&quot; OR [Process Name]:~=&quot;spartan_edge.exe&quot; OR [Process Name]:~=&quot;spartan_legacy.exe&quot; OR [Process Name]:~=&quot;browser_broker.exe&quot; OR [Process Name]:~=&quot;webcache.exe&quot; OR [Process Name]:~=&quot;microsoftedge.exe&quot; OR [Process Name]:~=&quot;microsoftedgecp.exe&quot;)" InitialFilterShouldKeep="true" InitialExpansionQuery="[Series Name]:=&quot;Allocation Stack Tag&quot;" GraphFilterColumnGuid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="25731f8c-96b6-4dd4-b279-451bee5b38a2" Name="Access Time" ColumnMetadata="StartTime" />
+              <MetadataEntry Guid="fc96be34-cd0d-4613-98e9-fcf128170c6f" Name="Release Time (Mark Adjusted)" ColumnMetadata="EndTime" />
+            </MetadataEntries>
+            <HighlightEntries>
+              <HighlightEntry StartTimeColumnGuid="953f3733-3f8e-469f-b6d7-6e37898d1a08" HighlightColor="#FFFF0000" />
+            </HighlightEntries>
+            <Columns>
+              <Column Guid="c80413d0-4bd8-4396-98d5-19e083cda74b" Name="Process" SortPriority="4" Width="158" IsVisible="true" />
+              <Column Guid="16415fd3-fb10-407a-80e4-fad3232b998f" Name="Category Class" SortPriority="2" Width="120" IsVisible="true" />
+              <Column Guid="accde649-ca35-462e-ac5d-fd751bcd3ff5" Name="Page Category" SortPriority="3" Width="127" IsVisible="true" />
+              <Column Guid="a9a21162-25a5-4da7-ba03-f4f4f5f9f580" Name="Process Name" SortPriority="1" Width="150" IsVisible="false" />
+              <Column Guid="ab6e4fb4-2574-4171-be05-98c981c70f70" Name="Allocation Stack Tag" SortPriority="5" Width="160" IsVisible="true">
+                <StackOptionsParameter Mode="StackTag" />
+              </Column>
+              <Column Guid="4fd7469d-d529-4fd3-9c27-57d4cb81b36e" Name="Impact Type" SortPriority="6" Width="136" IsVisible="true" />
+              <Column Guid="fa54c0af-4d3e-4590-bcda-e8ba4f7cd490" Name="Impact Size w/o Offer (System View)" AggregationMode="Sum" SortOrder="Descending" SortPriority="0" Width="120" IsVisible="true" />
+            </Columns>
+          </Preset>
+        </PersistedPresets>
+      </GraphSchema>
+    </ModifiedGraphs>
+  </Content>
+</WpaProfileContainer>

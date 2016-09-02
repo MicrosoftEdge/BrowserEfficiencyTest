@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WpaProfileContainer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2" xmlns="http://tempuri.org/SerializableElement.xsd">
+  <Content xsi:type="WpaProfile2">
+    <Sessions>
+      <Session Index="0">
+        <FileReferences />
+      </Session>
+    </Sessions>
+    <Views>
+      <View Guid="59846c99-da9f-4bf1-8684-6aa6e699451e" Title="Analysis" IsVisible="true">
+        <Graphs>
+          <Graph Guid="4237fcb5-808e-4868-ae15-96772fb57e41" LayoutStyle="DataTable" Color="#FFFF0000" GraphHeight="125" IsMinimized="false" IsShown="true" IsExpanded="false" >
+            <Preset Name="CPU_UsageTime_ByProcess" GraphChartType="StackedBars" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="13" KeyColumnCount="4" LeftFrozenColumnCount="5" RightFrozenColumnCount="12" InitialFilterShouldKeep="true" InitialSelectionQuery="([Series Name]:=&quot;Process&quot; AND NOT ([Process]:=&quot;Idle (0)&quot;))" GraphFilterTopValue="0" GraphFilterThresholdValue="0" >
+              <MetadataEntries>
+                <MetadataEntry Guid="06a17026-935e-4cc7-82fd-2dd99aca31e6" Name="Thread ID" ColumnMetadata="EndThreadId" />
+                <MetadataEntry Guid="3146e1c7-4112-45b2-bd36-c7c567c944ef" Name="Switch-In Time" ColumnMetadata="StartTime" />
+                <MetadataEntry Guid="f54f983e-dd2d-4a72-bf45-756c1199b67c" Name="Time Switched-In" ColumnMetadata="Duration" />
+              </MetadataEntries>
+              <HighlightEntries />
+              <Columns>
+                <Column Guid="1e8cbc23-093a-4d49-a8e8-c4ed7951e254" Name="Process" SortOrder="Ascending" SortPriority="0" Width="306" IsVisible="true" />
+                <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="1" Width="230" IsVisible="false" />
+                <Column Guid="f1f58603-c0ce-4f4c-a9c2-4335e04021d2" Name="Process Name" SortPriority="2" Width="180" IsVisible="false" />
+                <Column Guid="06a17026-935e-4cc7-82fd-2dd99aca31e6" Name="Thread ID" SortPriority="3" TextAlignment="Right" Width="80" IsVisible="false" />
+                <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="4" Width="80" IsVisible="false" />
+                <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="5" Width="80" IsVisible="false" />
+                <Column Guid="3146e1c7-4112-45b2-bd36-c7c567c944ef" Name="Switch-In Time" SortPriority="6" TextAlignment="Right" Width="120" IsVisible="false" />
+                <Column Guid="0686a137-1e89-474f-86cc-bd7e94361d92" Name="CPU" SortPriority="7" TextAlignment="Right" Width="50" IsVisible="false" />
+                <Column Guid="f54f983e-dd2d-4a72-bf45-756c1199b67c" Name="Time Switched-In" AggregationMode="Sum" SortPriority="8" TextAlignment="Right" Width="100" IsVisible="false" />
+                <Column Guid="002c66b5-fd27-4792-bcb6-b897cceb150f" Name="CPU Usage (in view)" AggregationMode="Sum" SortPriority="9" TextAlignment="Right" Width="252" IsVisible="true" />
+                <Column Guid="423a4686-a544-4d2a-9aaf-43575b97a9c4" Name="% CPU Usage" AggregationMode="Sum" SortPriority="10" TextAlignment="Right" Width="100" IsVisible="true" />
+              </Columns>
+            </Preset>
+          </Graph>
+        </Graphs>
+        <SessionIndices>
+          <SessionIndex>0</SessionIndex>
+        </SessionIndices>
+      </View>
+    </Views>
+    <ModifiedGraphs>
+      <GraphSchema Guid="4237fcb5-808e-4868-ae15-96772fb57e41" >
+        <ModifiedPresets>
+          <Preset Name="CPU_UsageTime_ByProcess" GraphChartType="StackedBars" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="13" KeyColumnCount="4" LeftFrozenColumnCount="5" RightFrozenColumnCount="12" InitialFilterShouldKeep="true" InitialSelectionQuery="([Series Name]:=&quot;Process&quot; AND NOT ([Process]:=&quot;Idle (0)&quot;))" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="06a17026-935e-4cc7-82fd-2dd99aca31e6" Name="Thread ID" ColumnMetadata="EndThreadId" />
+              <MetadataEntry Guid="3146e1c7-4112-45b2-bd36-c7c567c944ef" Name="Switch-In Time" ColumnMetadata="StartTime" />
+              <MetadataEntry Guid="f54f983e-dd2d-4a72-bf45-756c1199b67c" Name="Time Switched-In" ColumnMetadata="Duration" />
+            </MetadataEntries>
+            <HighlightEntries />
+            <Columns>
+              <Column Guid="1e8cbc23-093a-4d49-a8e8-c4ed7951e254" Name="Process" SortOrder="Ascending" SortPriority="0" Width="306" IsVisible="true" />
+              <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="1" Width="230" IsVisible="false" />
+              <Column Guid="f1f58603-c0ce-4f4c-a9c2-4335e04021d2" Name="Process Name" SortPriority="2" Width="180" IsVisible="false" />
+              <Column Guid="06a17026-935e-4cc7-82fd-2dd99aca31e6" Name="Thread ID" SortPriority="3" TextAlignment="Right" Width="80" IsVisible="false" />
+              <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="4" Width="80" IsVisible="false" />
+              <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="5" Width="80" IsVisible="false" />
+              <Column Guid="3146e1c7-4112-45b2-bd36-c7c567c944ef" Name="Switch-In Time" SortPriority="6" TextAlignment="Right" Width="120" IsVisible="false" />
+              <Column Guid="0686a137-1e89-474f-86cc-bd7e94361d92" Name="CPU" SortPriority="7" TextAlignment="Right" Width="50" IsVisible="false" />
+              <Column Guid="f54f983e-dd2d-4a72-bf45-756c1199b67c" Name="Time Switched-In" AggregationMode="Sum" SortPriority="8" TextAlignment="Right" Width="100" IsVisible="false" />
+              <Column Guid="002c66b5-fd27-4792-bcb6-b897cceb150f" Name="CPU Usage (in view)" AggregationMode="Sum" SortPriority="9" TextAlignment="Right" Width="252" IsVisible="true" />
+              <Column Guid="423a4686-a544-4d2a-9aaf-43575b97a9c4" Name="% CPU Usage" AggregationMode="Sum" SortPriority="10" TextAlignment="Right" Width="100" IsVisible="true" />
+            </Columns>
+          </Preset>
+        </ModifiedPresets>
+        <PersistedPresets />
+      </GraphSchema>
+    </ModifiedGraphs>
+  </Content>
+</WpaProfileContainer>

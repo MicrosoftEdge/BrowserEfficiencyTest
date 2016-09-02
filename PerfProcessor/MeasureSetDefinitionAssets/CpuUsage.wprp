@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8" standalone='yes'?>
+<WindowsPerformanceRecorder Version="1.0" Author="Web Platform Performance Team" Team="Web Platform Performance Team" Company="Microsoft Corporation" Copyright="Microsoft Corporation">
+  <Profiles>
+    <!-- System Collectors -->
+    <SystemCollector Id="SystemCollector_Default" Name="NT Kernel Logger">
+      <BufferSize Value="1024"/>
+      <Buffers Value="814"/>
+    </SystemCollector>
+	
+    <!-- Event Collectors -->
+    <EventCollector Id="EventCollector_User" Name="WPR User Event Collector">
+      <BufferSize Value="1024"/>
+      <Buffers Value="164"/>
+    </EventCollector>
+	
+    <!-- System Providers -->
+    <SystemProvider Id="SystemProvider_TestingPowerMetrics">
+      <Keywords>
+        <Keyword Value="CpuConfig"/>
+        <Keyword Value="CSwitch"/>
+        <Keyword Value="DiskIO"/>
+        <Keyword Value="DPC"/>
+        <Keyword Value="FileIO"/>
+        <Keyword Value="FileIOInit"/>
+        <Keyword Value="Filename"/>		
+        <Keyword Value="HardFaults"/>
+        <Keyword Value="Interrupt"/>
+        <Keyword Value="Loader"/>
+        <Keyword Value="MemoryInfo"/>
+        <Keyword Value="MemoryInfoWS"/>
+        <Keyword Value="Power"/>
+        <Keyword Value="ProcessCounter"/>
+        <Keyword Value="ProcessThread"/>
+        <Keyword Value="ReadyThread"/>
+        <Keyword Value="SampledProfile"/>
+        <Keyword Value="ThreadPriority"/>
+        <Keyword Value="WDFDPC" />
+        <Keyword Value="WDFInterrupt" />		
+      </Keywords>
+      <Stacks>	  
+        <Stack Value="CSwitch"/>
+        <Stack Value="DiskFlushInit"/>
+        <Stack Value="DiskReadInit"/>
+        <Stack Value="DiskWriteInit"/>
+        <Stack Value="FileCleanup"/>
+        <Stack Value="FileClose"/>
+        <Stack Value="FileCreate"/>
+        <Stack Value="FileDelete"/>
+        <Stack Value="FileDirEnum"/>
+        <Stack Value="FileDirNotify"/>
+        <Stack Value="FileFlush"/>
+        <Stack Value="FileFSCTL"/>
+        <Stack Value="FileOpEnd"/>
+        <Stack Value="FileQueryInformation"/>
+        <Stack Value="FileRead"/>
+        <Stack Value="FileRename"/>
+        <Stack Value="FileSetInformation"/>
+        <Stack Value="FileWrite"/>
+        <Stack Value="ReadyThread"/>
+        <Stack Value="SampledProfile"/>
+        <Stack Value="ThreadDCEnd"/>
+      </Stacks>
+    </SystemProvider>
+
+    <!-- Event Providers -->
+    <EventProvider Id="EventProvider_RSS" Name="2b240425-3141-43ee-931f-ec9f997c7d7e" />
+    <EventProvider Id="EventProvider_RelocProvider" Name="d3de60b2-a663-45d5-9826-a0a5949d2cb0" NonPagedMemory="true" />
+    <EventProvider Id="EventProvider_Inetcpl" Name="E687C0B6-3B85-4819-93F0-69CA3FCAFB28" />	
+    <EventProvider Id="EventProvider_Microsoft-Windows-DirectComposition" Name="Microsoft-Windows-DirectComposition" >	
+	  <Keywords>
+        <Keyword Value="0x4"/>
+      </Keywords>
+    </EventProvider>	
+    <EventProvider Id="EventProvider_Microsoft-Windows-DXGKrnl" Name="Microsoft-Windows-DXGKrnl" Level="5">
+      <Keywords>
+        <Keyword Value="0x67"/>
+      </Keywords>
+      <CaptureStateOnStart>
+        <Keyword Value="0x67"/>
+      </CaptureStateOnStart>
+      <CaptureStateOnSave>
+        <Keyword Value="0x67"/>
+      </CaptureStateOnSave>
+    </EventProvider>	
+    <EventProvider Id="EventProvider_E3" Name="Microsoft-Windows-Energy-Estimation-Engine" NonPagedMemory="true" >
+      <Keywords>
+        <Keyword Value="0x4" />
+      </Keywords>
+    </EventProvider>
+	<EventProvider Id="EventProvider_Microsoft-Windows-Kernel-Processor-Power" Name="Microsoft-Windows-Kernel-Processor-Power" NonPagedMemory="true" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-Performance-Recorder-Control" Name="Microsoft-Windows-Performance-Recorder-Control" NonPagedMemory="true" >
+      <Keywords>
+        <Keyword Value="0x10000" />
+      </Keywords>
+    </EventProvider>	
+    <EventProvider Id="EventProvider_Microsoft-Windows-RPC" Name="Microsoft-Windows-RPC" Level="4" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-RPCSS" Name="Microsoft-Windows-RPCSS" Level="4"/>
+    <EventProvider Id="EventProvider_Microsoft-Windows-VolumeSnapshot-Driver" Name="Microsoft-Windows-VolumeSnapshot-Driver" NonPagedMemory="true" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-Win32k" Name="Microsoft-Windows-Win32k" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0x6EE000"/>
+      </Keywords>
+      <CaptureStateOnSave>
+        <Keyword Value="0x80000"/>
+      </CaptureStateOnSave>		  
+    </EventProvider>
+
+	
+    <EventProvider Id="EventProvider_DotNetProvider" Name="DotNetProvider" NonPagedMemory="true" Level="5">
+      <Keywords>
+        <Keyword Value="0x20098"/>
+      </Keywords>
+      <CaptureStateOnSave>
+        <Keyword Value="0x20118"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Id="EventProvider_DWMWin32k" Base="" Name="e7ef96be-969f-414f-97d7-3ddb7b558ccc" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0x2000"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_DWMWin32kWin8" Base="" Name="8c416c79-d49b-4f01-a467-e56d3aa8234c" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0x2000"/>
+      </Keywords>
+    </EventProvider>	
+    <EventProvider Id="EventProvider_DWMWin32kWin8_WaitAnalysis" Base="EventProvider_DWMWin32kWin8" Name="8c416c79-d49b-4f01-a467-e56d3aa8234c" NonPagedMemory="true" Stack="true">
+      <Keywords Operation="Add">
+        <Keyword Value="0x400000"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_DWMWin32kWin8_WaitAnalysis_CaptureState" Base="" Name="8c416c79-d49b-4f01-a467-e56d3aa8234c" NonPagedMemory="true" CaptureStateOnly="true" Stack="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x80000"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Id="EventProvider_IE" Name="9e3b3947-ca5d-4614-91a2-7b624e0e7244">
+      <Keywords>
+        <Keyword Value="0x1300"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_IEFrame" Name="5c8bb950-959e-4309-8908-67961a1205d5">
+      <Keywords>
+        <Keyword Value="0x100"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Antimalware-AMFilter" Name="cfeb0608-330e-4410-b00d-56d8da9986e6"/>
+    <EventProvider Id="EventProvider_Microsoft-Antimalware-Engine" Name="0a002690-3839-4e3a-b3b6-96d8df868d99" Level="5"/>
+    <EventProvider Id="EventProvider_Microsoft-Antimalware-Protection" Name="e4b70372-261f-4c54-8fa6-a5a7914d73da"/>
+    <EventProvider Id="EventProvider_Microsoft-Antimalware-RTP" Name="8e92deef-5e17-413b-b927-59b2f06a3cfc"/>
+    <EventProvider Id="EventProvider_Microsoft-Antimalware-Service" Name="751ef305-6c6e-4fed-b847-02ef79d26aef"/>
+    <EventProvider Id="EventProvider_Microsoft-JScript" Name="57277741-3638-4A4B-BDBA-0AC6E45DA56C">
+      <Keywords>
+        <Keyword Value="0x1"/>
+      </Keywords>
+      <CaptureStateOnSave>
+        <Keyword Value="0x4"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Web-Platform" Name="ff32ada1-5a4b-583c-889e-a3c027b201f5"/>
+    <EventProvider Id="EventProvider_Microsoft_Windows_Performance_Recorder_Context" Name="b7a19fcd-15ba-41ba-a3d7-dc352d5f79ba" NonPagedMemory="true"/>
+    <EventProvider Id="EventProvider_Microsoft-Windows-App-Browser" Name="0bca4784-8257-51a0-d9ec-24fe1fe4c90d"/>
+    <EventProvider Id="EventProvider_Microsoft-Windows-BrokerInfrastructure" Name="e6835967-e0d2-41fb-bcec-58387404e25a">
+       <Keywords>
+         <Keyword Value="0x1"/>   
+       </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-COMRuntime" Name="Microsoft-Windows-COMRuntime">
+      <Keywords>
+        <Keyword Value="0x3"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-DNS-Client" Name="Microsoft-Windows-DNS-Client" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-Kernel-EventTracing" Name="b675ec37-bdb6-4648-bc92-f3fdc74d3ca2" Level="15" NonPagedMemory="true">
+      <Keywords>
+        <Keyword Value="0x40"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-Kernel-Processor-Power_CaptureState" Name="Microsoft-Windows-Kernel-Processor-Power" NonPagedMemory="true" CaptureStateOnly="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-NCSI" Base="" Name="Microsoft-Windows-NCSI" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-Networking-Correlation" Name="Microsoft-Windows-Networking-Correlation" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-ProcessStateManager" Name="d49918cf-9489-4bf1-9d7b-014d864cf71f"/>
+    <EventProvider Id="EventProvider_Microsoft-Windows-RPC_Level4" Name="Microsoft-Windows-RPC" Level="4" Stack="true" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-RPCSS_Level4" Name="Microsoft-Windows-RPCSS" Level="4" Stack="true" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-Search-Core" Name="Microsoft-Windows-Search-Core" />
+    <EventProvider Id="EventProvider_Microsoft-Windows-TCPIP-Verbose" Name="Microsoft-Windows-TCPIP"/>
+    <EventProvider Id="EventProvider_Microsoft-Windows-URLMon" Name="245f975d-909d-49ed-b8f9-9a75691d6b6b"/>
+    <EventProvider Id="EventProvider_Microsoft-Windows-UserModePowerService_CaptureState" Name="Microsoft-Windows-UserModePowerService" NonPagedMemory="true" CaptureStateOnly="true">
+      <CaptureStateOnSave>
+        <Keyword Value="0x0"/>
+      </CaptureStateOnSave>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-WinINet" Name="Microsoft-Windows-WinINet">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-WLAN-AutoConfig" Name="Microsoft-Windows-WLAN-AutoConfig">
+      <Keywords>
+        <Keyword Value="0x200"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_Microsoft-Windows-XAML" Name="531a35ab-63ce-4bcf-aa98-f88c7a89e455">
+      <Keywords>
+        <Keyword Value="0xFFFFFFFFFFFFFFFF"/>
+      </Keywords>
+    </EventProvider>
+    <EventProvider Id="EventProvider_PerfTrack" Name="PerfTrack" NonPagedMemory="true" Level="4" />
+    <EventProvider Id="EventProvider_WPR_Status" Name="36b6f488-aad7-48c2-afe3-d4ec2c8b46fa">
+      <Keywords>
+        <Keyword Value="0x10000"/>
+      </Keywords>
+    </EventProvider>
+	
+    <!-- Profiles -->
+    <Profile Id="TestingPower.Verbose.File" Name="TestingPower" Description="TestingPower Profile" DetailLevel="Verbose" Base="" LoggingMode="File">
+      <Collectors>
+        <SystemCollectorId Value="SystemCollector_Default">
+          <SystemProviderId Value="SystemProvider_TestingPowerMetrics" />
+        </SystemCollectorId>	  
+        <EventCollectorId Value="EventCollector_User">
+          <EventProviders>
+            <EventProviderId Value="EventProvider_RSS"/>
+		        <EventProviderId Value="EventProvider_RelocProvider" />
+            <EventProviderId Value="EventProvider_Inetcpl"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-DirectComposition"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-DXGKrnl" />
+			      <EventProviderId Value="EventProvider_E3"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Kernel-Processor-Power"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Performance-Recorder-Control"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-RPC"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-RPCSS"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-VolumeSnapshot-Driver"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Win32k"/>
+            <EventProviderId Value="EventProvider_DotNetProvider" />
+            <EventProviderId Value="EventProvider_DWMWin32k" />
+            <EventProviderId Value="EventProvider_DWMWin32kWin8_WaitAnalysis" />
+            <EventProviderId Value="EventProvider_DWMWin32kWin8_WaitAnalysis_CaptureState" />
+            <EventProviderId Value="EventProvider_IE">
+              <Keywords Operation="Add">
+                <Keyword Value="0x30801300"/>
+              </Keywords>
+            </EventProviderId>
+            <EventProviderId Value="EventProvider_IEFrame" />
+            <EventProviderId Value="EventProvider_Microsoft-Antimalware-AMFilter" />
+            <EventProviderId Value="EventProvider_Microsoft-Antimalware-Engine" />
+            <EventProviderId Value="EventProvider_Microsoft-Antimalware-Protection" />
+            <EventProviderId Value="EventProvider_Microsoft-Antimalware-RTP" />
+            <EventProviderId Value="EventProvider_Microsoft-Antimalware-Service" />
+            <EventProviderId Value="EventProvider_Microsoft-JScript">
+              <Keywords Operation="Add">
+                <Keyword Value="0x43"/>
+              </Keywords>
+            </EventProviderId>
+            <EventProviderId Value="EventProvider_Microsoft-Web-Platform" />
+            <EventProviderId Value="EventProvider_Microsoft_Windows_Performance_Recorder_Context" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-App-Browser" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-BrokerInfrastructure" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-COMRuntime" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-DNS-Client" />			
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Kernel-EventTracing" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Kernel-Processor-Power_CaptureState" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-NCSI" />			
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Networking-Correlation" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-ProcessStateManager" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-RPC_Level4"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-RPCSS_Level4"/>
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Search-Core" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-TCPIP-Verbose" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-URLMon" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-UserModePowerService_CaptureState" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-WinINet" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-WLAN-AutoConfig" />
+            <EventProviderId Value="EventProvider_Microsoft-Windows-XAML" />
+            <EventProviderId Value="EventProvider_PerfTrack" />
+            <EventProviderId Value="EventProvider_WPR_Status" />
+          </EventProviders>
+        </EventCollectorId>
+      </Collectors>
+	</Profile>
+    <Profile Id="TestingPower.Verbose.Memory" Name="TestingPower" Description="TestingPower Profile" DetailLevel="Verbose" Base="TestingPower.Verbose.File" LoggingMode="Memory">
+      <Collectors Operation="Add">
+        <SystemCollectorId Value="SystemCollector_Default">
+          <Buffers Value="3" PercentageOfTotalMemory="true"/>
+        </SystemCollectorId>
+        <EventCollectorId Value="EventCollector_User">
+          <Buffers Value="3" PercentageOfTotalMemory="true"/>
+        </EventCollectorId>
+      </Collectors>
+    </Profile>	
+  </Profiles>
+
+  <TraceMergeProperties>
+    <TraceMergeProperty Id="TraceMerge_Default" Name="TraceMerge_Default" Base="">
+      <DeletePreMergedTraceFiles Value="true"/>
+      <CustomEvents>
+        <CustomEvent Value="ImageId"/>
+        <CustomEvent Value="BuildInfo"/>
+        <CustomEvent Value="VolumeMapping"/>
+        <CustomEvent Value="EventMetadata"/>
+        <CustomEvent Value="PerfTrackMetadata"/>
+        <CustomEvent Value="WinSAT"/>
+        <CustomEvent Value="NetworkInterface"/>
+      </CustomEvents>
+    </TraceMergeProperty>
+  </TraceMergeProperties>
+</WindowsPerformanceRecorder>

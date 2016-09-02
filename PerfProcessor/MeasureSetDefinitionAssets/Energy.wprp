@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone='yes'?>
+<WindowsPerformanceRecorder Version="1.0" Author="WPR Profile Generator" Copyright="Microsoft Corporation" Company="Microsoft Corporation">
+  <Profiles>
+    <SystemCollector Id="SystemCollector" Name="NT Kernel Logger">
+      <BufferSize Value="1024" />
+      <Buffers Value="60" />
+    </SystemCollector>
+	
+    <EventCollector Id="EventCollector_EnergyLogger" Name="EnergyLogger">
+      <BufferSize Value="1024" />
+      <Buffers Value="128" />
+    </EventCollector>		
+		
+    <EventProvider Id="EventProvider_Microsoft-Windows-Energy-Estimation-Engine" Name="Microsoft-Windows-Energy-Estimation-Engine" NonPagedMemory="true" >	
+      <Keywords>
+        <Keyword Value="0x4" />
+      </Keywords>
+    </EventProvider>
+	
+    <Profile Id="DefaultBrowserEnergyProfile.Verbose.File" Name="DefaultBrowserEnergyProfile" Description="Default profile for browser energy measurement." LoggingMode="File" DetailLevel="Verbose">
+      <Collectors>
+        <EventCollectorId Value="EventCollector_EnergyLogger">
+          <EventProviders>	
+            <EventProviderId Value="EventProvider_Microsoft-Windows-Energy-Estimation-Engine" />			
+          </EventProviders>
+        </EventCollectorId>		
+      </Collectors>
+    </Profile>	
+    <Profile Id="DefaultBrowserEnergyProfile.Verbose.Memory" Name="DefaultBrowserEnergyProfile" Description="Default profile for browser energy measurement." Base="DefaultBrowserEnergyProfile.Verbose.File" LoggingMode="Memory" DetailLevel="Verbose" />	
+  </Profiles>
+</WindowsPerformanceRecorder>
