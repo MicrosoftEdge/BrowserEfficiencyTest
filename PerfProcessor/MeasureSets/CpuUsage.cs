@@ -41,7 +41,7 @@ namespace TestingPower
             _wpaProfile = @".\MeasureSetDefinitionAssets\CpuUsage.wpaProfile";
             WprpFile = @".\MeasureSetDefinitionAssets\CpuUsage.wprp";
             TracingMode = TraceCaptureMode.File;
-            Name = "CpuUsage";
+            Name = "cpuUsage";
             _wpaExportedDataFileNames = new List<string>() { "CPU_Usage_(Attributed)_CPU_UsageTime_ByProcess.csv" };
         }
 

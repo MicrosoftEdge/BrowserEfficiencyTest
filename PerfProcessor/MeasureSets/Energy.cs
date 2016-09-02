@@ -41,7 +41,7 @@ namespace TestingPower
             _wpaProfile = @".\MeasureSetDefinitionAssets\Energy.wpaProfile";
             WprpFile = @".\MeasureSetDefinitionAssets\Energy.wprp";
             TracingMode = TraceCaptureMode.File;
-            Name = "Energy";
+            Name = "energy";
             _wpaExportedDataFileNames = new List<string>() { "Energy_Estimation_Engine_Summary_Table_(by_Process)_E3EnergyByProcess.csv" };
         }
 

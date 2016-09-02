@@ -42,7 +42,7 @@ namespace TestingPower
             _wpaProfile = @".\MeasureSetDefinitionAssets\DiskUsage.wpaProfile";
             WprpFile = @".\MeasureSetDefinitionAssets\DiskUsage.wprp";
             TracingMode = TraceCaptureMode.Memory;
-            Name = "DiskUsage";
+            Name = "diskUsage";
             _wpaExportedDataFileNames = new List<string>() { "Disk_Usage_DiskFileIO_ByProcess.csv" };
         }
 
