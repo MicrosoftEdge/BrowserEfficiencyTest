@@ -58,7 +58,7 @@ namespace TestingPower
             }
             else
             {
-                // For other browsers, use some JS. Note that this means you have to disable popup blocking in Edge
+                // For other browsers, use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
                 // You actually have to in Opera too, but that's provided in a flag below
                 remoteWebDriver.ExecuteScript("window.open();");
                 // Go to that tab
@@ -147,7 +147,7 @@ namespace TestingPower
                     driver = new ChromeDriver(option);
                     break;
                 default:
-                    // Warning: this blows away all Edge data, including bookmarks, cookies, passwords, etc
+                    // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
                     EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
                     driver = new EdgeDriver(svc);
                     HttpClient client = new HttpClient();

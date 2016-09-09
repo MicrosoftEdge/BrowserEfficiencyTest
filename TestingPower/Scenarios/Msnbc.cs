@@ -51,19 +51,5 @@ namespace TestingPower
             driver.ExecuteScript("return window.scrollTo(0,0);");
             Thread.Sleep(2000);
         }
-
-        private static void ClickMsnbcLink(RemoteWebDriver driver)
-        {
-            var links = driver.FindElements(By.CssSelector("a"));
-            foreach (var link in links)
-            {
-                if (!link.GetAttribute("href").Contains("http://www.msnbc.com"))
-                {
-                    // Clicking link in Edge hits obscure bug
-                    //link.Click();
-                    break;
-                }
-            }
-        }
     }
 }

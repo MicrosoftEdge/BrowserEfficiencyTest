@@ -35,7 +35,7 @@ Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scena
 > When run on Microsoft Edge, this will delete all browser data, including bookmarks, saved passwords, and form fill.
 
 #Examples
-Run the CNN scenario on Edge
+Run the CNN scenario on Microsoft Edge
 
 ```testingpower.exe -browser edge -scenario cnn```
 
@@ -43,11 +43,11 @@ Run the CNN scenario on Edge
 
  ```testingpower.exe -b edge -s cnn```
 
-Run the Wikipedia and YouTube scenarios on Edge, Chrome, and Firefox
+Run the Wikipedia and YouTube scenarios on Microsoft Edge, Chrome, and Firefox
 
 ```testingpower.exe -b edge chrome firefox -scenario wikipedia youtube```
 
-Run the Wikipedia and YouTube scenarios on Edge and Firefox ten times.
+Run the Wikipedia and YouTube scenarios on Microsoft Edge and Firefox ten times.
 
 ```testingpower.exe -b edge firefox -scenario wikipedia youtube -i 10```
 
@@ -55,7 +55,7 @@ Run the MSN, Gmail and Google scenarios on Chrome, Firefox and Opera five times 
 
 ```testingpower.exe -b chrome firefox opera -scenario msn gmail google -i 5 -tc C:\powerRun\Test1```
 
-Run the TechRadar and YouTube scenarios on Edge and Firefox ten times with the tracing controller and run a warmup pass. Store the ETL and processed data files in C:\powerRun\Test1.
+Run the TechRadar and YouTube scenarios on Microsoft Edge and Firefox ten times with the tracing controller and run a warmup pass. Store the ETL and processed data files in C:\powerRun\Test1.
 
 ```testingpower.exe -b edge firefox -scenario techRadar youtube -i 10 -tc C:\powerRun\Test1 -w```
 
