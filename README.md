@@ -1,5 +1,5 @@
 # Welcome!
-PowerTest is a [Selenium WebDriver](http://docs.seleniumhq.org/) based web browser test automation project written in C#.
+BrowserEfficiencyTest is a [Selenium WebDriver](http://docs.seleniumhq.org/) based web browser test automation project written in C#.
 
 ## Links
 * [Selenium WebDriver](http://docs.seleniumhq.org/)
