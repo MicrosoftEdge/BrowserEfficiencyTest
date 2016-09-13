@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -31,30 +31,27 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class CnnTopStory : Scenario
+    internal class TechRadarSurfacePro4Review : Scenario
     {
-        public CnnTopStory()
+        public TechRadarSurfacePro4Review()
         {
-            Name = "cnnTopStory";
-
-            // Using 90s as sometimes Chrome takes just over 80 seconds to run
-            Duration = 90;
+            Name = "techRadar";
+            Duration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            IWebElement headlineElement = null;
-
             driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(30));
 
-            // Occasionally CNN never completes loading or doesn't seem to report it has loaded. Here, we work around
+            // Occasionally TechRadar never completes loading or doesn't seem to report it has loaded. Here, we work around
             // this issue by catching a webdriver timeout exception and respond with sending the ESC key which
             // will stop the page from continuing to load
             try
             {
-                driver.Navigate().GoToUrl("http://www.cnn.com");
+                // Navigate to the Surface Pro 4 review on TechRadar.
+                driver.Navigate().GoToUrl("http://www.techradar.com/us/reviews/pc-mac/tablets/microsoft-surface-pro-4-1290285/review");
             }
             catch (WebDriverTimeoutException)
             {
@@ -62,38 +59,7 @@ namespace TestingPower
                 driver.Keyboard.SendKeys(Keys.Escape);
             }
 
-            // Get the element that contains the headline story
-            try
-            {
-                // CNN defaults to using js-screaming-banner as its top headline
-                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-                headlineElement = driver.FindElementByClassName("js-screaming-banner");
-            }
-            catch(NoSuchElementException)
-            {
-                // On big news events CNN changes to using zh-banner class for their headline
-                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-                IWebElement znBannerElement = driver.FindElementByClassName("zn-banner");
-                headlineElement = znBannerElement.FindElement(By.TagName("a"));
-            }
-
-            // Get focus on the headline story link
-            headlineElement.SendKeys(string.Empty);
-
-            // Open the link to the headline story
-            // Same as above case where CNN occasionally never returns after sending a key. Here we catch
-            // this exception and send the ESC key if it occurs.
-            try
-            {
-                headlineElement.SendKeys(Keys.Enter);
-            }
-            catch(WebDriverTimeoutException)
-            {
-                Thread.Sleep(3 * 1000);
-                driver.Keyboard.SendKeys(Keys.Escape);
-            }
-
-            // And let that load
+            // Give it more than enough time to load
             Thread.Sleep(5 * 1000);
 
             // Scroll down multiple times

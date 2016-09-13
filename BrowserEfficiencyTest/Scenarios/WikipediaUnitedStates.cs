@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -28,40 +28,32 @@
 using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
-using OpenQA.Selenium;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-
-    internal class YahooNews : Scenario
+    internal class WikipediaUnitedStates : Scenario
     {
-        public YahooNews()
+        public WikipediaUnitedStates()
         {
-            Name = "yahooNews";
-            Duration = 90;
+            // Specifify name and that it's 30s
+            Name = "wikipedia";
+            Duration = 30;
         }
-
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://www.yahoo.com");
-            Thread.Sleep(10000);
+            // Nagivate to wikipedia
+            driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
 
-            // No reliable class or id for the news link, so get the news icon, then find its parent
-            IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
-            newsLink.SendKeys(String.Empty);
-            newsLink.SendKeys(Keys.Enter);
+            Thread.Sleep(2 * 1000);
+            if (browser == "firefox")
+            {
+                // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
+                driver.FindElementById("firstHeading").SendKeys(string.Empty);
+            }
 
-            Thread.Sleep(10000);
-
-            // Get the "mega" story and navigate to it
-            // We appear to be taking advantage of a test hook in the page for their own tests
-            IWebElement newsArticles = driver.FindElement(By.Id("tgtm-YDC-Stream"));
-            IWebElement mega = newsArticles.FindElement(By.XPath("//*[@data-test-locator='mega']"));
-            IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
-            articleLink.SendKeys(String.Empty);
-            articleLink.SendKeys(Keys.Enter);
-
+            // Scroll a bit
+            driver.ScrollPage(12);
         }
     }
 }

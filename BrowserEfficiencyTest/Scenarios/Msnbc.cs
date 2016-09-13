@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,19 +25,31 @@
 //
 //--------------------------------------------------------------
 
-using Newtonsoft.Json;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class UserInfo
+    internal class Msnbc : Scenario
     {
-        [JsonProperty("Domain")]
-        public string Domain { get; set; }
+        public Msnbc()
+        {
+            Name = "msnbc";
+            Duration = 50;
+        }
 
-        [JsonProperty("UserName")]
-        public string UserName { get; set; }
+        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        {
+            driver.Navigate().GoToUrl("http://www.msnbc.com");
+            // and scroll up / down
+            driver.ScrollPage(10);
 
-        [JsonProperty("Password")]
-        public string PassWord { get; set; }
+            // click on one of the links on the page
+            // first get back to the top
+            driver.ExecuteScript("return window.scrollTo(0,0);");
+            Thread.Sleep(2000);
+        }
     }
 }

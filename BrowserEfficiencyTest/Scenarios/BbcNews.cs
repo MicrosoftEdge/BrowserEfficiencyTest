@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,29 +25,36 @@
 //
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    /// <summary>
-    /// This scenario is designed to end quickly, and is for testing
-    /// </summary>
-    class FastScenario : Scenario
+    internal class BbcNews : Scenario
     {
-        public FastScenario()
+        public BbcNews()
         {
-            Name = "fastScenario";
-            Duration = 10;
+            Name = "bbcNews";
+            Duration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://www.google.com");
+            driver.Navigate().GoToUrl("http://www.bbc.co.uk");
+            Thread.Sleep(10000);
+
+            // Navigate to the hero headline
+            IWebElement heroHeadline = driver.FindElement(By.XPath("//*[@rev='hero1|headline']"));
+            heroHeadline.SendKeys(string.Empty);
+            heroHeadline.SendKeys(Keys.Enter);
+
+            // Read (some of) the article
+            Thread.Sleep(8000);
+            driver.ScrollPage(2);
+            Thread.Sleep(2000);
+            driver.ScrollPage(2);
         }
     }
 }

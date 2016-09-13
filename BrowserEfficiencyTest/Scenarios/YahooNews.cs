@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,50 +25,43 @@
 //
 //--------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
-using System.Threading;
 using OpenQA.Selenium;
+using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class RedditSearchSubreddit : Scenario
+
+    internal class YahooNews : Scenario
     {
-        public RedditSearchSubreddit()
+        public YahooNews()
         {
-            Name = "reddit";
+            Name = "yahooNews";
+            Duration = 90;
         }
+
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("https://www.reddit.com/");
-            Thread.Sleep(2000);
-
-            const string SearchTerm = "marvel contest";
-            var search = driver.FindElementByName("q");
-
-            search.SendKeys(SearchTerm);
-            search.SendKeys(Keys.Tab);
-            search.SendKeys(Keys.Enter);
-
-            while (!driver.Title.Contains(SearchTerm))
-            {
-                Thread.Sleep(1000);
-            }
-
-            Thread.Sleep(1000);
-            var subreddit = driver.FindElementByClassName("search-title");
-            driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/?ref=search_subreddits");
-            Thread.Sleep(5000);
-
-            driver.ScrollPage(3);
-
-            var subredditThread = driver.FindElementByClassName("thumbnail");
-
-            Thread.Sleep(5000);
-            driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/comments/4luknw/rank_upteam_buildingawakening_post/");
+            driver.Navigate().GoToUrl("http://www.yahoo.com");
             Thread.Sleep(10000);
 
-            driver.ScrollPage(15);
+            // No reliable class or id for the news link, so get the news icon, then find its parent
+            IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
+            newsLink.SendKeys(String.Empty);
+            newsLink.SendKeys(Keys.Enter);
+
+            Thread.Sleep(10000);
+
+            // Get the "mega" story and navigate to it
+            // We appear to be taking advantage of a test hook in the page for their own tests
+            IWebElement newsArticles = driver.FindElement(By.Id("tgtm-YDC-Stream"));
+            IWebElement mega = newsArticles.FindElement(By.XPath("//*[@data-test-locator='mega']"));
+            IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
+            articleLink.SendKeys(String.Empty);
+            articleLink.SendKeys(Keys.Enter);
+
         }
     }
 }

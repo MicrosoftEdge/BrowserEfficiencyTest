@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     /// <summary>
     /// Processes the energy data from E3 event data.
@@ -454,7 +454,7 @@ namespace TestingPower
 
     /// <summary>
     /// Data container holding the E3 Energy data for a single browser and iteration test run. The data broken down by component.
-    /// This data represents the energy from one ETL trace from a testingPower Test pass
+    /// This data represents the energy from one ETL trace from a BrowserEfficiencyTest test pass
     /// </summary>
     public struct E3BrowserTestRunEnergyByComponent
     {
@@ -480,7 +480,7 @@ namespace TestingPower
 
     /// <summary>
     /// Data container holding the E3 Energy data for a single browser and iteration test run. The data is broken down by process.
-    /// This data represents the energy from one ETL trace from a testingPower Test pass
+    /// This data represents the energy from one ETL trace from a BrowserEfficiencyTest test pass
     /// </summary>
     public struct E3BrowserTestRunEnergyByProcess
     {
