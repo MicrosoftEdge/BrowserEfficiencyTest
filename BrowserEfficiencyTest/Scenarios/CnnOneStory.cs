@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -27,43 +27,23 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using OpenQA.Selenium.Remote;
-using OpenQA.Selenium;
-using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class TechRadarSurfacePro4Review : Scenario
+    class CnnOneStory : Scenario
     {
-        public TechRadarSurfacePro4Review()
+        public CnnOneStory()
         {
-            Name = "techRadar";
-            Duration = 60;
+            Name = "cnnOneStory";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(30));
-
-            // Occasionally TechRadar never completes loading or doesn't seem to report it has loaded. Here, we work around
-            // this issue by catching a webdriver timeout exception and respond with sending the ESC key which
-            // will stop the page from continuing to load
-            try
-            {
-                // Navigate to the Surface Pro 4 review on TechRadar.
-                driver.Navigate().GoToUrl("http://www.techradar.com/us/reviews/pc-mac/tablets/microsoft-surface-pro-4-1290285/review");
-            }
-            catch (WebDriverTimeoutException)
-            {
-                Thread.Sleep(3 * 1000);
-                driver.Keyboard.SendKeys(Keys.Escape);
-            }
-
-            // Give it more than enough time to load
-            Thread.Sleep(5 * 1000);
-
-            // Scroll down multiple times
-            driver.ScrollPage(10);
+            driver.Navigate().GoToUrl("http://bleacherreport.com/articles/2657513-tim-duncan-declined-olympic-invitation-from-president-obama?utm_source=cnn.com&utm_medium=referral&utm_campaign=editorial");
         }
     }
 }

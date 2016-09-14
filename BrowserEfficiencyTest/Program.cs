@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     internal class Program
     {

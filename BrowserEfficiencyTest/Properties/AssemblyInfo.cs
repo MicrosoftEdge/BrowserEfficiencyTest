@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -31,11 +31,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TestingPower")]
+[assembly: AssemblyTitle("BrowserEfficiencyTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TestingPower")]
+[assembly: AssemblyProduct("BrowserEfficiencyTest")]
 [assembly: AssemblyCopyright("Copyright \u00A9 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

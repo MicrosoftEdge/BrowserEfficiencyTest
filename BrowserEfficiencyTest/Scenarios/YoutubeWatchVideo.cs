@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,35 +25,39 @@
 //
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
+using System.Collections.Generic;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class WikipediaUnitedStates : Scenario
+    internal class YoutubeWatchVideo : Scenario
     {
-        public WikipediaUnitedStates()
+        public YoutubeWatchVideo()
         {
-            // Specifify name and that it's 30s
-            Name = "wikipedia";
-            Duration = 30;
+            this.Name = "youtube";
+            // Leave the default time
         }
+
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            // Nagivate to wikipedia
-            driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
-
-            Thread.Sleep(2 * 1000);
-            if (browser == "firefox")
+            // Browse to Youtube if we're not there already
+            if (!driver.Url.Contains("youtube.com"))
             {
-                // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
-                driver.FindElementById("firstHeading").SendKeys(string.Empty);
+                driver.Navigate().GoToUrl("https://www.youtube.com/watch?v=l42U5Cwn1Y0");
+                Thread.Sleep(2000);
             }
 
-            // Scroll a bit
-            driver.ScrollPage(12);
+            string movieId = "movie_player";
+            var player = driver.FindElementById(movieId);
+
+            // Play if it's paused
+            if (player.GetAttribute("class").Contains("paused-mode"))
+            {
+                player.Click();
+            }
+
+            Thread.Sleep(2000);
         }
     }
 }

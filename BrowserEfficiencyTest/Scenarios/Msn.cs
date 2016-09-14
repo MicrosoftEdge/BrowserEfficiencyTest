@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -29,7 +29,7 @@ using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     internal class Msn : Scenario
     {

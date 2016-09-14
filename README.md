@@ -1,5 +1,9 @@
 # Welcome!
-BrowserEfficiencyTest is a [Selenium WebDriver](http://docs.seleniumhq.org/) based web browser test automation project written in C#.
+BrowserEfficiencyTest is a [Selenium WebDriver](http://docs.seleniumhq.org/) based web browser test automation project written in C#. It allows you to run through common tasks done in browsers (look through a Facebook feed, go through some emails, browse the news) done in multiple tabs, and uses Windows Performance Recorder to measure how much power, CPU, or other resources were used in order to accomplish those tasks. It currently supports:
+* Microsoft Edge
+* Google Chrome
+* Firefox
+* Opera
 
 ## Links
 * [Selenium WebDriver](http://docs.seleniumhq.org/)
@@ -13,13 +17,14 @@ This project follows the [dotnet/corefx C# Coding Style](https://github.com/dotn
 ## Code of Conduct
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-## Notes
+## Dependencies
 Using the XPerf and WPR modules requires the [Windows Performance Toolkit.](https://msdn.microsoft.com/en-us/library/windows/hardware/dn927310(v=vs.85).aspx)
+This also requires [Elevator](https://github.com/MicrosoftEdge/Elevator) in order to trace (which must be done with admin rights).
 
 ## Usage
 
 ```
-Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]
+Usage: BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]
 
  -browser|-b           Selects the browser or browsers to run the scenarios with. For multiple browsers, separate each browser with a space.
  -scenario|-s 	       Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space.
@@ -33,6 +38,8 @@ Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scena
 
 > **WARNING**
 > When run on Microsoft Edge, this will delete all browser data, including bookmarks, saved passwords, and form fill.
+
+If you use `-tracecontrolled` or `-tc`, you'll also need to have an instance of [Elevator](https://github.com/MicrosoftEdge/Elevator) running to do the tracing for you.
 
 #Examples
 Run the CNN scenario on Microsoft Edge

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -30,7 +30,7 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     internal class FacebookNewsfeedScroll : Scenario
     {
@@ -77,7 +77,7 @@ namespace TestingPower
                     password.SendKeys(passWord);
                     Thread.Sleep(1000);
 
-                    // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI
+                    // Avoding applying click to button because of ObscureElement bug in Microsoft Edge with high DPI
                     // Instead use tab and enter. Seemed to be pretty reliable across browsers
                     driver.Keyboard.SendKeys(Keys.Tab);
                     driver.Keyboard.SendKeys(Keys.Enter);

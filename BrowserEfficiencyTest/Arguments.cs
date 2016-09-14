@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -29,7 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     /// <summary>
     /// Parses the command line arguments and provides access to the various 
@@ -99,7 +99,7 @@ namespace TestingPower
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]");
+            Console.WriteLine("Usage: BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();

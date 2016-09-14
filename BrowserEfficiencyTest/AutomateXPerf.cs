@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -28,12 +28,11 @@
 using System;
 using System.Diagnostics;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     /// <summary>
     /// Provides Windows tracing controls using XPerf.
     /// By default AutomateXPerf assumes XPerf has been installed on the test machine as part of the Windows Performance Toolkit.
-    /// NOTE: TestingPower.exe must be run elevated in order to allow control of XPerf.exe.
     /// </summary>
     internal class AutomateXPerf
     {

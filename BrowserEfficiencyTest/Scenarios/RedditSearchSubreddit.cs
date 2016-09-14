@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,36 +25,50 @@
 //
 //--------------------------------------------------------------
 
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
+using OpenQA.Selenium.Remote;
 using System.Threading;
+using OpenQA.Selenium;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class BbcNews : Scenario
+    internal class RedditSearchSubreddit : Scenario
     {
-        public BbcNews()
+        public RedditSearchSubreddit()
         {
-            Name = "bbcNews";
-            Duration = 60;
+            Name = "reddit";
         }
-
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://www.bbc.co.uk");
+            driver.Navigate().GoToUrl("https://www.reddit.com/");
+            Thread.Sleep(2000);
+
+            const string SearchTerm = "marvel contest";
+            var search = driver.FindElementByName("q");
+
+            search.SendKeys(SearchTerm);
+            search.SendKeys(Keys.Tab);
+            search.SendKeys(Keys.Enter);
+
+            while (!driver.Title.Contains(SearchTerm))
+            {
+                Thread.Sleep(1000);
+            }
+
+            Thread.Sleep(1000);
+            var subreddit = driver.FindElementByClassName("search-title");
+            driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/?ref=search_subreddits");
+            Thread.Sleep(5000);
+
+            driver.ScrollPage(3);
+
+            var subredditThread = driver.FindElementByClassName("thumbnail");
+
+            Thread.Sleep(5000);
+            driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/comments/4luknw/rank_upteam_buildingawakening_post/");
             Thread.Sleep(10000);
 
-            // Navigate to the hero headline
-            IWebElement heroHeadline = driver.FindElement(By.XPath("//*[@rev='hero1|headline']"));
-            heroHeadline.SendKeys(string.Empty);
-            heroHeadline.SendKeys(Keys.Enter);
-
-            // Read (some of) the article
-            Thread.Sleep(8000);
-            driver.ScrollPage(2);
-            Thread.Sleep(2000);
-            driver.ScrollPage(2);
+            driver.ScrollPage(15);
         }
     }
 }
