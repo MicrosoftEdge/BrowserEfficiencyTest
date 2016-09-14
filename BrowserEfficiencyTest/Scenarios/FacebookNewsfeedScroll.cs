@@ -77,7 +77,7 @@ namespace BrowserEfficiencyTest
                     password.SendKeys(passWord);
                     Thread.Sleep(1000);
 
-                    // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI
+                    // Avoding applying click to button because of ObscureElement bug in Microsoft Edge with high DPI
                     // Instead use tab and enter. Seemed to be pretty reliable across browsers
                     driver.Keyboard.SendKeys(Keys.Tab);
                     driver.Keyboard.SendKeys(Keys.Enter);
