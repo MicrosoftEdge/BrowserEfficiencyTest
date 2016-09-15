@@ -45,28 +45,28 @@ If you use `-tracecontrolled` or `-tc`, you'll also need to have an instance of 
 #Examples
 Run the CNN scenario on Microsoft Edge
 
-```testingpower.exe -browser edge -scenario cnn```
+```BrowserEfficiencyTest.exe -browser edge -scenario cnn```
 
  or
 
- ```testingpower.exe -b edge -s cnn```
+ ```BrowserEfficiencyTest.exe -b edge -s cnn```
 
 Run the Wikipedia and YouTube scenarios on Microsoft Edge, Chrome, and Firefox
 
-```testingpower.exe -b edge chrome firefox -scenario wikipedia youtube```
+```BrowserEfficiencyTest.exe -b edge chrome firefox -scenario wikipedia youtube```
 
 Run the Wikipedia and YouTube scenarios on Microsoft Edge and Firefox ten times.
 
-```testingpower.exe -b edge firefox -scenario wikipedia youtube -i 10```
+```BrowserEfficiencyTest.exe -b edge firefox -scenario wikipedia youtube -i 10```
 
 Run the MSN, Gmail and Google scenarios on Chrome, Firefox and Opera five times with the tracing controller and store the ETL and processed data files in C:\powerRun\Test1.
 
-```testingpower.exe -b chrome firefox opera -scenario msn gmail google -i 5 -tc C:\powerRun\Test1```
+```BrowserEfficiencyTest.exe -b chrome firefox opera -scenario msn gmail google -i 5 -tc C:\powerRun\Test1```
 
 Run the TechRadar and YouTube scenarios on Microsoft Edge and Firefox ten times with the tracing controller and run a warmup pass. Store the ETL and processed data files in C:\powerRun\Test1.
 
-```testingpower.exe -b edge firefox -scenario techRadar youtube -i 10 -tc C:\powerRun\Test1 -w```
+```BrowserEfficiencyTest.exe -b edge firefox -scenario techRadar youtube -i 10 -tc C:\powerRun\Test1 -w```
 
 Run the Gmail and Amazon scenarios on Chrome using the Chrome profile located at C:\ChromeUserData.
 
-```testingpower.exe -b chrome -scenario gmail amazon -p C:\ChromeUserData```
+```BrowserEfficiencyTest.exe -b chrome -scenario gmail amazon -p C:\ChromeUserData```
