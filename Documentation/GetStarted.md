@@ -6,11 +6,11 @@ This guide will walk through getting started with BrowserEfficiencyTest.
 
 * You're on a Windows device
 * You have the code available in the [BrowserEfficiencyTest repo](https://github.com/MicrosoftEdge/BrowserEfficiencyTest) cloned or downloaded on your device
-* You have Visual Studio or something similar. Try [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx), it's free
+* You have Visual Studio or equivalent. Try [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx), it's free
 
 ## Get the dependencies
 
-* First, go download or clone [Elevator](https://github.com/MicrosoftEdge/Elevator). Elevator is used to trace while a browser is automatically running through scenarios. This results in a trace file (with a .etl extension), which will later be used to extract measures, like how much CPU, networking, or power was used while the browser was working. Traces can also be opened in Windows Performance Analyzer, so you can see what was going on during the test.
+* First, go download or clone [Elevator](https://github.com/MicrosoftEdge/Elevator). Elevator is used to trace while a browser is automatically running through scenarios. This results in a trace file (with a .etl extension), which will later be used to extract measures (e.g. how much CPU, networking, or power was used while the browser was working). Traces can also be opened in Windows Performance Analyzer, so you can see what was going on during the test.
 * Next, download the Windows Performance Toolkit. It's available as part of the Windows Assessment and Deployment Kit (ADK), and can be downloaded [here](http://go.microsoft.com/fwlink/p/?LinkId=526740).
     * In the ADK installer, select "Install to this computer"
 	* Keep the default path
@@ -18,15 +18,15 @@ This guide will walk through getting started with BrowserEfficiencyTest.
 
 ## Webdriver
 
-Most browsers require you to have the correct version of their associated webdrive exe in PATH. You'll need to follow these instructions for each browser you wish to test on.
+This is how you set Webdriver up. You must have the correct version of the associated Webdriver exe in PATH for every browser you wish to test.
 
-### Step 1. Make a folder for webdriver
+### Step 1. Make a folder for Webdriver
 
 First, make a folder that you'll put your webdriver exes in, anywhere on your device. This will be added to your PATH variable, allowing BrowserEfficiencyTest to control browsers on your device.
 
 ### Step 2a. Download Microsoft Edge Webdriver
 
-Download the exe from [here](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/). Not sure which release is the correct one? Type `winver` into Cortana, and look for the nubmerbeside "OS Build".
+Download the exe from [here](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/). Not sure which release is the correct one? Type `winver` into Cortana, and look for the nubmer beside "OS Build".
 
 Put `MicrosoftWebDriver.exe` in the folder from step 1.
 
@@ -66,4 +66,37 @@ You should now have a folder on your device with the respective Webdriver for ea
 * In the directory you cloned/downloaded Elevator to, open the solution file in Visual Studio and build it.
 * In the directory you cloned/downloaded BrowserEfficiencyTest to, open the solution file in Visual Studio and build it.
 
+## Configuration
+
+* In Microsoft Edge, go to settings, "View advanced settings", then turn "Block pop-ups" to off. This is required in order for BrowserEfficiencyTest to open new tabs in Microsoft Edge.
+
+### Recommendations to reduce variability
+
+The items in this section are not required, but they are useful recommendations for making your tests more repeatable and consistent. These will reduce interference from other factors than the browsers and sites you wish to test.
+
+* Turn off adaptive brightness of the screen if applicable
+* Turn off bluetooth
+* Turn off location
+* Ensure your volume is set to the same level as other tests you have/will run if applicable
+* Battery saver mode will activate when the battery of your device reaches 20%. Disable this if applicable
+* Ensure bitlocker is disabled or consistent with other tests you have/will run
+
+### If you're measuring power
+
+* From an elevated command prompt, run:
+    `reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SRUM\Parameters" /v Tier1Period /t REG_DWORD /d 10 /f`
+	This will set the energy estimation engine in Windows to fire an event every 10s.
+* Ensure that the drivers are installed if you have power-measuring hardware like a [Maxim 34407 Power Accumulator chip](https://www.maximintegrated.com/en/products/analog/amplifiers/MAX34407.html)
+
 ## Run the test
+
+### Start Elevator
+
+* Run Elevator by going to the its folder, then within it, navigating to \ElevatorServer\bin\Debug\ElevatorServer.exe (assuming you built for Debug).
+* Accept the UAC prompt
+* The window should say "Waiting for client connection."
+
+### Start the test
+
+* Run BrowserEfficiencyTest by going to its folder, then within it, navigating to \BrowserEfficiencyTest\bin\Debug\ (assuming you built for Debug).
+* Open a command window here if you're not already in the command line (by shift + right-clicking in the folder and selecting "Open command window here")
