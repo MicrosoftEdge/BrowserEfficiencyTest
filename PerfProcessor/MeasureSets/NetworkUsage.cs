@@ -39,7 +39,7 @@ namespace TestingPower
         public NetworkUsage()
         {
             _wpaProfile = @".\MeasureSetDefinitionAssets\NetworkUsage.wpaProfile";
-            WprpFile = @".\MeasureSetDefinitionAssets\NetworkUsage.wprp";
+            WprProfile = "networkUsage";
             TracingMode = TraceCaptureMode.File;
             Name = "networkUsage";
             _wpaExportedDataFileNames = new List<string>() { "TcpIp_Events_Throughput_over_Time.csv" };

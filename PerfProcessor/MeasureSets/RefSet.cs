@@ -40,7 +40,7 @@ namespace TestingPower
         public RefSet()
         {
             _wpaProfile = @".\MeasureSetDefinitionAssets\RefSet.wpaProfile";
-            WprpFile = @".\MeasureSetDefinitionAssets\RefSet.wprp";
+            WprProfile = "refSet";
             TracingMode = TraceCaptureMode.File;
             Name = "refSet";
             _wpaExportedDataFileNames = new List<string>() { "Reference_Set_RefSet_without_PagePool.csv" };

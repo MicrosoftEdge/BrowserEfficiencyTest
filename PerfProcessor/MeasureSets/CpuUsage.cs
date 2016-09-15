@@ -39,7 +39,7 @@ namespace TestingPower
         public CpuUsage()
         {
             _wpaProfile = @".\MeasureSetDefinitionAssets\CpuUsage.wpaProfile";
-            WprpFile = @".\MeasureSetDefinitionAssets\CpuUsage.wprp";
+            WprProfile = "cpuUsage";
             TracingMode = TraceCaptureMode.File;
             Name = "cpuUsage";
             _wpaExportedDataFileNames = new List<string>() { "CPU_Usage_(Attributed)_CPU_UsageTime_ByProcess.csv" };
@@ -75,11 +75,8 @@ namespace TestingPower
             cpuUsageTimeNotIdle = totalCpuTime - idleCpuUsageTime;
 
             totalCpuUsagePercentage = (double)(cpuUsageTimeNotIdle / totalCpuTime) * 100;
-            double dummypercent = (double)((cpuUsageTimeNotIdle / totalCpuTime) * 100);
-            double dummypercent2 = (double)(cpuUsageTimeNotIdle / totalCpuTime) * 100.0;
 
-            //metrics = cpuUsageTimeByProcess.ToDictionary(k => "CPU Usage Time (ms) | " + k.ProcessName, v => v.CpuUsageMilliSec.ToString());
-            metrics = new Dictionary<string, string>() { { "CPU Usage | % time not idle | ", totalCpuUsagePercentage.ToString() } };
+            metrics = new Dictionary<string, string>() { { "CPU Usage | % time not idle", totalCpuUsagePercentage.ToString() } };
 
             return metrics;
         }

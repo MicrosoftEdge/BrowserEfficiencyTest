@@ -51,7 +51,7 @@ namespace TestingPower
         /// <summary>
         /// The Windows Performance Recorder(WPR) Profile to use when recording a trace session for this measure.
         /// </summary>
-        public string WprpFile
+        public string WprProfile
         {
             get;
             protected set;

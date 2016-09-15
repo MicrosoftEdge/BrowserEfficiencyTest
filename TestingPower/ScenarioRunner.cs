@@ -55,7 +55,7 @@ namespace TestingPower
         private string _scenarioName;
         private int _e3RefreshDelaySeconds;
 
-        // _measureSets format: Dictionary< "measure set name", Tuple < "WPRP filename", "tracing mode" >>
+        // _measureSets format: Dictionary< "measure set name", Tuple < "WPR profile name", "tracing mode" >>
         private Dictionary<string, Tuple<string, string>> _measureSets;
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace TestingPower
         // multiple checks throughout the main pass loop checking to see if measure sets were enabled or not.
         private Dictionary<string, Tuple<string, string>> GetMeasureSetInfo(List<MeasureSet> measureSets)
         {
-            // _measureSets format: Dictionary< "measure set name", Tuple < "WPRP filename", "tracing mode" >>
+            // _measureSets format: Dictionary< "measure set name", Tuple < "WPR profile name", "tracing mode" >>
             Dictionary<string, Tuple<string, string>> measureSetInfo = new Dictionary<string, Tuple<string, string>>();
 
             if (measureSets == null || measureSets.Count == 0)
@@ -99,9 +99,9 @@ namespace TestingPower
             }
             else
             {
-                // Create a data structure containing the name, WPRP file name and tracing mode of all selected measure sets.                
+                // Create a data structure containing the name, WPR profile name and tracing mode of all selected measure sets.
                 var msInfo = from m in measureSets
-                             select new KeyValuePair<string, Tuple<string, string>>(m.Name, new Tuple<string, string>(Path.GetFullPath(m.WprpFile), m.TracingMode.ToString()));
+                             select new KeyValuePair<string, Tuple<string, string>>(m.Name, new Tuple<string, string>(m.WprProfile, m.TracingMode.ToString()));
 
                 // Format msInfo to a Dictionary of <string, Tuple<string, string>>
                 measureSetInfo = msInfo.ToDictionary(k => k.Key, v => v.Value);
@@ -197,7 +197,8 @@ namespace TestingPower
                                     Console.WriteLine("[{0}] - Attempting again...", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                                 }
 
-                                elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {_scenarioName} WPRP {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
+                                elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {_scenarioName} WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
+
                                 Console.WriteLine("[{0}] - Launching Browser Driver {1} -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser);
                                 using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser))
                                 {

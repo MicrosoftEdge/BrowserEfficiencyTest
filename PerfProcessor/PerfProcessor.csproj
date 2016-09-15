@@ -56,16 +56,7 @@
     <None Include="MeasureSetDefinitionAssets\CpuUsage.wpaProfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MeasureSetDefinitionAssets\CpuUsage.wprp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="MeasureSetDefinitionAssets\DiskUsage.wprp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="MeasureSetDefinitionAssets\Energy.wpaProfile">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="MeasureSetDefinitionAssets\Energy.wprp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="MeasureSetDefinitionAssets\DiskUsage.wpaProfile">
@@ -74,13 +65,7 @@
     <None Include="MeasureSetDefinitionAssets\NetworkUsage.wpaProfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="MeasureSetDefinitionAssets\NetworkUsage.wprp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="MeasureSetDefinitionAssets\RefSet.wpaProfile">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="MeasureSetDefinitionAssets\RefSet.wprp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
