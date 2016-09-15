@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WpaProfileContainer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2" xmlns="http://tempuri.org/SerializableElement.xsd">
+  <Content xsi:type="WpaProfile2">
+    <Sessions>
+      <Session Index="0">
+        <FileReferences />
+      </Session>
+    </Sessions>
+    <Views>
+      <View Guid="08cf0c3d-a948-4cf5-8149-62cc4ab3b203" Title="Analysis" IsVisible="true">
+        <Graphs>
+          <Graph Guid="c1718a41-aad0-477a-ba79-79180815eeb1" LayoutStyle="DataTable" Color="#FFFFFF00" GraphHeight="125" IsMinimized="false" IsShown="true" IsExpanded="false">
+            <Preset Name="E3EnergyByProcess" BarGraphIntervalCount="50" AggregationOverTime="Rate" IsThreadActivityTable="false" GraphColumnCount="13" KeyColumnCount="3" LeftFrozenColumnCount="0" RightFrozenColumnCount="12" InitialFilterShouldKeep="true" GraphFilterColumnGuid="b6b65afe-793b-479b-b18d-08be9af0ca00" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+              <MetadataEntries>
+                <MetadataEntry Guid="e3f44793-1355-4598-999f-09f1fdd5a9db" Name="Start Time " ColumnMetadata="StartTime" />
+                <MetadataEntry Guid="2032bf72-64c1-4798-ad6e-931063bb5a27" Name="End Time " ColumnMetadata="EndTime" />
+              </MetadataEntries>
+              <HighlightEntries />
+              <Columns>
+                <Column Guid="bd101efa-3c0d-47e1-8e1b-24ec7082416e" Name="App Name" SortOrder="Ascending" SortPriority="0" Width="274" IsVisible="true" />
+                <Column Guid="17ee331d-166a-44cc-b258-1d697063849a" Name="Is Foreground" SortPriority="2" Width="150" IsVisible="false" />
+                <Column Guid="18b8d428-b2cb-4e55-8939-b0bcd2c9931a" Name="Full Path" SortPriority="3" Width="535" IsVisible="false" />
+                <Column Guid="b6b65afe-793b-479b-b18d-08be9af0ca00" Name="Cpu Energy (mJ)" AggregationMode="Sum" SortPriority="4" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="a66b3c20-eb9e-4cb5-9b72-a9d70013c787" Name="SocEnergy (mJ)" AggregationMode="Sum" SortPriority="5" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="122f4b5e-033f-4709-b53b-23e2a012327e" Name="DiskEnergy (mJ)" AggregationMode="Sum" SortPriority="6" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="1837ebd1-2c3e-4ae2-9d96-84da843963b3" Name="DisplayEnergy (mJ)" AggregationMode="Sum" SortPriority="7" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="670d87f1-85f9-4fc8-9790-80e9a94e1445" Name="MbbEnergy (mJ)" AggregationMode="Sum" SortPriority="8" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="28be6cbc-3541-4cac-b244-93bf7df99359" Name="NetworkEnergy (mJ)" AggregationMode="Sum" SortPriority="9" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="ca21d6a3-13ca-4c7a-a3d3-0bd5aa4e55e8" Name="OtherEnergy (mJ)" AggregationMode="Sum" SortPriority="10" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="dc4b964c-02f4-4fe7-9ee6-b39b22c06176" Name="TotalEnergy (mJ)" AggregationMode="Sum" SortPriority="11" TextAlignment="Right" Width="150" IsVisible="true" />
+                <Column Guid="e3f44793-1355-4598-999f-09f1fdd5a9db" Name="Start Time " AggregationMode="Min" SortPriority="12" TextAlignment="Right" Width="120" CellFormat="nN" IsVisible="true" />
+                <Column Guid="2032bf72-64c1-4798-ad6e-931063bb5a27" Name="End Time " AggregationMode="Max" SortPriority="13" TextAlignment="Right" Width="120" CellFormat="nN" IsVisible="true" />
+                <Column Guid="ce84d427-a0a7-58d9-0fde-e8d2e84770bc" Name="Table" SortPriority="14" Width="16" IsVisible="false" />
+                <Column Guid="6a67fd39-b79b-54c3-d192-12ded31c68b1" Name="Trace #" SortPriority="15" Width="80" IsVisible="false" />
+                <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="16" Width="16" IsVisible="false" />
+                <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="17" Width="16" IsVisible="false" />
+                <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="18" Width="16" IsVisible="false" />
+              </Columns>
+            </Preset>
+          </Graph>
+        </Graphs>
+        <SessionIndices>
+          <SessionIndex>0</SessionIndex>
+        </SessionIndices>
+      </View>
+    </Views>
+    <ModifiedGraphs>
+      <GraphSchema Guid="c1718a41-aad0-477a-ba79-79180815eeb1">
+        <ModifiedPresets>
+          <Preset Name="E3EnergyByProcess" BarGraphIntervalCount="50" AggregationOverTime="Rate" IsThreadActivityTable="false" GraphColumnCount="13" KeyColumnCount="3" LeftFrozenColumnCount="0" RightFrozenColumnCount="12" InitialFilterShouldKeep="true" GraphFilterColumnGuid="b6b65afe-793b-479b-b18d-08be9af0ca00" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+            <MetadataEntries>
+              <MetadataEntry Guid="e3f44793-1355-4598-999f-09f1fdd5a9db" Name="Start Time " ColumnMetadata="StartTime" />
+              <MetadataEntry Guid="2032bf72-64c1-4798-ad6e-931063bb5a27" Name="End Time " ColumnMetadata="EndTime" />
+            </MetadataEntries>
+            <HighlightEntries />
+            <Columns>
+              <Column Guid="bd101efa-3c0d-47e1-8e1b-24ec7082416e" Name="App Name" SortOrder="Ascending" SortPriority="0" Width="274" IsVisible="true" />
+              <Column Guid="17ee331d-166a-44cc-b258-1d697063849a" Name="Is Foreground" SortPriority="2" Width="150" IsVisible="false" />
+              <Column Guid="18b8d428-b2cb-4e55-8939-b0bcd2c9931a" Name="Full Path" SortPriority="3" Width="535" IsVisible="false" />
+              <Column Guid="b6b65afe-793b-479b-b18d-08be9af0ca00" Name="Cpu Energy (mJ)" AggregationMode="Sum" SortPriority="4" TextAlignment="Right" Width="100" IsVisible="true" />
+              <Column Guid="a66b3c20-eb9e-4cb5-9b72-a9d70013c787" Name="SocEnergy (mJ)" AggregationMode="Sum" SortPriority="5" TextAlignment="Right" Width="100" IsVisible="true" />
+              <Column Guid="122f4b5e-033f-4709-b53b-23e2a012327e" Name="DiskEnergy (mJ)" AggregationMode="Sum" SortPriority="6" TextAlignment="Right" Width="100" IsVisible="true" />
+              <Column Guid="1837ebd1-2c3e-4ae2-9d96-84da843963b3" Name="DisplayEnergy (mJ)" AggregationMode="Sum" SortPriority="7" TextAlignment="Right" Width="100" IsVisible="true" />
+              <Column Guid="670d87f1-85f9-4fc8-9790-80e9a94e1445" Name="MbbEnergy (mJ)" AggregationMode="Sum" SortPriority="8" TextAlignment="Right" Width="100" IsVisible="true" />
+              <Column Guid="28be6cbc-3541-4cac-b244-93bf7df99359" Name="NetworkEnergy (mJ)" AggregationMode="Sum" SortPriority="9" TextAlignment="Right" Width="100" IsVisible="true" />
+              <Column Guid="ca21d6a3-13ca-4c7a-a3d3-0bd5aa4e55e8" Name="OtherEnergy (mJ)" AggregationMode="Sum" SortPriority="10" TextAlignment="Right" Width="100" IsVisible="true" />
+              <Column Guid="dc4b964c-02f4-4fe7-9ee6-b39b22c06176" Name="TotalEnergy (mJ)" AggregationMode="Sum" SortPriority="11" TextAlignment="Right" Width="150" IsVisible="true" />
+              <Column Guid="e3f44793-1355-4598-999f-09f1fdd5a9db" Name="Start Time " AggregationMode="Min" SortPriority="12" TextAlignment="Right" Width="120" CellFormat="nN" IsVisible="true" />
+              <Column Guid="2032bf72-64c1-4798-ad6e-931063bb5a27" Name="End Time " AggregationMode="Max" SortPriority="13" TextAlignment="Right" Width="120" CellFormat="nN" IsVisible="true" />
+              <Column Guid="ce84d427-a0a7-58d9-0fde-e8d2e84770bc" Name="Table" SortPriority="14" Width="16" IsVisible="false" />
+              <Column Guid="6a67fd39-b79b-54c3-d192-12ded31c68b1" Name="Trace #" SortPriority="15" Width="80" IsVisible="false" />
+              <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="16" Width="16" IsVisible="false" />
+              <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="17" Width="16" IsVisible="false" />
+              <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="18" Width="16" IsVisible="false" />
+            </Columns>
+          </Preset>
+        </ModifiedPresets>
+        <PersistedPresets />
+      </GraphSchema>
+    </ModifiedGraphs>
+  </Content>
+</WpaProfileContainer>

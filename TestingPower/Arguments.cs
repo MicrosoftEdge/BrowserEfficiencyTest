@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace TestingPower
 {
@@ -42,6 +43,8 @@ namespace TestingPower
         private Dictionary<string, Scenario> _possibleScenarios;
         private List<Scenario> _scenarios;
         private List<string> _browsers;
+        private Dictionary<string, MeasureSet> _availableMeasureSets;
+        private List<MeasureSet> _selectedMeasureSets;
 
         public string ScenarioName { get; private set; }
         public string BrowserProfilePath { get; private set; }
@@ -49,7 +52,7 @@ namespace TestingPower
         public int Iterations { get; private set; }
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
-        public int MaxAttempts { get; private set;  }
+        public int MaxAttempts { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -68,6 +71,14 @@ namespace TestingPower
         }
 
         /// <summary>
+        /// List of all measure sets selected to be run.
+        /// </summary>
+        public IReadOnlyCollection<MeasureSet> SelectedMeasureSets
+        {
+            get { return _selectedMeasureSets.AsReadOnly(); }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the Arguments class and processes the passed in array of command line arguments.
         /// Based on user input in the args, here we break them apart and determine:
         ///  - Which browser to run on
@@ -80,7 +91,8 @@ namespace TestingPower
             _possibleScenarios = new Dictionary<string, Scenario>();
             _scenarios = new List<Scenario>();
             _browsers = new List<string>();
-
+            _availableMeasureSets = PerfProcessor.AvailableMeasureSets.ToDictionary(k => k.Key, v => v.Value);
+            _selectedMeasureSets = new List<MeasureSet>();
             ScenarioName = "";
             BrowserProfilePath = "";
             DoWarmup = false;
@@ -99,7 +111,7 @@ namespace TestingPower
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]");
+            Console.WriteLine("Usage: TestingPower.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -201,6 +213,30 @@ namespace TestingPower
                         EtlPath = Path.GetFullPath(etlPath);
 
                         break;
+                    case "-measureset":
+                    case "-ms":
+                        argNum++;
+
+                        while (argNum < args.Length)
+                        {
+                            var measureSet = args[argNum];
+                            if (!_availableMeasureSets.ContainsKey(measureSet))
+                            {
+                                throw new Exception($"Unexpected measure set '{measureSet}'");
+                            }
+
+                            _selectedMeasureSets.Add(_availableMeasureSets[measureSet]);
+
+                            int nextArgNum = argNum + 1;
+                            if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
+                            {
+                                break;
+                            }
+
+                            argNum++;
+                        }
+
+                        break;
                     case "-warmup":
                     case "-w":
                         DoWarmup = true;
@@ -228,6 +264,16 @@ namespace TestingPower
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
             }
+
+            // For perf processing, ensure that both the tracing controller option and measuresets have been selected
+            if (UsingTraceController && _selectedMeasureSets.Count == 0)
+            {
+                throw new Exception("A measure set must be specified when using a trace controller.");
+            }
+            else if (!UsingTraceController && _selectedMeasureSets.Count > 0)
+            {
+                throw new Exception("The tracing controller option must be specified when using measure sets.");
+            }
         }
 
         /// <summary>
@@ -254,7 +300,7 @@ namespace TestingPower
             AddScenario(new CnnOneStory());
             AddScenario(new FastScenario());
         }
-        
+
         private void AddScenario(Scenario scenario)
         {
             _possibleScenarios.Add(scenario.Name, scenario);

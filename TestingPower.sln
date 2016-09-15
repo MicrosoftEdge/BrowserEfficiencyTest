@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingPower", "TestingPower\TestingPower.csproj", "{F54DFCBE-CD4C-465A-8523-F1C79C3E05C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8F9D79CD-9E21-464F-80D6-4B502AA51845} = {8F9D79CD-9E21-464F-80D6-4B502AA51845}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerfProcessor", "PerfProcessor\PerfProcessor.csproj", "{8F9D79CD-9E21-464F-80D6-4B502AA51845}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{F54DFCBE-CD4C-465A-8523-F1C79C3E05C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F54DFCBE-CD4C-465A-8523-F1C79C3E05C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F54DFCBE-CD4C-465A-8523-F1C79C3E05C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F9D79CD-9E21-464F-80D6-4B502AA51845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F9D79CD-9E21-464F-80D6-4B502AA51845}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F9D79CD-9E21-464F-80D6-4B502AA51845}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F9D79CD-9E21-464F-80D6-4B502AA51845}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

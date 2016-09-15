@@ -69,7 +69,7 @@ namespace TestingPower
                 driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
                 headlineElement = driver.FindElementByClassName("js-screaming-banner");
             }
-            catch(NoSuchElementException)
+            catch (NoSuchElementException)
             {
                 // On big news events CNN changes to using zh-banner class for their headline
                 driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
@@ -87,7 +87,7 @@ namespace TestingPower
             {
                 headlineElement.SendKeys(Keys.Enter);
             }
-            catch(WebDriverTimeoutException)
+            catch (WebDriverTimeoutException)
             {
                 Thread.Sleep(3 * 1000);
                 driver.Keyboard.SendKeys(Keys.Escape);
