@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -29,7 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     /// <summary>
     /// Energy Usage measure. Calculates the hardware measured energy usage by hardware meter.

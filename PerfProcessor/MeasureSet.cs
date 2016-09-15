@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     public enum TraceCaptureMode { Memory = 0x01, File = 0x02 }
 

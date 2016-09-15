@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// MBrowser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,19 +25,29 @@
 //
 //--------------------------------------------------------------
 
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class UserInfo
+    internal class Program
     {
-        [JsonProperty("Domain")]
-        public string Domain { get; set; }
+        private static void Main(string[] args)
+        {
+            Arguments arguments = new Arguments(args);
 
-        [JsonProperty("UserName")]
-        public string UserName { get; set; }
+            ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
 
-        [JsonProperty("Password")]
-        public string PassWord { get; set; }
+            scenarioRunner.Run();
+
+            if (arguments.UsingTraceController)
+            {
+                PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
+
+                perfProcessor.Execute(arguments.EtlPath);
+            }
+        }
     }
 }

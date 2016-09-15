@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -31,7 +31,7 @@ using System.Threading;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     internal class GmailGoThroughEmails : Scenario
     {

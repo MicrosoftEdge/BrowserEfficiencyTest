@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,36 +25,45 @@
 //
 //--------------------------------------------------------------
 
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
+using System;
 using System.Collections.Generic;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class BbcNews : Scenario
+    internal class TechRadarSurfacePro4Review : Scenario
     {
-        public BbcNews()
+        public TechRadarSurfacePro4Review()
         {
-            Name = "bbcNews";
+            Name = "techRadar";
             Duration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://www.bbc.co.uk");
-            Thread.Sleep(10000);
+            driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(30));
 
-            // Navigate to the hero headline
-            IWebElement heroHeadline = driver.FindElement(By.XPath("//*[@rev='hero1|headline']"));
-            heroHeadline.SendKeys(string.Empty);
-            heroHeadline.SendKeys(Keys.Enter);
+            // Occasionally TechRadar never completes loading or doesn't seem to report it has loaded. Here, we work around
+            // this issue by catching a webdriver timeout exception and respond with sending the ESC key which
+            // will stop the page from continuing to load
+            try
+            {
+                // Navigate to the Surface Pro 4 review on TechRadar.
+                driver.Navigate().GoToUrl("http://www.techradar.com/us/reviews/pc-mac/tablets/microsoft-surface-pro-4-1290285/review");
+            }
+            catch (WebDriverTimeoutException)
+            {
+                Thread.Sleep(3 * 1000);
+                driver.Keyboard.SendKeys(Keys.Escape);
+            }
 
-            // Read (some of) the article
-            Thread.Sleep(8000);
-            driver.ScrollPage(2);
-            Thread.Sleep(2000);
-            driver.ScrollPage(2);
+            // Give it more than enough time to load
+            Thread.Sleep(5 * 1000);
+
+            // Scroll down multiple times
+            driver.ScrollPage(10);
         }
     }
 }

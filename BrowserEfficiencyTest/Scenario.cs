@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,29 +25,20 @@
 //
 //--------------------------------------------------------------
 
-using System;
+using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class Program
+    // All scenarios will inherit from this class
+    internal abstract class Scenario
     {
-        private static void Main(string[] args)
-        {
-            Arguments arguments = new Arguments(args);
+        public string Name { get; set; }
 
-            ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
+        // By default, a scenario will last 40s, but this can be overridden.
+        public int Duration { get; set; } = 40;
 
-            scenarioRunner.Run();
-
-            if (arguments.UsingTraceController)
-            {
-                PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
-
-                perfProcessor.Execute(arguments.EtlPath);
-            }
-        }
+        // Override this function with the "stuff" to do in the scenario
+        public abstract void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins);
     }
 }

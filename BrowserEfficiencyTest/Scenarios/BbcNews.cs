@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,50 +25,36 @@
 //
 //--------------------------------------------------------------
 
-using System;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
 using System.Threading;
-using OpenQA.Selenium.Remote;
-using OpenQA.Selenium;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class AmazonSearch : Scenario
+    internal class BbcNews : Scenario
     {
-        public AmazonSearch()
+        public BbcNews()
         {
-            Name = "amazon";
-            Duration = 45;
+            Name = "bbcNews";
+            Duration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://www.amazon.com");
+            driver.Navigate().GoToUrl("http://www.bbc.co.uk");
+            Thread.Sleep(10000);
 
-            // Give it more than enough time to load
-            Thread.Sleep(5 * 1000);
+            // Navigate to the hero headline
+            IWebElement heroHeadline = driver.FindElement(By.XPath("//*[@rev='hero1|headline']"));
+            heroHeadline.SendKeys(string.Empty);
+            heroHeadline.SendKeys(Keys.Enter);
 
-            // Type "Game of Thrones" in the search box and hit enter
-            var searchbox = driver.FindElementById("twotabsearchtextbox");
-            foreach (char c in "Game of Thrones")
-            {
-                searchbox.SendKeys(c.ToString());
-            }
-            searchbox.SendKeys(Keys.Enter);
-
-            // Give the results time to load
-            Thread.Sleep(5 * 1000);
-
-            // Click into "Game of Thrones Season 1"
-            var bookLink = driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']");
-            bookLink.SendKeys(string.Empty);
-            driver.Keyboard.SendKeys(Keys.Enter);
-
-            // And let that load
-            Thread.Sleep(2 * 1000);
-
-            // Scroll down to reviews
-            driver.ScrollPage(5);
+            // Read (some of) the article
+            Thread.Sleep(8000);
+            driver.ScrollPage(2);
+            Thread.Sleep(2000);
+            driver.ScrollPage(2);
         }
     }
 }
