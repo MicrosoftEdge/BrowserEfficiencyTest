@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -34,7 +34,7 @@ using OpenQA.Selenium.Remote;
 using System.Net.Http;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     /// <summary>
     /// Extension class for the RemoteWebDriver class

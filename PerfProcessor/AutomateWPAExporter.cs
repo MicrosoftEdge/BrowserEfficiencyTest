@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -28,7 +28,7 @@
 using System;
 using System.Diagnostics;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     /// <summary>
     /// Provides Windows Performance Analyzer (WPA) ETL trace data exporting controls using Windows Performance Analyzer Exporter (WPAExporter.exe).

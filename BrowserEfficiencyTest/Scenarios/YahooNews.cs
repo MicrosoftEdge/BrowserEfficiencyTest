@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -31,39 +31,35 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class TechRadarSurfacePro4Review : Scenario
+    internal class YahooNews : Scenario
     {
-        public TechRadarSurfacePro4Review()
+        public YahooNews()
         {
-            Name = "techRadar";
-            Duration = 60;
+            Name = "yahooNews";
+            Duration = 90;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(30));
+            driver.Navigate().GoToUrl("http://www.yahoo.com");
+            Thread.Sleep(10000);
 
-            // Occasionally TechRadar never completes loading or doesn't seem to report it has loaded. Here, we work around
-            // this issue by catching a webdriver timeout exception and respond with sending the ESC key which
-            // will stop the page from continuing to load
-            try
-            {
-                // Navigate to the Surface Pro 4 review on TechRadar.
-                driver.Navigate().GoToUrl("http://www.techradar.com/us/reviews/pc-mac/tablets/microsoft-surface-pro-4-1290285/review");
-            }
-            catch (WebDriverTimeoutException)
-            {
-                Thread.Sleep(3 * 1000);
-                driver.Keyboard.SendKeys(Keys.Escape);
-            }
+            // No reliable class or id for the news link, so get the news icon, then find its parent
+            IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
+            newsLink.SendKeys(String.Empty);
+            newsLink.SendKeys(Keys.Enter);
 
-            // Give it more than enough time to load
-            Thread.Sleep(5 * 1000);
+            Thread.Sleep(10000);
 
-            // Scroll down multiple times
-            driver.ScrollPage(10);
+            // Get the "mega" story and navigate to it
+            // We appear to be taking advantage of a test hook in the page for their own tests
+            IWebElement newsArticles = driver.FindElement(By.Id("tgtm-YDC-Stream"));
+            IWebElement mega = newsArticles.FindElement(By.XPath("//*[@data-test-locator='mega']"));
+            IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
+            articleLink.SendKeys(String.Empty);
+            articleLink.SendKeys(Keys.Enter);
         }
     }
 }

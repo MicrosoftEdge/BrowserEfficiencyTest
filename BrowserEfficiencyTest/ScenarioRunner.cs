@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -34,7 +34,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
     /// <summary>
     /// Executes automated scenarios on selected web browsers using WebDriver
@@ -134,7 +134,7 @@ namespace TestingPower
         private void RunWarmupPass()
         {
             // A warmup pass is one run thru the selected scenarios and browsers.
-            // It allows the browsers to cache some content which helps reduce power variability from run to run.
+            // It allows the browsers to cache some content which helps reduce variability from run to run.
             Console.WriteLine("[{0}] - Starting warmup pass -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
             foreach (string browser in _browsers)

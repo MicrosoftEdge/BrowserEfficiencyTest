@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,41 +25,31 @@
 //
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
+using System.Collections.Generic;
 using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class YahooNews : Scenario
+    internal class Msnbc : Scenario
     {
-        public YahooNews()
+        public Msnbc()
         {
-            Name = "yahooNews";
-            Duration = 90;
+            Name = "msnbc";
+            Duration = 50;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://www.yahoo.com");
-            Thread.Sleep(10000);
+            driver.Navigate().GoToUrl("http://www.msnbc.com");
+            // and scroll up / down
+            driver.ScrollPage(10);
 
-            // No reliable class or id for the news link, so get the news icon, then find its parent
-            IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
-            newsLink.SendKeys(String.Empty);
-            newsLink.SendKeys(Keys.Enter);
-
-            Thread.Sleep(10000);
-
-            // Get the "mega" story and navigate to it
-            // We appear to be taking advantage of a test hook in the page for their own tests
-            IWebElement newsArticles = driver.FindElement(By.Id("tgtm-YDC-Stream"));
-            IWebElement mega = newsArticles.FindElement(By.XPath("//*[@data-test-locator='mega']"));
-            IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
-            articleLink.SendKeys(String.Empty);
-            articleLink.SendKeys(Keys.Enter);
+            // click on one of the links on the page
+            // first get back to the top
+            driver.ExecuteScript("return window.scrollTo(0,0);");
+            Thread.Sleep(2000);
         }
     }
 }

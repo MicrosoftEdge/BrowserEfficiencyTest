@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -27,33 +27,48 @@
 
 using System;
 using System.Collections.Generic;
-using OpenQA.Selenium.Remote;
 using System.Threading;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class WikipediaUnitedStates : Scenario
+    internal class AmazonSearch : Scenario
     {
-        public WikipediaUnitedStates()
+        public AmazonSearch()
         {
-            // Specifify name and that it's 30s
-            Name = "wikipedia";
-            Duration = 30;
+            Name = "amazon";
+            Duration = 45;
         }
+
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            // Nagivate to wikipedia
-            driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
+            driver.Navigate().GoToUrl("http://www.amazon.com");
 
-            Thread.Sleep(2 * 1000);
-            if (browser == "firefox")
+            // Give it more than enough time to load
+            Thread.Sleep(5 * 1000);
+
+            // Type "Game of Thrones" in the search box and hit enter
+            var searchbox = driver.FindElementById("twotabsearchtextbox");
+            foreach (char c in "Game of Thrones")
             {
-                // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
-                driver.FindElementById("firstHeading").SendKeys(string.Empty);
+                searchbox.SendKeys(c.ToString());
             }
+            searchbox.SendKeys(Keys.Enter);
 
-            // Scroll a bit
-            driver.ScrollPage(12);
+            // Give the results time to load
+            Thread.Sleep(5 * 1000);
+
+            // Click into "Game of Thrones Season 1"
+            var bookLink = driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']");
+            bookLink.SendKeys(string.Empty);
+            driver.Keyboard.SendKeys(Keys.Enter);
+
+            // And let that load
+            Thread.Sleep(2 * 1000);
+
+            // Scroll down to reviews
+            driver.ScrollPage(5);
         }
     }
 }

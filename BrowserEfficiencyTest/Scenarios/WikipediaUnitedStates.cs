@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,50 +25,35 @@
 //
 //--------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using System.Threading;
-using OpenQA.Selenium;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class RedditSearchSubreddit : Scenario
+    internal class WikipediaUnitedStates : Scenario
     {
-        public RedditSearchSubreddit()
+        public WikipediaUnitedStates()
         {
-            Name = "reddit";
+            // Specifify name and that it's 30s
+            Name = "wikipedia";
+            Duration = 30;
         }
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("https://www.reddit.com/");
-            Thread.Sleep(2000);
+            // Nagivate to wikipedia
+            driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
 
-            const string SearchTerm = "marvel contest";
-            var search = driver.FindElementByName("q");
-
-            search.SendKeys(SearchTerm);
-            search.SendKeys(Keys.Tab);
-            search.SendKeys(Keys.Enter);
-
-            while (!driver.Title.Contains(SearchTerm))
+            Thread.Sleep(2 * 1000);
+            if (browser == "firefox")
             {
-                Thread.Sleep(1000);
+                // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
+                driver.FindElementById("firstHeading").SendKeys(string.Empty);
             }
 
-            Thread.Sleep(1000);
-            var subreddit = driver.FindElementByClassName("search-title");
-            driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/?ref=search_subreddits");
-            Thread.Sleep(5000);
-
-            driver.ScrollPage(3);
-
-            var subredditThread = driver.FindElementByClassName("thumbnail");
-
-            Thread.Sleep(5000);
-            driver.Navigate().GoToUrl("https://www.reddit.com/r/ContestOfChampions/comments/4luknw/rank_upteam_buildingawakening_post/");
-            Thread.Sleep(10000);
-
-            driver.ScrollPage(15);
+            // Scroll a bit
+            driver.ScrollPage(12);
         }
     }
 }

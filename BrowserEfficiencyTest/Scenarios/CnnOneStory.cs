@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,19 +25,25 @@
 //
 //--------------------------------------------------------------
 
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OpenQA.Selenium.Remote;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class UserInfo
+    internal class CnnOneStory : Scenario
     {
-        [JsonProperty("Domain")]
-        public string Domain { get; set; }
+        public CnnOneStory()
+        {
+            Name = "cnnOneStory";
+        }
 
-        [JsonProperty("UserName")]
-        public string UserName { get; set; }
-
-        [JsonProperty("Password")]
-        public string PassWord { get; set; }
+        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        {
+            driver.Navigate().GoToUrl("http://bleacherreport.com/articles/2657513-tim-duncan-declined-olympic-invitation-from-president-obama?utm_source=cnn.com&utm_medium=referral&utm_campaign=editorial");
+        }
     }
 }

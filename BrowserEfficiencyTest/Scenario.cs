@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,37 +25,20 @@
 //
 //--------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading;
 using OpenQA.Selenium.Remote;
-using OpenQA.Selenium;
+using System.Collections.Generic;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class GoogleSearch : Scenario
+    // All scenarios will inherit from this class
+    internal abstract class Scenario
     {
-        public GoogleSearch()
-        {
-            Name = "google";
-            // Default time
-        }
+        public string Name { get; set; }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
-        {
-            driver.Navigate().GoToUrl("http://www.google.com");
+        // By default, a scenario will last 40s, but this can be overridden.
+        public int Duration { get; set; } = 40;
 
-            Thread.Sleep(5 * 1000);
-
-            // Search for "Seattle" and hit enter
-            var searchBox = driver.FindElementByXPath("//*[@title='Search']");
-            foreach (char c in "Seattle")
-            {
-                searchBox.SendKeys(c.ToString());
-                Thread.Sleep(75);
-            }
-            driver.Keyboard.SendKeys(Keys.Enter);
-
-            // Simply yield control back to the main thread and look at results
-        }
+        // Override this function with the "stuff" to do in the scenario
+        public abstract void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins);
     }
 }

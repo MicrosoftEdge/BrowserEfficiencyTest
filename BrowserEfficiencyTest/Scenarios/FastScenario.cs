@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,31 +25,29 @@
 //
 //--------------------------------------------------------------
 
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OpenQA.Selenium.Remote;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class Msnbc : Scenario
+    /// <summary>
+    /// This scenario is designed to end quickly, and is for testing
+    /// </summary>
+    internal class FastScenario : Scenario
     {
-        public Msnbc()
+        public FastScenario()
         {
-            Name = "msnbc";
-            Duration = 50;
+            Name = "fastScenario";
+            Duration = 10;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://www.msnbc.com");
-            // and scroll up / down
-            driver.ScrollPage(10);
-
-            // click on one of the links on the page
-            // first get back to the top
-            driver.ExecuteScript("return window.scrollTo(0,0);");
-            Thread.Sleep(2000);
+            driver.Navigate().GoToUrl("http://www.google.com");
         }
     }
 }

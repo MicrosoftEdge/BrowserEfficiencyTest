@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,39 +25,29 @@
 //
 //--------------------------------------------------------------
 
-using OpenQA.Selenium.Remote;
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.IO;
+using System.Linq;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class YoutubeWatchVideo : Scenario
+    internal class Program
     {
-        public YoutubeWatchVideo()
+        private static void Main(string[] args)
         {
-            this.Name = "youtube";
-            // Leave the default time
-        }
+            Arguments arguments = new Arguments(args);
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
-        {
-            // Browse to Youtube if we're not there already
-            if (!driver.Url.Contains("youtube.com"))
+            ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
+
+            scenarioRunner.Run();
+
+            if (arguments.UsingTraceController)
             {
-                driver.Navigate().GoToUrl("https://www.youtube.com/watch?v=l42U5Cwn1Y0");
-                Thread.Sleep(2000);
+                PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
+
+                perfProcessor.Execute(arguments.EtlPath);
             }
-
-            string movieId = "movie_player";
-            var player = driver.FindElementById(movieId);
-
-            // Play if it's paused
-            if (player.GetAttribute("class").Contains("paused-mode"))
-            {
-                player.Click();
-            }
-
-            Thread.Sleep(2000);
         }
     }
 }

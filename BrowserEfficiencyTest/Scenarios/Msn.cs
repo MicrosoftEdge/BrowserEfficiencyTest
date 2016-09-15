@@ -1,6 +1,6 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 //
-// Microsoft Edge Power Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
@@ -25,25 +25,23 @@
 //
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium.Remote;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace TestingPower
+namespace BrowserEfficiencyTest
 {
-    internal class CnnOneStory : Scenario
+    internal class Msn : Scenario
     {
-        public CnnOneStory()
+        public Msn()
         {
-            Name = "cnnOneStory";
+            this.Name = "msn";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            driver.Navigate().GoToUrl("http://bleacherreport.com/articles/2657513-tim-duncan-declined-olympic-invitation-from-president-obama?utm_source=cnn.com&utm_medium=referral&utm_campaign=editorial");
+            driver.Navigate().GoToUrl("http://www.msn.com");
+            Thread.Sleep(1000);
         }
     }
 }
