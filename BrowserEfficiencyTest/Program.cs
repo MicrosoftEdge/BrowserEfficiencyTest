@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------
 //
-// MBrowser Efficiency Test
+// Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
 // All rights reserved.
 //
