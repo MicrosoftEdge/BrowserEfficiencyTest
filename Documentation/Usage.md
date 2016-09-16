@@ -19,7 +19,18 @@ Usage: BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabet
 
 If you use `-tracecontrolled` or `-tc`, you'll also need to have an instance of [Elevator](https://github.com/MicrosoftEdge/Elevator) running to do the tracing for you.
 
-#Examples
+# Measure sets
+
+The following can be specificed after `-ms`, and will specify what you want to measure when you do your test.
+
+* `cpuUsage` will measure how much the CPU was used during the test. Specifically, it measures how much time the CPU was not idle during the test pass.
+* `diskUsage` will measure the disk activity during the test pass.
+* `energy` will measure how much energy was consumed by the system during the test pass. Some devices, like the Surface Book, have hardware that measures this directly and provide much more accurate results.
+* `networkUsage` will measure the network activity during the test pass.
+* `refSet` is a measure of the memory used during the test pass.
+
+# Examples
+
 Run the CNN scenario on Microsoft Edge
 
 ```BrowserEfficiencyTest.exe -browser edge -scenario cnn```
