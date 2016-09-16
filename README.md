@@ -5,6 +5,10 @@ BrowserEfficiencyTest is a [Selenium WebDriver](http://docs.seleniumhq.org/) bas
 * Firefox
 * Opera
 
+## Get started
+
+[Full instructions on how to get started are available here](Documentation/GetStarted.md).
+
 ## Links
 * [Selenium WebDriver](http://docs.seleniumhq.org/)
 * [Selenium WebDriver Downloads](http://docs.seleniumhq.org/download/)

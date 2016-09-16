@@ -69,6 +69,7 @@ You should now have a folder on your device with the respective Webdriver for ea
 ## Configuration
 
 * In Microsoft Edge, go to settings, "View advanced settings", then turn "Block pop-ups" to off. This is required in order for BrowserEfficiencyTest to open new tabs in Microsoft Edge.
+* Under \BrowserEfficiencyTest\BrowserEfficiencyTest\bin\Debug, you'll see the JSON file `config.json`. You will have to provide credentials for any sceanrios that require them. No test accounts/credentials are provided as part of this repo. If you're running the default set of scenarios (`-s all`), you'll need to provide credentials for test accounts for `facebook.com` and `gmail.com`.
 
 ### Recommendations to reduce variability
 
@@ -100,3 +101,22 @@ The items in this section are not required, but they are useful recommendations 
 
 * Run BrowserEfficiencyTest by going to its folder, then within it, navigating to \BrowserEfficiencyTest\bin\Debug\ (assuming you built for Debug).
 * Open a command window here if you're not already in the command line (by shift + right-clicking in the folder and selecting "Open command window here")
+* Run `BrowserEfficiencyTest.exe` plus your desired configuration, and BrowserEfficiencyTest will take care of the rest. Here's some examples:
+
+#### Fast test run
+
+To ensure your configuration and build is correct, here's a good test to run. It will run through each browser twice, using two quick scenarios in two different tabs, and record how much CPU was used for them:
+
+This command assumes the user logged in is "UserName" and places the resulting traces in a folder on the desktop. You should switch in the location you wish the traces to be stored after the `-tc` command. Remember that this also assumes Elevator is already running and waiting for a client connection.
+
+```
+> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 2 -tc C:\Users\UserName\Desktop\TestTraces -ms cpuUsage -s fastScenario wikipedia
+```
+
+#### Full test run
+
+To get a full 5 iterations on each browser, running the default set of scenarios, 
+
+```
+> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 5 -tc C:\Users\UserName\Desktop\Traces -ms cpuUsage -s all
+```
