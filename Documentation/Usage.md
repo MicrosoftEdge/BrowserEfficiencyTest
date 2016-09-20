@@ -19,10 +19,10 @@ BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -sce
     * `firefox` will include Firefox in the test pass
     * `opera` will include Opera in the test pass
 
-* **-scenario|-s (REQUIRED)** Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional sceanrios after, it will be left running in a background tab. The possible options are:
+* **-scenario|-s (REQUIRED)** Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional sceanrios after it, it will be left running in a background tab. The possible options are:
     * `amazon` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
     * `bbcNews` will load BBC, click on the top story, and scroll down
-    * `cnnOneStory` will direclty load a news story from CNN, but not interact with CNN besides the page load
+    * `cnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
     * `cnnTopStory` will load CNN, load the top story, and scroll down
     * `facebook` will log into facebook with the provided credentials, and scroll through the news feed. Requires facebook credentials to be provided in the `config.json` file
     * `fastScenario` will load google and quickly exit. This is designed to be fast, and is for testing BrowserEfficiencyTest
@@ -38,12 +38,12 @@ BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -sce
 
 * **-iterations|-i** Selects the number of times to run each set of scenarios on each browser. Each time will result in its own trace file, and its own measurement(s) which can be aggregated and analyzed however desired. Running multiple iterations is highly recommended to account for variablity in the test. If not provided, 1 iteration will be run
 
-* **-tracecontrolled|-tc** Provides the path to save the trace files in. This must be provided if and only if `-measureset|-ms` is also provided. After the test completes, look for the trace files in this path. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not convered within BrowserEfficiencyTest.
+* **-tracecontrolled|-tc** Provides the path to save the trace files in. This must be provided if and only if `-measureset|-ms` is also provided. After the test completes, look for the trace files in this path. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not covered within BrowserEfficiencyTest.
 
-* **-measureset|-ms** Determines which measures will be traced for and extracted out of the traces. This must be provided if and only if `tracecontrolled|-tc` is provided. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not convered within BrowserEfficiencyTest. The possible measure sets are:
+* **-measureset|-ms** Determines which measures will be traced for and extracted out of the traces. This must be provided if and only if `tracecontrolled|-tc` is provided. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not covered within BrowserEfficiencyTest. The possible measure sets are:
     * `cpuUsage` will measure how much the CPU was used during the test. Specifically, it measures how much time the CPU was not idle during the test pass.
     * `diskUsage` will measure the disk activity during the test pass.
-    * `energy` will measure how much energy was consumed by the system during the test pass. Some devices, like the Surface Book, have hardware that measures this directly and provide much more accurate results.
+    * `energy` will measure how much energy was consumed by the system during the test pass. **Note that this measure set only works on a Surface Book with the Maxim power chip driver installed**
     * `networkUsage` will measure the network activity during the test pass.
     * `refSet` is a measure of the memory used during the test pass.
 
