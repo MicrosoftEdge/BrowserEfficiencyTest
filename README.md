@@ -8,8 +8,9 @@ BrowserEfficiencyTest is a [Selenium WebDriver](http://docs.seleniumhq.org/) bas
 
 ## Documentation
 
-* [Instructions on how to get started are available here](Documentation/GetStarted.md).
-* [Full documentation on usage is available here](Documentation/Usage.md).
+* [Get started with BrowserEfficiencyTest](Documentation/GetStarted.md).
+* [Using BrowserEfficiencyTest](Documentation/Usage.md)
+* [Extending BrowserEfficiencyTest](Documentation/Extending.md)
 
 ## Links
 

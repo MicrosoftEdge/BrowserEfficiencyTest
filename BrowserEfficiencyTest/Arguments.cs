@@ -288,7 +288,6 @@ namespace BrowserEfficiencyTest
             AddScenario(new Msn());
             AddScenario(new Msnbc());
             AddScenario(new OutlookViewEmails());
-            AddScenario(new RedditSearchSubreddit());
             AddScenario(new WikipediaUnitedStates());
             AddScenario(new YoutubeWatchVideo());
             AddScenario(new AmazonSearch());
