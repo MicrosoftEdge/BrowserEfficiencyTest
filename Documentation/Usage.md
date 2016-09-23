@@ -19,7 +19,7 @@ BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -sce
     * `firefox` will include Firefox in the test pass
     * `opera` will include Opera in the test pass
 
-* **-scenario|-s (REQUIRED)** Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional sceanrios after it, it will be left running in a background tab. The possible options are:
+* **-scenario|-s (REQUIRED)** Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
     * `amazon` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
     * `bbcNews` will load BBC, click on the top story, and scroll down
     * `cnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
@@ -63,9 +63,9 @@ This example will run the wikipedia scenario on Microsoft Edge. Since it's only 
 
  or
 
- ```BrowserEfficiencyTest.exe -b edge -s wikipedia```
+```BrowserEfficiencyTest.exe -b edge -s wikipedia```
 
- ### Running multiple scenarios on multiple browsers
+### Running multiple scenarios on multiple browsers
 
 This example will run wikipedia, youtube, and facebook on Microsoft Edge, Chrome, and Firefox. Each scenario (site) will be run in its own tab on each browser. No measureset is defined, so this run will only automate the actions on each browser; it won't result in any measurements being taken.
 
