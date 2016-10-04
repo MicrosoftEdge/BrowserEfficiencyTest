@@ -13,13 +13,13 @@ Usage:
 BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2> [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>]
 ```
 
-* **-browser|-b (REQUIRED)** Selects the browser or browsers to run the scenarios with. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
+*   **-browser|-b (REQUIRED)** Selects the browser or browsers to run the scenarios with. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
     * `edge` will include Microsoft Edge in the test pass
     * `chrome` will include Chrome in the test pass
     * `firefox` will include Firefox in the test pass
     * `opera` will include Opera in the test pass
 
-* **-scenario|-s (REQUIRED)** Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
+*   **-scenario|-s (REQUIRED)** Selects the scenario or scenarios to run. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
     * `amazon` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
     * `bbcNews` will load BBC, click on the top story, and scroll down
     * `cnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
@@ -36,22 +36,28 @@ BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -sce
     * `yahooNews` will navigate to Yahoo.com, go to news, and navigate to the top story. It will then scroll through it.
     * `youtube` will play the video "Microsoft Design: Connecting Makers" on Youtube
 
-* **-iterations|-i** Selects the number of times to run each set of scenarios on each browser. Each time will result in its own trace file, and its own measurement(s) which can be aggregated and analyzed however desired. Running multiple iterations is highly recommended to account for variablity in the test. If not provided, 1 iteration will be run
+*   **-iterations|-i** Selects the number of times to run each set of scenarios on each browser. Each time will result in its own trace file, and its own measurement(s) which can be aggregated and analyzed however desired. Running multiple iterations is highly recommended to account for variablity in the test. If not provided, 1 iteration will be run
 
-* **-tracecontrolled|-tc** Provides the path to save the trace files in. This must be provided if and only if `-measureset|-ms` is also provided. After the test completes, look for the trace files in this path. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not covered within BrowserEfficiencyTest.
+*   **-tracecontrolled|-tc** Provides the path to save the trace files in. This must be provided if and only if `-measureset|-ms` is also provided. After the test completes, look for the trace files in this path. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not covered within BrowserEfficiencyTest.
 
-* **-measureset|-ms** Determines which measures will be traced for and extracted out of the traces. This must be provided if and only if `tracecontrolled|-tc` is provided. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not covered within BrowserEfficiencyTest. The possible measure sets are:
+*   **-measureset|-ms** Determines which measures will be traced for and extracted out of the traces. This must be provided if and only if `tracecontrolled|-tc` is provided. If not provided, no tracing will be done and no measures will be provided after the test completes. You may wish to do this if you are testing or extracting measures in some other way not covered within BrowserEfficiencyTest. The possible measure sets are:
     * `cpuUsage` will measure how much the CPU was used during the test. Specifically, it measures how much time the CPU was not idle during the test pass.
+
     * `diskUsage` will measure the disk activity during the test pass.
-    * `energy` will measure how much energy was consumed by the system during the test pass. **Note that this measure set only works on a Surface Book with the Maxim power chip driver installed**
+
+    * `energy` will measure how much energy was consumed by the system during the test pass.
+
+      **Note:** The `energy` measure set only works on a Surface Book with the Maxim power chip driver installed, and in order to measure total system power, the top must be detached from the keyboard and unplugged from power.
+
     * `networkUsage` will measure the network activity during the test pass.
+
     * `refSet` is a measure of the memory used during the test pass.
 
-* **-warmup|-w** Runs each of the scenarios on each browser once before starting measured iterations, to populate the cache
+*   **-warmup|-w** Runs each of the scenarios on each browser once before starting measured iterations, to populate the cache
 
-* **-profile|-p** Enables the Chrome driver to use the passed in profile. Requires passing in the path to the Chrome profile.
+*   **-profile|-p** Enables the Chrome driver to use the passed in profile. Requires passing in the path to the Chrome profile.
 
-* **-attempts|-a** Defines the number of attempts to make per iteration. If an exception is caught, the trace is discarded and a new attempt is made. This paramater allows you to override the default number of attempts before giving up on the iteration, which is 3.
+*   **-attempts|-a** Defines the number of attempts to make per iteration. If an exception is caught, the trace is discarded and a new attempt is made. This paramater allows you to override the default number of attempts before giving up on the iteration, which is 3.
 
 ## Examples
 
@@ -79,7 +85,7 @@ or
 
 ### Getting measurements through tracing
 
-This example builds off the above example with multiple scenarios on multiple browsers. It will run the same automation on the same browsers, but will also measure how much CPU each browser consumed to run them. The final results will be outputted in a CSV file in the active directory, and the traces from each iteration or each browser will be available in the path you specify.
+This example builds off the above example with multiple scenarios on multiple browsers. It will run the same automation on the same browsers, but will also measure how much CPU the system consumed to run each of them. The final results will be outputted in a CSV file in the active directory, and the traces from each iteration or each browser will be available in the path you specify.
 
 Remember that an instance of Elevator must be running and listening for a client connection in order for this command to complete.
 
