@@ -164,6 +164,7 @@ namespace BrowserEfficiencyTest
                             _scenarios.Add(_possibleScenarios["facebook"]);
                             _scenarios.Add(_possibleScenarios["google"]);
                             _scenarios.Add(_possibleScenarios["gmail"]);
+                            _scenarios.Add(_possibleScenarios["slack"]);
                             _scenarios.Add(_possibleScenarios["wikipedia"]);
                             ScenarioName = "all";
                             break;
@@ -298,6 +299,7 @@ namespace BrowserEfficiencyTest
             AddScenario(new BbcNews());
             AddScenario(new CnnOneStory());
             AddScenario(new FastScenario());
+            AddScenario(new Slack());
         }
 
         private void AddScenario(Scenario scenario)

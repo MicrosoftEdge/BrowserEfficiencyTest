@@ -68,6 +68,7 @@
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
+    <Compile Include="Scenarios\Slack.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />
     <Compile Include="RemoteWebDriverExtension.cs" />
     <Compile Include="ScenarioRunner.cs" />
@@ -93,6 +94,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
