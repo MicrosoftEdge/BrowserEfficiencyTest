@@ -70,14 +70,17 @@ namespace BrowserEfficiencyTest
 
             // hack around bug in WebDriver:
             // driver.FindElement(By.Id("signin_btn")).Click();
-            //passElem.SendKeys(Keys.Enter);
+            passElem.SendKeys(Keys.Enter);
             Thread.Sleep(10000);
 
-            // View some channels
-            driver.Navigate().GoToUrl("https://mswebeco.slack.com/messages/msedgedev/");
-            Thread.Sleep(5000);
-            driver.Navigate().GoToUrl("https://mswebeco.slack.com/messages/random/");
-            Thread.Sleep(5000);
+            for (var i = 0; i < 11; i++)
+            {
+                // View some channels
+                driver.Navigate().GoToUrl("https://mswebeco.slack.com/messages/msedgedev/");
+                Thread.Sleep(5000);
+                driver.Navigate().GoToUrl("https://mswebeco.slack.com/messages/random/");
+                Thread.Sleep(5000);
+            }
         }   
     }
 }
