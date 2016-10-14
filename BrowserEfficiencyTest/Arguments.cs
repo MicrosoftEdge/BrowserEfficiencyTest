@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
     /// </summary>
     internal class Arguments
     {
-        private static readonly List<string> s_SupportedBrowsers = new List<string> { "chrome", "edge", "firefox", "opera" };
+        private static readonly List<string> s_SupportedBrowsers = new List<string> { "chrome", "edge", "firefox", "opera", "hwa" };
 
         private Dictionary<string, Scenario> _possibleScenarios;
         private List<Scenario> _scenarios;

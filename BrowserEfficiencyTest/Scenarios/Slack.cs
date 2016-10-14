@@ -25,6 +25,7 @@
 //
 //--------------------------------------------------------------
 
+using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
@@ -32,6 +33,8 @@ using System.Threading;
 
 namespace BrowserEfficiencyTest
 {
+    // Sample command line params:
+    // -browser chrome -s slack -tc c:\etls -ms energy -i 5
     internal class Slack : Scenario
     {
         public Slack()
@@ -42,44 +45,61 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
-            string userName = string.Empty, passWord = string.Empty;
-            driver.Navigate().GoToUrl("http://mswebeco.slack.com/");
-            Thread.Sleep(5000);
-
-            // login to slack
-            foreach (var item in logins)
+            if (browser != "hwa")
             {
-                if (item.Domain == "slack.com")
+                string userName = string.Empty, passWord = string.Empty;
+
+                driver.Navigate().GoToUrl("http://mswebeco.slack.com/");
+                Thread.Sleep(5000);
+
+                try
                 {
-                    userName = item.UserName;
-                    passWord = item.PassWord;
-                    break;
+                    driver.FindElementById("direct_messages_header").Click();
+                }
+                catch (Exception)
+                {
+                    // login to slack
+                    foreach (var item in logins)
+                    {
+                        if (item.Domain == "slack.com")
+                        {
+                            userName = item.UserName;
+                            passWord = item.PassWord;
+                            break;
+                        }
+                    }
+
+                    var userElem = driver.FindElement(By.Id("email"));
+                    var passElem = driver.FindElement(By.Id("password"));
+
+                    userElem.Clear();
+                    userElem.SendKeys(userName);
+                    Thread.Sleep(500);
+
+                    passElem.Clear();
+                    passElem.SendKeys(passWord);
+                    Thread.Sleep(500);
+
+                    //// hack around bug in WebDriver:
+                    //driver.FindElement(By.Id("signin_btn")).Click();
+
+                    passElem.SendKeys(Keys.Enter);
+                    Thread.Sleep(5000);
                 }
             }
-
-            var userElem = driver.FindElement(By.Id("email"));
-            var passElem = driver.FindElement(By.Id("password"));
-
-            userElem.Clear();
-            userElem.SendKeys(userName);
-            Thread.Sleep(500);
-
-            passElem.Clear();
-            passElem.SendKeys(passWord);
-            Thread.Sleep(500);
-
-            // hack around bug in WebDriver:
-            // driver.FindElement(By.Id("signin_btn")).Click();
-            passElem.SendKeys(Keys.Enter);
             Thread.Sleep(10000);
-
-            for (var i = 0; i < 11; i++)
+            for (var i = 0; i < 10; i++)
             {
-                // View some channels
-                driver.Navigate().GoToUrl("https://mswebeco.slack.com/messages/msedgedev/");
-                Thread.Sleep(5000);
-                driver.Navigate().GoToUrl("https://mswebeco.slack.com/messages/random/");
-                Thread.Sleep(5000);
+                // simulate some scrolling. every other time we will
+                // go down
+                // but we will also go up (so, sometimes up 2x, sometimes down then up)
+                var scrollElem = driver.FindElementById("message-input");
+                scrollElem.SendKeys(i%2 == 0 ? Keys.PageUp : Keys.PageDown);
+
+                Thread.Sleep(1000);
+                scrollElem.SendKeys(Keys.PageUp);
+
+                Thread.Sleep(1000);
             }
         }   
     }
