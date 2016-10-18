@@ -298,6 +298,7 @@ namespace BrowserEfficiencyTest
             AddScenario(new BbcNews());
             AddScenario(new CnnOneStory());
             AddScenario(new FastScenario());
+            AddScenario(new AzureDashboard());
         }
 
         private void AddScenario(Scenario scenario)
