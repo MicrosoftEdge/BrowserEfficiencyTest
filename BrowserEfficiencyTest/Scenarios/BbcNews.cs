@@ -42,18 +42,17 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
+            // Navigate
             driver.Navigate().GoToUrl("http://www.bbc.co.uk");
-            Thread.Sleep(10000);
+            driver.Wait(10);
 
             // Navigate to the hero headline
-            IWebElement heroHeadline = driver.FindElement(By.XPath("//*[@rev='hero1|headline']"));
-            heroHeadline.SendKeys(string.Empty);
-            heroHeadline.SendKeys(Keys.Enter);
+            driver.ClickElement(driver.FindElement(By.XPath("//*[@rev='hero1|headline']")));
 
             // Read (some of) the article
-            Thread.Sleep(8000);
+            driver.Wait(8);
             driver.ScrollPage(2);
-            Thread.Sleep(2000);
+            driver.Wait(2);
             driver.ScrollPage(2);
         }
     }
