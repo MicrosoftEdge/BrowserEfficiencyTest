@@ -25,10 +25,8 @@
 //
 //--------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
-using System.Threading;
 using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest

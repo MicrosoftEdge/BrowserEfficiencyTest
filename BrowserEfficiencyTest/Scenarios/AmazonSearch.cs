@@ -43,29 +43,17 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
+            // Navigate
             driver.Navigate().GoToUrl("http://www.amazon.com");
-
-            // Give it more than enough time to load
-            Thread.Sleep(5 * 1000);
+            driver.Wait(5);
 
             // Type "Game of Thrones" in the search box and hit enter
-            var searchbox = driver.FindElementById("twotabsearchtextbox");
-            foreach (char c in "Game of Thrones")
-            {
-                searchbox.SendKeys(c.ToString());
-            }
-            searchbox.SendKeys(Keys.Enter);
-
-            // Give the results time to load
-            Thread.Sleep(5 * 1000);
+            driver.TypeIntoField(driver.FindElementById("twotabsearchtextbox"), "Game of Thrones" + Keys.Enter);
+            driver.Wait(5);
 
             // Click into "Game of Thrones Season 1"
-            var bookLink = driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']");
-            bookLink.SendKeys(string.Empty);
-            driver.Keyboard.SendKeys(Keys.Enter);
-
-            // And let that load
-            Thread.Sleep(2 * 1000);
+            driver.ClickElement(driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']"));
+            driver.Wait(2);
 
             // Scroll down to reviews
             driver.ScrollPage(5);
