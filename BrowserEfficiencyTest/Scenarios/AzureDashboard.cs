@@ -25,13 +25,8 @@
 //
 //--------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium.Remote;
-using System.Threading;
 using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
@@ -41,7 +36,7 @@ namespace BrowserEfficiencyTest
         public AzureDashboard()
         {
             Name = "azure";
-            Duration = 80;
+            Duration = 70;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
@@ -60,66 +55,31 @@ namespace BrowserEfficiencyTest
 
             // Go to the login
             driver.Navigate().GoToUrl("http://portal.azure.com");
-
-            Thread.Sleep(3 * 1000);
+            driver.Wait(3);
 
             // Log in
-            var usernameIn = driver.FindElementById("cred_userid_inputtext");
-            var passwordIn = driver.FindElementById("cred_password_inputtext");
-            foreach (char c in username)
-            {
-                usernameIn.SendKeys(c.ToString());
-                Thread.Sleep(75);
-            }
-            foreach (char c in password)
-            {
-                passwordIn.SendKeys(c.ToString());
-                Thread.Sleep(75);
-            }
-            passwordIn.SendKeys(Keys.Enter);
-
-            Thread.Sleep(9 * 1000);
+            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), username);
+            driver.TypeIntoField(driver.FindElementById("cred_password_inputtext"), password + Keys.Enter);
+            driver.Wait(8);
 
             // Open a blade
             var sidebar = driver.FindElementByClassName("fxs-sidebar-bar");
-            var allResourcesLink = sidebar.FindElement(By.XPath("//*[@title='All resources']"));
-            allResourcesLink.SendKeys(String.Empty);
-            allResourcesLink.SendKeys(Keys.Enter);
-
-            Thread.Sleep(5 * 1000);
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='All resources']")));
+            driver.Wait(5);
 
             // Open the marketplace
-            var browseButton = sidebar.FindElement(By.ClassName("fxs-sidebar-browse"));
-            browseButton.SendKeys(String.Empty);
-            browseButton.SendKeys(Keys.Enter);
+            driver.ClickElement(sidebar.FindElement(By.ClassName("fxs-sidebar-browse")));
+            driver.Wait(2);
 
-            Thread.Sleep(2 * 1000);
-
-            var filterInput = driver.FindElement(By.ClassName("fxs-sidebar-filter-input"));
-            foreach (char c in "marketplace")
-            {
-                filterInput.SendKeys(c.ToString());
-                Thread.Sleep(75);
-            }
-            filterInput.SendKeys(Keys.Enter);
-
-            Thread.Sleep(12 * 1000);
+            driver.TypeIntoField(driver.FindElement(By.ClassName("fxs-sidebar-filter-input")), "marketplace" + Keys.Enter);
+            driver.Wait(12);
 
             // Search for Visual studio
-            var marketplaceSearchBox = driver.FindElementByClassName("ext-gallery-search-container").FindElement(By.ClassName("azc-input"));
-            foreach (char c in "Visual studio")
-            {
-                marketplaceSearchBox.SendKeys(c.ToString());
-                Thread.Sleep(75);
-            }
-            marketplaceSearchBox.SendKeys(Keys.Enter);
-
-            Thread.Sleep(8 * 1000);
+            driver.TypeIntoField(driver.FindElementByClassName("ext-gallery-search-container").FindElement(By.ClassName("azc-input")), "Visual studio" + Keys.Enter);
+            driver.Wait(8);
 
             // Open another blade
-            var billingLink = sidebar.FindElement(By.XPath("//*[@title='Billing']"));
-            billingLink.SendKeys(String.Empty);
-            billingLink.SendKeys(Keys.Enter);
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Billing']")));
         }
     }
 }
