@@ -107,6 +107,8 @@ namespace BrowserEfficiencyTest
                 throw new ArgumentException("Not all required members of MeasureSetDefinition have been defined by the child class.");
             }
 
+            Console.WriteLine("[{0}] - Processing ETL {1} using profile {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), etlFileName, _wpaProfile);
+
             // Dump the data from the ETL File using the specified wpaProfile.
             _wpaExporter.WPAExport(etlFileName, _wpaProfile);
 
