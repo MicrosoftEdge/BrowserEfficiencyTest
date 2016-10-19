@@ -47,46 +47,25 @@ namespace BrowserEfficiencyTest
         }
 
         /// <summary>
-        /// Calculates the number of megabytes for dynamic and file reference set categories by process.
+        /// Calculates the peak memory refset in bytes for the entire system during the trace session.
         /// </summary>
-        /// <param name="csvData">The raw csv data to use for calculating the number of megabytes for dynamic and file reference sets.</param>
-        /// <returns>A dictionary of processes and the number of megabytes used by reference set category.</returns>
+        /// <param name="csvData">The raw csv data to use for calculating the number of bytes for dynamic and file reference sets.</param>
+        /// <returns>A dictionary of the number of bytes used per refset category class.</returns>
         protected override Dictionary<string, string> CalculateMetrics(Dictionary<string, List<string>> csvData)
         {
             Dictionary<string, string> metrics = null;
 
             // Process the raw string data into a usable format.
-            var rawRefSetData = from row in csvData.First().Value
+            var rawRefSetData = (from row in csvData.First().Value
                                 let fields = SplitCsvString(row)
-                                select new { ProcessName = fields[1], CategoryClass = fields[2], PageCategory = fields[3], ImpactingSize = Convert.ToDecimal(fields[6]) };
+                                select new { CategoryClass = fields[0], PeakSizeMark = fields[2] }).ToDictionary( k => k.CategoryClass, v => v.PeakSizeMark );
 
             if (rawRefSetData.Count() == 0)
             {
                 return null;
             }
 
-            // Get the dynamic category of data. We only need the top level dynamic category class of refset data since 
-            // all the sub levels of the data are already summed up to the top level.
-            var dynamicCategory = (from row in rawRefSetData
-                                   where row.CategoryClass == "Dynamic" && row.PageCategory == ""
-                                   group row by row.ProcessName into g
-                                   orderby g.Key
-                                   select new KeyValuePair<string, string>("ImpactingSize(MB) | Dynamic | " + g.Key.ToString(), g.Sum(s => s.ImpactingSize).ToString())).ToDictionary(s => s.Key, s => s.Value);
-
-            // Get the file category of data. We only need the top level file category class of refset data since 
-            // all the sub levels of the data are already summed up to the top level.
-            var fileCategory = (from row in rawRefSetData
-                                where row.CategoryClass == "File" && row.PageCategory == ""
-                                group row by row.ProcessName into g
-                                orderby g.Key
-                                select new KeyValuePair<string, string>("ImpactingSize(MB) | File | " + g.Key.ToString(), g.Sum(s => s.ImpactingSize).ToString())).ToDictionary(s => s.Key, s => s.Value);
-
-            metrics = dynamicCategory;
-
-            foreach (var item in fileCategory)
-            {
-                metrics.Add(item.Key, item.Value);
-            }
+            metrics = rawRefSetData.ToDictionary( k => "Peak RefSet Size (Bytes) | " + k.Key.ToString(), v => v.Value);
 
             return metrics;
         }
