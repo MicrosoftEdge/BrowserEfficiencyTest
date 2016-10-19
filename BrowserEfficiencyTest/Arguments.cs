@@ -299,6 +299,7 @@ namespace BrowserEfficiencyTest
             AddScenario(new CnnOneStory());
             AddScenario(new FastScenario());
             AddScenario(new AzureDashboard());
+            AddScenario(new OutlookOffice());
         }
 
         private void AddScenario(Scenario scenario)

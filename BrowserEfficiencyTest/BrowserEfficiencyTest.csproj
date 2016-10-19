@@ -69,6 +69,7 @@
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
+    <Compile Include="Scenarios\OutlookOffice.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />
     <Compile Include="RemoteWebDriverExtension.cs" />
     <Compile Include="ScenarioRunner.cs" />
