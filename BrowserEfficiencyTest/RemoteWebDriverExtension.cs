@@ -31,6 +31,7 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
+using System;
 using System.Net.Http;
 using System.Threading;
 
@@ -102,6 +103,67 @@ namespace BrowserEfficiencyTest
             {
                 remoteWebDriver.Keyboard.SendKeys(Keys.PageDown);
                 Thread.Sleep(1000);
+            }
+        }
+
+        /// <summary>
+        /// Waits for the specified amount of time before executing the next command.
+        /// </summary>
+        /// <param name="secondsToWait">The number of seconds to wait</param>
+        public static void Wait(this RemoteWebDriver remoteWebDriver, double secondsToWait)
+        {
+            Thread.Sleep((int)(secondsToWait * 1000));
+        }
+
+        /// <summary>
+        /// Types into the given WebElement the specified text
+        /// </summary>
+        /// <param name="element">The WebElement to type into</param>
+        /// <param name="text">The text to type</param>
+        public static void TypeIntoField(this RemoteWebDriver remoteWebdriver, IWebElement element, string text)
+        {
+            foreach (char c in text)
+            {
+                element.SendKeys(c.ToString());
+                Thread.Sleep(75);
+            }
+        }
+
+        /// <summary>
+        /// Clicks on the given web element. Makes multiple attempts if necessary.
+        /// </summary>
+        /// <param name="element">The WebElement to click on</param>
+        public static void ClickElement(this RemoteWebDriver remoteWebDriver, IWebElement element)
+        {
+            int attempt = 0;
+            int attemptsToMake = 3;
+            bool failedLastAttempt = false;
+            Exception exception = null;
+            while (attempt < 3)
+            {
+                try
+                {
+                    // Send the empty string to give focus, then enter. We do this instead of click() because
+                    // click() has a bug on high DPI screen we're working around
+                    element.SendKeys(string.Empty);
+                    element.SendKeys(Keys.Enter);
+                    break;
+                }
+                catch (Exception e)
+                {
+                    exception = e;
+                    if (attempt + 1 == attemptsToMake)
+                    {
+                        failedLastAttempt = true;
+                    }
+                    Console.WriteLine("Failed attempt " + attempt + " to click element " + element.ToString());
+                    Thread.Sleep(1000);
+                    attempt++;
+                }
+            }
+            if (failedLastAttempt)
+            {
+                throw exception;
             }
         }
 
