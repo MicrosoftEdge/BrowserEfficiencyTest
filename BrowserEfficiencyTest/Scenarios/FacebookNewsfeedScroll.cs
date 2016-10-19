@@ -43,47 +43,43 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
             driver.Navigate().GoToUrl("http://www.facebook.com");
-
-            Thread.Sleep(5000);
+            driver.Wait(5);
 
             // if not logged on, log on
             var elems = driver.FindElements(By.CssSelector("H2"));
             foreach (IWebElement elem in elems)
             {
-                if (elem.Text.Contains("Sign Up")) // not signed in
+                string userName = string.Empty, passWord = string.Empty;
+
+                foreach (var item in logins)
                 {
-                    string userName = string.Empty, passWord = string.Empty;
-
-                    foreach (var item in logins)
+                    if (item.Domain == "facebook.com")
                     {
-                        if (item.Domain == "facebook.com")
-                        {
-                            userName = item.UserName;
-                            passWord = item.PassWord;
-                            break;
-                        }
+                        userName = item.UserName;
+                        passWord = item.PassWord;
+                        break;
                     }
-
-                    Thread.Sleep(2000);
-                    var username = driver.FindElement(By.Id("email"));
-                    var password = driver.FindElement(By.Id("pass"));
-
-                    username.Clear();
-                    username.SendKeys(userName);
-                    Thread.Sleep(1000);
-
-                    password.Clear();
-                    Thread.Sleep(3000);
-                    password.SendKeys(passWord);
-                    Thread.Sleep(1000);
-
-                    // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI
-                    // Instead use tab and enter. Seemed to be pretty reliable across browsers
-                    driver.Keyboard.SendKeys(Keys.Tab);
-                    driver.Keyboard.SendKeys(Keys.Enter);
-                    Thread.Sleep(2000);
-                    break;
                 }
+
+                Thread.Sleep(2000);
+                var username = driver.FindElement(By.Id("email"));
+                var password = driver.FindElement(By.Id("pass"));
+
+                username.Clear();
+                driver.TypeIntoField(username, userName);
+                driver.Wait(1);
+
+                password.Clear();
+                driver.Wait(3);
+                driver.TypeIntoField(password, passWord);
+                driver.Wait(1);
+
+                // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI
+                // Instead use tab and enter. Seemed to be pretty reliable across browsers
+                driver.Keyboard.SendKeys(Keys.Tab);
+                driver.Keyboard.SendKeys(Keys.Enter);
+                driver.Wait(2);
+                break;
             }
 
             // Once we're logged in, all we're going to do is scroll through the page
