@@ -49,6 +49,11 @@ namespace BrowserEfficiencyTest
         protected string _wpaProfile;
 
         /// <summary>
+        /// The Windows Performance Analyzer(WPA) Region name to use when extracting data from an ETL.
+        /// </summary>
+        protected string _wpaRegionName;
+
+        /// <summary>
         /// The Windows Performance Recorder(WPR) Profile to use when recording a trace session for this measure.
         /// </summary>
         public string WprProfile
@@ -87,6 +92,9 @@ namespace BrowserEfficiencyTest
         protected MeasureSet()
         {
             _wpaExporter = new AutomateWPAExporter();
+
+            // _wpaRegionName is optional so instantiate it to empty.
+            _wpaRegionName = "";
         }
 
         /// <summary>
@@ -110,7 +118,7 @@ namespace BrowserEfficiencyTest
             Console.WriteLine("[{0}] - Processing ETL {1} using profile {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), etlFileName, _wpaProfile);
 
             // Dump the data from the ETL File using the specified wpaProfile.
-            _wpaExporter.WPAExport(etlFileName, _wpaProfile);
+            _wpaExporter.WPAExport(etlFileName, _wpaProfile, _wpaRegionName);
 
             // Load the data from all the csv files exported above.
             foreach (string wpaExportedDataFile in _wpaExportedDataFileNames)

@@ -54,8 +54,9 @@ namespace BrowserEfficiencyTest
         /// <returns>True if the data tables were successfully exported.</returns>
         /// <param name="etlFile">The ETL file to export from.</param>
         /// <param name="wpaExporterProfile">The .wpaProfile file to use for exporting data from the ETL file.</param>
+        /// <param name="region">The name of the region to export if using regions.</param>
         /// <param name="outputFolder">The folder of where to place the file containig the xported data. Default is the current folder.</param>
-        public bool WPAExport(string etlFile, string wpaExporterProfile, string outputFolder = ".")
+        public bool WPAExport(string etlFile, string wpaExporterProfile, string region = "", string outputFolder = ".")
         {
             bool isSuccess = false;
 
@@ -64,7 +65,16 @@ namespace BrowserEfficiencyTest
                 return false;
             }
 
-            string commandLine = "-i " + etlFile + " -profile " + wpaExporterProfile + " -outputFolder " + outputFolder;
+            if (!string.IsNullOrEmpty(region))
+            {
+                region = " -region " + region;
+            }
+            else
+            {
+                region = "";
+            }
+
+            string commandLine = "-i " + etlFile + region + " -profile " + wpaExporterProfile + " -outputFolder " + outputFolder;
 
             isSuccess = this.RunWpaExporter(commandLine, true);
 
