@@ -44,9 +44,9 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
             NavigateToGmail(driver);
-            Thread.Sleep(2 * 1000);
+            driver.Wait(2);
             LogIn(driver, logins);
-            Thread.Sleep(7 * 1000);
+            driver.Wait(7);
             BrowseEmails(driver, 5);
         }
 
@@ -69,28 +69,17 @@ namespace BrowserEfficiencyTest
                 }
             }
 
-            // Log in with them
-            IWebElement userElement = null;
-
             try
             {
-                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
-                userElement = driver.FindElementById("Email");
-
-                // Type in the user name
-                foreach (char c in username)
-                {
-                    userElement.SendKeys(c.ToString());
-                    Thread.Sleep(75);
-                }
-
-                Thread.Sleep(1000);
+                // Enter username
+                driver.TypeIntoField(driver.FindElementById("Email"), username);
+                driver.Wait(1);
 
                 // Tab down and hit next button
                 driver.Keyboard.SendKeys(Keys.Tab);
                 driver.Keyboard.SendKeys(Keys.Enter);
 
-                Thread.Sleep(1000);
+                driver.Wait(1);
             }
             catch (ElementNotVisibleException)
             {
@@ -98,16 +87,11 @@ namespace BrowserEfficiencyTest
             }
 
             // Enter password
-            var passwordElement = driver.FindElementById("Passwd");
-            foreach (char c in password)
-            {
-                passwordElement.SendKeys(c.ToString());
-                Thread.Sleep(75);
-            }
+            driver.TypeIntoField(driver.FindElementById("Passwd"), password);
 
             // Tab down and hit submit button
             driver.Keyboard.SendKeys(Keys.Tab);
-            Thread.Sleep(2000);
+            driver.Wait(1);
             driver.Keyboard.SendKeys(Keys.Enter);
         }
 
@@ -119,14 +103,15 @@ namespace BrowserEfficiencyTest
                 // Simply using the shortcut keys worked pretty well.
                 // Note that they have to be enabled in the account you're using (gmail settings)
                 driver.Keyboard.SendKeys("o");
+                driver.Wait(4);
 
-                Thread.Sleep(4000);
                 // Go back to inbox
                 driver.Keyboard.SendKeys("u");
-                Thread.Sleep(2000);
+                driver.Wait(2);
+                
                 // Select next email with the "cursor". Do this with the j key in gmail
                 driver.Keyboard.SendKeys("j");
-                Thread.Sleep(2000);
+                driver.Wait(2);
             }
         }
     }
