@@ -25,9 +25,6 @@
 //
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace BrowserEfficiencyTest
@@ -46,7 +43,7 @@ namespace BrowserEfficiencyTest
             {
                 PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
 
-                perfProcessor.Execute(arguments.EtlPath);
+                perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath);
             }
         }
     }
