@@ -76,7 +76,7 @@ namespace BrowserEfficiencyTest
 
             totalCpuUsagePercentage = (double)(cpuUsageTimeNotIdle / totalCpuTime) * 100;
 
-            metrics = new Dictionary<string, string>() { { "CPU Usage | % time not idle", totalCpuUsagePercentage.ToString() } };
+            metrics = new Dictionary<string, string>() { { "CPU Total Utilization %", totalCpuUsagePercentage.ToString() } };
 
             return metrics;
         }
