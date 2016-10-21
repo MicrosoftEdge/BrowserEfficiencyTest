@@ -130,6 +130,19 @@ namespace BrowserEfficiencyTest
         }
 
         /// <summary>
+        /// Types the given text into whichever field has focus
+        /// </summary>
+        /// <param name="text">The text to type</param>
+        public static void TypeIntoField(this RemoteWebDriver remoteWebDriver, string text)
+        {
+            foreach (char c in text)
+            {
+                remoteWebDriver.Keyboard.SendKeys(c.ToString());
+                Thread.Sleep(75);
+            }
+        }
+
+        /// <summary>
         /// Clicks on the given web element. Makes multiple attempts if necessary.
         /// </summary>
         /// <param name="element">The WebElement to click on</param>
