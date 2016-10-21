@@ -50,7 +50,7 @@ namespace BrowserEfficiencyTest
         /// Calculates the peak and average reference set size in bytes for the entire system during the trace session.
         /// </summary>
         /// <param name="csvData">The raw csv data to use for calculating the number of bytes for dynamic and file reference sets.</param>
-        /// <returns>A dictionary of processes and the number of bytes used by reference set category.</returns>
+        /// <returns>A dictionary of the Reference Set size and the number of bytes used by reference set category.</returns>
         protected override Dictionary<string, string> CalculateMetrics(Dictionary<string, List<string>> csvData)
         {
             Dictionary<string, string> metrics = null;
