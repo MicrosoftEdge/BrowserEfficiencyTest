@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes'?>
+<InstrumentationManifest>
+   <Instrumentation>
+      <Regions>
+         <RegionRoot Guid="{EFA7A927-BAE3-48F6-92E1-000000000000}"
+                     Name="TraceActiveRegionRoot"
+                     FriendlyName="RegionRoot">
+            <Region Guid="{d8d639a0-cf4c-45fb-976a-000111000100}"
+                    Name="TraceActiveRegion"
+                    FriendlyName="TraceActive">
+               <Start>
+                  <Event Provider="{36b6f488-aad7-48c2-afe3-d4ec2c8b46fa}" Id="121" Version="0" />
+               </Start>
+               <Stop>
+                  <Event Provider="{36b6f488-aad7-48c2-afe3-d4ec2c8b46fa}" Id="126" Version="0" />
+               </Stop>
+            </Region>
+         </RegionRoot>
+      </Regions>
+   </Instrumentation>
+</InstrumentationManifest>
