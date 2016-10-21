@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
         public AzureDashboard()
         {
             Name = "azure";
-            Duration = 70;
+            Duration = 7 * 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
@@ -65,7 +65,7 @@ namespace BrowserEfficiencyTest
             // Open a blade
             var sidebar = driver.FindElementByClassName("fxs-sidebar-bar");
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='All resources']")));
-            driver.Wait(5);
+            driver.Wait(30);
 
             // Open the marketplace
             driver.ClickElement(sidebar.FindElement(By.ClassName("fxs-sidebar-browse")));
@@ -76,10 +76,29 @@ namespace BrowserEfficiencyTest
 
             // Search for Visual studio
             driver.TypeIntoField(driver.FindElementByClassName("ext-gallery-search-container").FindElement(By.ClassName("azc-input")), "Visual studio" + Keys.Enter);
-            driver.Wait(8);
+            driver.Wait(30);
 
-            // Open another blade
+            // Open more blades
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Billing']")));
+            driver.Wait(30);
+
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Resource groups']")));
+            driver.Wait(30);
+
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='App Services']")));
+            driver.Wait(30);
+
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='SQL databases']")));
+            driver.Wait(30);
+
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Virtual machines']")));
+            driver.Wait(30);
+
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Load balancers']")));
+            driver.Wait(30);
+
+            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Storage accounts']")));
+            driver.Wait(120);
         }
     }
 }

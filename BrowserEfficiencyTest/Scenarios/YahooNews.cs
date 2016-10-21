@@ -44,7 +44,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
             driver.Navigate().GoToUrl("http://www.yahoo.com");
-            Thread.Sleep(10000);
+            driver.Wait(10);
 
             // No reliable class or id for the news link, so get the news icon, then find its parent
             IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
