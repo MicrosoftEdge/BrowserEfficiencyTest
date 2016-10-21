@@ -51,7 +51,11 @@
     <Compile Include="MeasureSets\RefSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="MeasureSetDefinitionAssets\ActiveRegion.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <None Include="MeasureSetDefinitionAssets\CpuUsage.wpaProfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

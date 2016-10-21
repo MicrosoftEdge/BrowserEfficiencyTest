@@ -43,7 +43,8 @@ namespace BrowserEfficiencyTest
             WprProfile = "diskUsage";
             TracingMode = TraceCaptureMode.Memory;
             Name = "diskUsage";
-            _wpaExportedDataFileNames = new List<string>() { "Disk_Usage_DiskFileIO_ByProcess.csv" };
+            _wpaExportedDataFileNames = new List<string>() { "Disk_Usage_SizeAndServiceTimeByIOType.csv" };
+            _wpaRegionName = "TraceActiveRegion";
         }
 
         /// <summary>
@@ -61,41 +62,33 @@ namespace BrowserEfficiencyTest
             // Process the raw string data into a usable format.
             var rawDiskUsageData = from row in csvData.First().Value
                                    let fields = SplitCsvString(row)
-                                   select new { ProcessWithPID = fields[0], ProcessName = fields[1], IoType = fields[2], DiskServiceTime = Convert.ToDouble(fields[6]), NumBytes = Convert.ToUInt64(fields[7]) };
+                                   select new { IoType = fields[0], IoCount = Convert.ToUInt64(fields[1]), DiskServiceTime = Convert.ToDecimal(fields[2]), SizeInBytes = Convert.ToUInt64(fields[3]) };
 
-            // Compute the disk usage aggregated by process name and IO type.
-            var diskUsageData = from row in rawDiskUsageData
-                                group row by new { ProcessName = row.ProcessName, IoType = row.IoType } into g
-                                orderby g.Key.ProcessName, g.Key.IoType
-                                select new { ProcessName = g.Key.ProcessName, IOType = g.Key.IoType, DiskServiceTimeMicroSec = g.Sum(t => (decimal)t.DiskServiceTime), SizeInBytes = (ulong)(g.Sum(s => (double)s.NumBytes)) };
-
-            if (diskUsageData.Count() == 0)
+            if (rawDiskUsageData.Count() == 0)
             {
                 return null;
             }
 
             // Format the usage time results to metric form.
-            var usageTime = (from row in diskUsageData
-                             select new KeyValuePair<string, string>("Disk Service Time(us) | " + row.ProcessName + " | " + row.IOType, row.DiskServiceTimeMicroSec.ToString())).ToDictionary(k => k.Key, v => v.Value);
+            var usageTime = (from row in rawDiskUsageData
+                             select new KeyValuePair<string, string>("Total Disk Service Time(us) | " + row.IoType, row.DiskServiceTime.ToString())).ToDictionary(k => k.Key, v => v.Value);
 
-            // Format the read bytes results to metric form.
-            var readBytes = (from row in diskUsageData
-                             where row.IOType == "Read"
-                             select new KeyValuePair<string, string>("Read Bytes | " + row.ProcessName, row.SizeInBytes.ToString())).ToDictionary(k => k.Key, v => v.Value);
+            // Format the usage size in bytes to metric form.
+            var usageSize = (from row in rawDiskUsageData
+                             select new KeyValuePair<string, string>("Total Bytes | " + row.IoType, row.SizeInBytes.ToString())).ToDictionary(k => k.Key, v => v.Value);
 
-            // Format the written bytes results to metric form.
-            var writeBytes = (from row in diskUsageData
-                              where row.IOType == "Write"
-                              select new KeyValuePair<string, string>("Written Bytes | " + row.ProcessName, row.SizeInBytes.ToString())).ToDictionary(k => k.Key, v => v.Value);
+            // Format the count of IOs to metric form.
+            var ioCount = (from row in rawDiskUsageData
+                           select new KeyValuePair<string, string>("IO Count | " + row.IoType, row.IoCount.ToString())).ToDictionary(k => k.Key, v => v.Value);
 
             metrics = usageTime;
 
-            foreach (var item in readBytes)
+            foreach (var item in usageSize)
             {
                 metrics.Add(item.Key, item.Value);
             }
 
-            foreach (var item in writeBytes)
+            foreach (var item in ioCount)
             {
                 metrics.Add(item.Key, item.Value);
             }

@@ -3,14 +3,16 @@
   <Content xsi:type="WpaProfile2">
     <Sessions>
       <Session Index="0">
-        <FileReferences />
+        <FileReferences>
+          <FileReference FileName="ActiveRegion.xml" ServiceMoniker="Regions.{51EF6868-EFEC-42A3-B284-1838673CC095}" />
+        </FileReferences>
       </Session>
     </Sessions>
     <Views>
-      <View Guid="670e6997-2304-471e-a80d-611cafb2d660" Title="Analysis (2)" IsVisible="true">
+      <View Guid="670e6997-2304-471e-a80d-611cafb2d660" Title="DiskUsage" IsVisible="true">
         <Graphs>
-          <Graph Guid="12c5387c-58ca-45d4-a5c6-450475c30e06" LayoutStyle="DataTable" Color="#FF008000" GraphHeight="125" IsMinimized="false" IsShown="true" IsExpanded="false">
-            <Preset Name="DiskFileIO_ByProcess" GraphChartType="StackedBars" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="34" KeyColumnCount="7" LeftFrozenColumnCount="1" RightFrozenColumnCount="33" InitialFilterShouldKeep="true" GraphFilterColumnGuid="a026c5ce-1efd-4073-b379-82882f08b68d" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
+          <Graph Guid="12c5387c-58ca-45d4-a5c6-450475c30e06" LayoutStyle="All" Color="#FF008000" GraphHeight="125" IsMinimized="false" IsShown="true" IsExpanded="false" HelpText="{}{\rtf1\ansi\ansicpg1252\uc1\htmautsp\deff2{\fonttbl{\f0\fcharset0 Times New Roman;}{\f2\fcharset0 Segoe UI;}}{\colortbl\red0\green0\blue0;\red255\green255\blue255;}\loch\hich\dbch\pard\plain\ltrpar\itap0{\lang1033\fs18\f2\cf0 \cf0\ql{\f2 {\ltrch This graph shows disk I/O time from beginning to end, including initiation time, with sizes in Bytes (B). If available, disk priority is shown.}\li0\ri0\sa0\sb0\fi0\ql\par}&#xD;&#xA;}&#xD;&#xA;}">
+            <Preset Name="SizeAndServiceTimeByIOType" GraphChartType="StackedBars" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="34" KeyColumnCount="8" LeftFrozenColumnCount="1" RightFrozenColumnCount="33" InitialFilterShouldKeep="true" GraphFilterColumnGuid="a026c5ce-1efd-4073-b379-82882f08b68d" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
               <MetadataEntries>
                 <MetadataEntry Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" ColumnMetadata="EndTime" />
                 <MetadataEntry Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" ColumnMetadata="Duration" />
@@ -18,30 +20,30 @@
               </MetadataEntries>
               <HighlightEntries />
               <Columns>
-                <Column Guid="8986994a-34ee-48bf-9a28-29f7ff7062cc" Name="Thread ID" SortPriority="3" TextAlignment="Right" Width="80" IsVisible="false" />
-                <Column Guid="35f601bd-6be5-4c1a-9b35-495dddbe4dff" Name="Path Tree" SortPriority="4" Width="200" IsVisible="false" />
-                <Column Guid="cc1bde00-e396-4c90-a777-7f57a265c5a4" Name="File Extension" SortPriority="5" Width="60" IsVisible="false" />
-                <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="6" Width="200" IsVisible="false">
+                <Column Guid="8986994a-34ee-48bf-9a28-29f7ff7062cc" Name="Thread ID" SortPriority="1" TextAlignment="Right" Width="80" IsVisible="false" />
+                <Column Guid="35f601bd-6be5-4c1a-9b35-495dddbe4dff" Name="Path Tree" SortPriority="2" Width="200" IsVisible="false" />
+                <Column Guid="cc1bde00-e396-4c90-a777-7f57a265c5a4" Name="File Extension" SortPriority="3" Width="60" IsVisible="false" />
+                <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="4" Width="200" IsVisible="false">
                   <StackOptionsParameter Mode="StackTag" />
                 </Column>
-                <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="7" Width="200" IsVisible="false">
+                <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="5" Width="200" IsVisible="false">
                   <StackOptionsParameter Mode="FrameTags" />
                 </Column>
-                <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="8" Width="200" IsVisible="false">
+                <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="6" Width="200" IsVisible="false">
                   <StackOptionsParameter />
                 </Column>
-                <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="9" Width="80" IsVisible="false" />
-                <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="10" Width="80" IsVisible="false" />
-                <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="11" Width="80" IsVisible="false" />
-                <Column Guid="b9c207c5-9da1-4e2d-94de-df17b84840bf" Name="Init Time" SortPriority="12" TextAlignment="Right" Width="120" IsVisible="false" />
-                <Column Guid="6cc32316-40ee-42a0-8f71-88f7d175301d" Name="Priority" SortPriority="13" TextAlignment="Right" Width="60" IsVisible="false" />
-                <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="14" TextAlignment="Right" Width="120" IsVisible="false" />
-                <Column Guid="585dad88-c4ba-4e39-a1e5-c41f43c4e7fb" Name="Process" SortPriority="15" Width="327" IsVisible="true" />
-                <Column Guid="855b0ae3-e5fc-450c-807d-2e3f7a0ea21e" Name="Process Name" SortPriority="2" Width="120" IsVisible="true" />
-                <Column Guid="0372579e-31f1-483c-8295-221e175f0cbd" Name="IO Type" SortPriority="16" Width="100" IsVisible="true" />
-                <Column Guid="01745275-2844-4895-967e-03c75d9e0ffe" Name="Path Name" SortOrder="Ascending" SortPriority="0" Width="546" IsVisible="true" />
-                <Column Guid="66852a8e-74d2-4ec7-ad13-bcae0644b9c9" Name="IO Time" AggregationMode="Sum" SortPriority="17" TextAlignment="Right" Width="120" CellFormat="uN" IsVisible="true" />
-                <Column Guid="a026c5ce-1efd-4073-b379-82882f08b68d" Name="Count" AggregationMode="Count" SortPriority="18" TextAlignment="Right" Width="40" IsVisible="false" />
+                <Column Guid="0372579e-31f1-483c-8295-221e175f0cbd" Name="IO Type" SortPriority="7" Width="100" IsVisible="true" />
+                <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="8" Width="80" IsVisible="false" />
+                <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="9" Width="80" IsVisible="false" />
+                <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="10" Width="80" IsVisible="false" />
+                <Column Guid="b9c207c5-9da1-4e2d-94de-df17b84840bf" Name="Init Time" SortPriority="11" TextAlignment="Right" Width="120" IsVisible="false" />
+                <Column Guid="6cc32316-40ee-42a0-8f71-88f7d175301d" Name="Priority" SortPriority="12" TextAlignment="Right" Width="60" IsVisible="false" />
+                <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="13" TextAlignment="Right" Width="120" IsVisible="false" />
+                <Column Guid="585dad88-c4ba-4e39-a1e5-c41f43c4e7fb" Name="Process" SortPriority="14" Width="327" IsVisible="false" />
+                <Column Guid="855b0ae3-e5fc-450c-807d-2e3f7a0ea21e" Name="Process Name" SortPriority="15" Width="120" IsVisible="false" />
+                <Column Guid="66852a8e-74d2-4ec7-ad13-bcae0644b9c9" Name="IO Time" AggregationMode="Sum" SortPriority="16" TextAlignment="Right" Width="120" CellFormat="uN" IsVisible="false" />
+                <Column Guid="01745275-2844-4895-967e-03c75d9e0ffe" Name="Path Name" SortPriority="17" Width="546" IsVisible="false" />
+                <Column Guid="a026c5ce-1efd-4073-b379-82882f08b68d" Name="Count" AggregationMode="Count" SortPriority="18" TextAlignment="Right" Width="77" IsVisible="true" />
                 <Column Guid="42699aab-80f4-4241-9659-948879aebf07" Name="Source" SortPriority="19" Width="80" IsVisible="false" />
                 <Column Guid="5dc8b11e-45ba-40db-9807-583931a5738b" Name="Min Offset" AggregationMode="Min" SortPriority="20" TextAlignment="Right" Width="140" CellFormat="x" IsVisible="false" />
                 <Column Guid="ba4dda2c-3924-4b50-8162-69bc5ef926cc" Name="Max Offset" AggregationMode="Max" SortPriority="21" TextAlignment="Right" Width="140" CellFormat="x" IsVisible="false" />
@@ -51,11 +53,44 @@
                 <Column Guid="0d9468f1-a731-4539-ad01-72921d1b4ba6" Name="IACA - #IOs Init After Completed After" SortPriority="25" TextAlignment="Right" Width="50" IsVisible="false" />
                 <Column Guid="87d56527-1be8-40da-aca1-bd274f7cdf05" Name="QD/C - Queue Depth at Complete Time" SortPriority="26" TextAlignment="Right" Width="50" IsVisible="false" />
                 <Column Guid="1addd219-3f20-4c6d-b0d1-30c2cf034a67" Name="IoRate Block Reason" SortPriority="27" Width="50" IsVisible="false" />
-                <Column Guid="eeb919cb-e186-490c-940d-93493a28fada" Name="IoRate Blocked Time" AggregationMode="Sum" SortPriority="28" TextAlignment="Right" Width="157" CellFormat="uN" IsVisible="true" />
-                <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="1" TextAlignment="Right" Width="200" IsVisible="false" />
-                <Column Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" SortPriority="29" TextAlignment="Right" Width="40" IsVisible="false" />
-                <Column Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" AggregationMode="Sum" SortPriority="30" TextAlignment="Right" Width="140" CellFormat="uN" IsVisible="true" />
+                <Column Guid="eeb919cb-e186-490c-940d-93493a28fada" Name="IoRate Blocked Time" AggregationMode="Sum" SortPriority="28" TextAlignment="Right" Width="157" CellFormat="uN" IsVisible="false" />
+                <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="29" TextAlignment="Right" Width="200" IsVisible="false" />
+                <Column Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" SortPriority="30" TextAlignment="Right" Width="40" IsVisible="false" />
+                <Column Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" AggregationMode="Sum" SortOrder="Descending" SortPriority="0" TextAlignment="Right" Width="140" CellFormat="uN" IsVisible="true" />
                 <Column Guid="a0cb7c64-4495-494b-baeb-c699693162cc" Name="Size" AggregationMode="Sum" SortPriority="31" TextAlignment="Right" Width="80" CellFormat="B" IsVisible="true" />
+              </Columns>
+            </Preset>
+          </Graph>
+          <Graph Guid="1ce7fd53-2344-4ea8-acd6-1a0722a51427" LayoutStyle="All" Color="#FF005DE0" GraphHeight="125" IsMinimized="false" IsShown="true" IsExpanded="false" HelpText="{}{\rtf1\ansi\ansicpg1252\uc1\htmautsp\deff2{\fonttbl{\f0\fcharset0 Times New Roman;}{\f2\fcharset0 Segoe UI;}}{\colortbl\red0\green0\blue0;\red255\green255\blue255;}\loch\hich\dbch\pard\plain\ltrpar\itap0{\lang1033\fs18\f2\cf0 \cf0\ql{\f2 {\ltrch Lets the application apply user-friendly labels to portions of the trace.}\li0\ri0\sa0\sb0\fi0\ql\par}&#xD;&#xA;}&#xD;&#xA;}">
+            <Preset Name="Regions of Interest" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="22" KeyColumnCount="4" LeftFrozenColumnCount="5" RightFrozenColumnCount="21" InitialFilterShouldKeep="true" GraphFilterTopValue="0" GraphFilterThresholdValue="0" HelpText="{}{\rtf1\ansi\ansicpg1252\uc1\htmautsp\deff2{\fonttbl{\f0\fcharset0 Times New Roman;}{\f2\fcharset0 Segoe UI;}}{\colortbl\red0\green0\blue0;\red255\green255\blue255;}\loch\hich\dbch\pard\plain\ltrpar\itap0{\lang1033\fs18\f2\cf0 \cf0\ql{\f2 {\ltrch Uses a Regions of Interest file to apply additional markup to an open trace in WPA. These labels are applied by finding events that define the start and stop of a given region. The XML file contains these regions as well as their events.}\li0\ri0\sa0\sb0\fi0\ql\par}&#xD;&#xA;}&#xD;&#xA;}">
+              <MetadataEntries>
+                <MetadataEntry Guid="052aa8a8-ce86-486b-8cc9-158ac7d27113" Name="Stop Thread" ColumnMetadata="EndThreadId" />
+                <MetadataEntry Guid="93b276b8-d183-41b7-a16e-19eb9373dbf3" Name="Start Time" ColumnMetadata="StartTime" />
+                <MetadataEntry Guid="03facf2d-1d9f-43c7-b8e8-aed46477f348" Name="Stop Time" ColumnMetadata="EndTime" />
+              </MetadataEntries>
+              <HighlightEntries />
+              <Columns>
+                <Column Guid="07ec3178-e4ce-4729-a918-f1cc44ee55b9" Name="Region Friendly Name" SortPriority="1" Width="200" IsVisible="true" />
+                <Column Guid="a310de95-c012-4af7-be28-f78dd2f71247" Name="Instance Name" SortPriority="0" Width="200" IsVisible="true" />
+                <Column Guid="d96b19f7-d47a-40f3-ba80-fe0b9fae4616" Name="Region" SortPriority="9" Width="300" IsVisible="false" />
+                <Column Guid="d11ae606-c15c-4c87-a001-6d93a76465c3" Name="Opcode" SortPriority="0" Width="100" IsVisible="true" />
+                <Column Guid="d683f423-cea9-4275-b67e-1aadd496289d" Name="Provider" SortPriority="0" Width="200" IsVisible="false" />
+                <Column Guid="b521d564-9030-485d-97ae-3bd638a979bb" Name="Event Name" SortPriority="0" Width="200" IsVisible="true" />
+                <Column Guid="9fd0ec98-a6a4-432d-b0f9-b032609923e5" Name="Payload" SortPriority="0" Width="250" IsVisible="true" />
+                <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="0" Width="80" IsVisible="false" />
+                <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="0" Width="80" IsVisible="false" />
+                <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="0" Width="80" IsVisible="false" />
+                <Column Guid="abfa45ec-ef0f-4fdd-8a6d-1c93a140032b" Name="Duration" AggregationMode="Sum" SortPriority="13" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="d0b2a5cb-1966-4fe9-919f-1383932b2d84" Name="Start Process" SortPriority="8" Width="195" IsVisible="true" />
+                <Column Guid="6d945afa-988e-4be4-906b-023fb72eda92" Name="Start Process Name" SortPriority="0" Width="150" IsVisible="false" />
+                <Column Guid="c74dbb74-97bf-4c5a-9b21-d967ce08df00" Name="Start Thread" SortPriority="5" TextAlignment="Right" Width="80" IsVisible="true" />
+                <Column Guid="b9e5e33d-d875-4fb2-b4f9-7e9d14d8d370" Name="Stop Process" SortPriority="6" Width="195" IsVisible="true" />
+                <Column Guid="04222b11-b8be-49e1-9c52-a6d1f820a6d3" Name="Stop Process Name" SortPriority="0" Width="150" IsVisible="false" />
+                <Column Guid="052aa8a8-ce86-486b-8cc9-158ac7d27113" Name="Stop Thread" SortPriority="7" TextAlignment="Right" Width="80" IsVisible="true" />
+                <Column Guid="471b850d-c2bc-482d-871d-13fb7c13bd2a" Name="Region Guid" AggregationMode="Count" SortPriority="10" Width="223" IsVisible="false" />
+                <Column Guid="0c5cf8cd-9b9e-5798-1a5d-09d429f7fa3c" Name="Field 1" SortPriority="-1" Width="80" IsVisible="true" />
+                <Column Guid="93b276b8-d183-41b7-a16e-19eb9373dbf3" Name="Start Time" AggregationMode="Min" SortOrder="Ascending" SortPriority="0" TextAlignment="Right" Width="100" IsVisible="true" />
+                <Column Guid="03facf2d-1d9f-43c7-b8e8-aed46477f348" Name="Stop Time" AggregationMode="Max" SortPriority="14" TextAlignment="Right" Width="100" IsVisible="true" />
               </Columns>
             </Preset>
           </Graph>
@@ -65,153 +100,6 @@
         </SessionIndices>
       </View>
     </Views>
-    <ModifiedGraphs>
-      <GraphSchema Guid="12c5387c-58ca-45d4-a5c6-450475c30e06">
-        <ModifiedPresets>
-          <Preset Name="DiskFileIO_ByProcess" GraphChartType="StackedBars" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="34" KeyColumnCount="7" LeftFrozenColumnCount="1" RightFrozenColumnCount="33" InitialFilterShouldKeep="true" GraphFilterColumnGuid="a026c5ce-1efd-4073-b379-82882f08b68d" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
-            <MetadataEntries>
-              <MetadataEntry Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" ColumnMetadata="EndTime" />
-              <MetadataEntry Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" ColumnMetadata="Duration" />
-              <MetadataEntry Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" ColumnMetadata="ResourceId" />
-            </MetadataEntries>
-            <HighlightEntries />
-            <Columns>
-              <Column Guid="8986994a-34ee-48bf-9a28-29f7ff7062cc" Name="Thread ID" SortPriority="3" TextAlignment="Right" Width="80" IsVisible="false" />
-              <Column Guid="35f601bd-6be5-4c1a-9b35-495dddbe4dff" Name="Path Tree" SortPriority="4" Width="200" IsVisible="false" />
-              <Column Guid="cc1bde00-e396-4c90-a777-7f57a265c5a4" Name="File Extension" SortPriority="5" Width="60" IsVisible="false" />
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack Tag" SortPriority="6" Width="200" IsVisible="false">
-                <StackOptionsParameter Mode="StackTag" />
-              </Column>
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack (Frame Tags)" SortPriority="7" Width="200" IsVisible="false">
-                <StackOptionsParameter Mode="FrameTags" />
-              </Column>
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="8" Width="200" IsVisible="false">
-                <StackOptionsParameter />
-              </Column>
-              <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="9" Width="80" IsVisible="false" />
-              <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="10" Width="80" IsVisible="false" />
-              <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="11" Width="80" IsVisible="false" />
-              <Column Guid="b9c207c5-9da1-4e2d-94de-df17b84840bf" Name="Init Time" SortPriority="12" TextAlignment="Right" Width="120" IsVisible="false" />
-              <Column Guid="6cc32316-40ee-42a0-8f71-88f7d175301d" Name="Priority" SortPriority="13" TextAlignment="Right" Width="60" IsVisible="false" />
-              <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="14" TextAlignment="Right" Width="120" IsVisible="false" />
-              <Column Guid="585dad88-c4ba-4e39-a1e5-c41f43c4e7fb" Name="Process" SortPriority="15" Width="327" IsVisible="true" />
-              <Column Guid="855b0ae3-e5fc-450c-807d-2e3f7a0ea21e" Name="Process Name" SortPriority="2" Width="120" IsVisible="true" />
-              <Column Guid="0372579e-31f1-483c-8295-221e175f0cbd" Name="IO Type" SortPriority="16" Width="100" IsVisible="true" />
-              <Column Guid="01745275-2844-4895-967e-03c75d9e0ffe" Name="Path Name" SortOrder="Ascending" SortPriority="0" Width="546" IsVisible="true" />
-              <Column Guid="66852a8e-74d2-4ec7-ad13-bcae0644b9c9" Name="IO Time" AggregationMode="Sum" SortPriority="17" TextAlignment="Right" Width="120" CellFormat="uN" IsVisible="true" />
-              <Column Guid="a026c5ce-1efd-4073-b379-82882f08b68d" Name="Count" AggregationMode="Count" SortPriority="18" TextAlignment="Right" Width="40" IsVisible="false" />
-              <Column Guid="42699aab-80f4-4241-9659-948879aebf07" Name="Source" SortPriority="19" Width="80" IsVisible="false" />
-              <Column Guid="5dc8b11e-45ba-40db-9807-583931a5738b" Name="Min Offset" AggregationMode="Min" SortPriority="20" TextAlignment="Right" Width="140" CellFormat="x" IsVisible="false" />
-              <Column Guid="ba4dda2c-3924-4b50-8162-69bc5ef926cc" Name="Max Offset" AggregationMode="Max" SortPriority="21" TextAlignment="Right" Width="140" CellFormat="x" IsVisible="false" />
-              <Column Guid="26c5073e-c597-460f-986d-d8392369ed55" Name="QD/I - Queue Depth at Init Time" SortPriority="22" TextAlignment="Right" Width="116" IsVisible="false" />
-              <Column Guid="56d83e4c-7e1d-4d70-a230-c41269f01473" Name="IBCB - #IOs Init Before Completed Before" SortPriority="23" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="ad341c3d-9a07-4d82-800e-e78f0f9effca" Name="IACB - #IOs Init After Completed Before" SortPriority="24" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="0d9468f1-a731-4539-ad01-72921d1b4ba6" Name="IACA - #IOs Init After Completed After" SortPriority="25" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="87d56527-1be8-40da-aca1-bd274f7cdf05" Name="QD/C - Queue Depth at Complete Time" SortPriority="26" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="1addd219-3f20-4c6d-b0d1-30c2cf034a67" Name="IoRate Block Reason" SortPriority="27" Width="50" IsVisible="false" />
-              <Column Guid="eeb919cb-e186-490c-940d-93493a28fada" Name="IoRate Blocked Time" AggregationMode="Sum" SortPriority="28" TextAlignment="Right" Width="157" CellFormat="uN" IsVisible="true" />
-              <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="1" TextAlignment="Right" Width="200" IsVisible="false" />
-              <Column Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" SortPriority="29" TextAlignment="Right" Width="40" IsVisible="false" />
-              <Column Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" AggregationMode="Sum" SortPriority="30" TextAlignment="Right" Width="140" CellFormat="uN" IsVisible="true" />
-              <Column Guid="a0cb7c64-4495-494b-baeb-c699693162cc" Name="Size" AggregationMode="Sum" SortPriority="31" TextAlignment="Right" Width="80" CellFormat="B" IsVisible="true" />
-            </Columns>
-          </Preset>
-          <Preset Name="FileIO_SizeDiskTime_ByProcessIOType_PathName" GraphChartType="StackedBars" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="33" KeyColumnCount="8" LeftFrozenColumnCount="2" RightFrozenColumnCount="32" InitialFilterShouldKeep="true" GraphFilterColumnGuid="a026c5ce-1efd-4073-b379-82882f08b68d" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
-            <MetadataEntries>
-              <MetadataEntry Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" ColumnMetadata="EndTime" />
-              <MetadataEntry Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" ColumnMetadata="Duration" />
-              <MetadataEntry Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" ColumnMetadata="ResourceId" />
-            </MetadataEntries>
-            <HighlightEntries />
-            <Columns>
-              <Column Guid="855b0ae3-e5fc-450c-807d-2e3f7a0ea21e" Name="Process Name" SortPriority="1" Width="120" IsVisible="false" />
-              <Column Guid="8986994a-34ee-48bf-9a28-29f7ff7062cc" Name="Thread ID" SortPriority="2" TextAlignment="Right" Width="80" IsVisible="false" />
-              <Column Guid="35f601bd-6be5-4c1a-9b35-495dddbe4dff" Name="Path Tree" SortPriority="4" Width="200" IsVisible="false" />
-              <Column Guid="cc1bde00-e396-4c90-a777-7f57a265c5a4" Name="File Extension" SortPriority="6" Width="60" IsVisible="false" />
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack Tag" SortPriority="7" Width="200" IsVisible="false">
-                <StackOptionsParameter Mode="StackTag" />
-              </Column>
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack (Frame Tags)" SortPriority="8" Width="200" IsVisible="false">
-                <StackOptionsParameter Mode="FrameTags" />
-              </Column>
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="9" Width="200" IsVisible="false">
-                <StackOptionsParameter />
-              </Column>
-              <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="10" Width="80" IsVisible="false" />
-              <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="11" Width="80" IsVisible="false" />
-              <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="12" Width="80" IsVisible="false" />
-              <Column Guid="b9c207c5-9da1-4e2d-94de-df17b84840bf" Name="Init Time" SortPriority="13" TextAlignment="Right" Width="120" IsVisible="false" />
-              <Column Guid="6cc32316-40ee-42a0-8f71-88f7d175301d" Name="Priority" SortPriority="14" TextAlignment="Right" Width="60" IsVisible="false" />
-              <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="15" TextAlignment="Right" Width="120" IsVisible="false" />
-              <Column Guid="585dad88-c4ba-4e39-a1e5-c41f43c4e7fb" Name="Process" SortOrder="Ascending" SortPriority="0" Width="327" IsVisible="true" />
-              <Column Guid="0372579e-31f1-483c-8295-221e175f0cbd" Name="IO Type" SortPriority="3" Width="100" IsVisible="true" />
-              <Column Guid="01745275-2844-4895-967e-03c75d9e0ffe" Name="Path Name" SortPriority="5" Width="546" IsVisible="true" />
-              <Column Guid="66852a8e-74d2-4ec7-ad13-bcae0644b9c9" Name="IO Time" AggregationMode="Sum" SortPriority="16" TextAlignment="Right" Width="120" CellFormat="uN" IsVisible="true" />
-              <Column Guid="a026c5ce-1efd-4073-b379-82882f08b68d" Name="Count" AggregationMode="Count" SortPriority="17" TextAlignment="Right" Width="40" IsVisible="false" />
-              <Column Guid="42699aab-80f4-4241-9659-948879aebf07" Name="Source" SortPriority="18" Width="80" IsVisible="false" />
-              <Column Guid="5dc8b11e-45ba-40db-9807-583931a5738b" Name="Min Offset" AggregationMode="Min" SortPriority="19" TextAlignment="Right" Width="140" CellFormat="x" IsVisible="false" />
-              <Column Guid="ba4dda2c-3924-4b50-8162-69bc5ef926cc" Name="Max Offset" AggregationMode="Max" SortPriority="20" TextAlignment="Right" Width="140" CellFormat="x" IsVisible="false" />
-              <Column Guid="26c5073e-c597-460f-986d-d8392369ed55" Name="QD/I - Queue Depth at Init Time" SortPriority="21" TextAlignment="Right" Width="116" IsVisible="false" />
-              <Column Guid="56d83e4c-7e1d-4d70-a230-c41269f01473" Name="IBCB - #IOs Init Before Completed Before" SortPriority="22" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="ad341c3d-9a07-4d82-800e-e78f0f9effca" Name="IACB - #IOs Init After Completed Before" SortPriority="23" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="0d9468f1-a731-4539-ad01-72921d1b4ba6" Name="IACA - #IOs Init After Completed After" SortPriority="24" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="87d56527-1be8-40da-aca1-bd274f7cdf05" Name="QD/C - Queue Depth at Complete Time" SortPriority="25" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="1addd219-3f20-4c6d-b0d1-30c2cf034a67" Name="IoRate Block Reason" SortPriority="26" Width="50" IsVisible="false" />
-              <Column Guid="eeb919cb-e186-490c-940d-93493a28fada" Name="IoRate Blocked Time" AggregationMode="Sum" SortPriority="27" TextAlignment="Right" Width="157" CellFormat="uN" IsVisible="true" />
-              <Column Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" SortPriority="28" TextAlignment="Right" Width="40" IsVisible="false" />
-              <Column Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" AggregationMode="Sum" SortPriority="29" TextAlignment="Right" Width="140" CellFormat="uN" IsVisible="true" />
-              <Column Guid="a0cb7c64-4495-494b-baeb-c699693162cc" Name="Size" AggregationMode="Sum" SortPriority="30" TextAlignment="Right" Width="80" CellFormat="B" IsVisible="true" />
-            </Columns>
-          </Preset>
-        </ModifiedPresets>
-        <PersistedPresets>
-          <Preset Name="Size by Process, Path Name, Stack" GraphChartType="StackedBars" BarGraphIntervalCount="50" IsThreadActivityTable="false" GraphColumnCount="33" KeyColumnCount="11" LeftFrozenColumnCount="4" RightFrozenColumnCount="32" InitialFilterShouldKeep="true" GraphFilterColumnName="Count" GraphFilterColumnGuid="a026c5ce-1efd-4073-b379-82882f08b68d" GraphFilterTopValue="0" GraphFilterThresholdValue="0">
-            <MetadataEntries>
-              <MetadataEntry Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" ColumnMetadata="EndTime" />
-              <MetadataEntry Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" ColumnMetadata="Duration" />
-              <MetadataEntry Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" ColumnMetadata="ResourceId" />
-            </MetadataEntries>
-            <HighlightEntries />
-            <Columns>
-              <Column Guid="855b0ae3-e5fc-450c-807d-2e3f7a0ea21e" Name="Process Name" SortPriority="1" Width="120" IsVisible="false" />
-              <Column Guid="585dad88-c4ba-4e39-a1e5-c41f43c4e7fb" Name="Process" SortPriority="2" Width="164" IsVisible="true" />
-              <Column Guid="8986994a-34ee-48bf-9a28-29f7ff7062cc" Name="Thread ID" SortPriority="3" TextAlignment="Right" Width="80" IsVisible="false" />
-              <Column Guid="0372579e-31f1-483c-8295-221e175f0cbd" Name="IO Type" SortPriority="8" Width="100" IsVisible="false" />
-              <Column Guid="35f601bd-6be5-4c1a-9b35-495dddbe4dff" Name="Path Tree" SortPriority="5" Width="200" IsVisible="false" />
-              <Column Guid="01745275-2844-4895-967e-03c75d9e0ffe" Name="Path Name" SortPriority="6" Width="200" IsVisible="true" />
-              <Column Guid="cc1bde00-e396-4c90-a777-7f57a265c5a4" Name="File Extension" SortPriority="7" Width="60" IsVisible="false" />
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="4" Width="200" IsVisible="false">
-                <StackOptionsParameter Mode="StackTag" />
-              </Column>
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="4" Width="200" IsVisible="false">
-                <StackOptionsParameter Mode="FrameTags" />
-              </Column>
-              <Column Guid="1735b930-a0d7-45a7-b7bf-85d2fdbb966a" Name="IO Init Stack" SortPriority="4" Width="200" IsVisible="true" />
-              <Column Guid="cb796d44-2927-5ac1-d231-4b71904c18f5" Name="Thread Name" SortPriority="0" Width="80" IsVisible="false" />
-              <Column Guid="82ddfdff-ee93-5f35-08ac-4705069618dc" Name="Thread Activity Tag" SortPriority="0" Width="80" IsVisible="false" />
-              <Column Guid="2818954f-2d30-5569-4510-dade0a5a605c" Name="Annotation" SortPriority="0" Width="80" IsVisible="false" />
-              <Column Guid="b9c207c5-9da1-4e2d-94de-df17b84840bf" Name="Init Time" SortPriority="10" TextAlignment="Right" Width="120" IsVisible="false" />
-              <Column Guid="6cc32316-40ee-42a0-8f71-88f7d175301d" Name="Priority" SortPriority="9" TextAlignment="Right" Width="60" IsVisible="true" />
-              <Column Guid="59b4288c-fee0-4b90-86dc-369b79f0b526" Name="Complete Time" SortPriority="11" TextAlignment="Right" Width="120" IsVisible="true" />
-              <Column Guid="66852a8e-74d2-4ec7-ad13-bcae0644b9c9" Name="IO Time" AggregationMode="Sum" SortPriority="12" TextAlignment="Right" Width="120" IsVisible="true" />
-              <Column Guid="a026c5ce-1efd-4073-b379-82882f08b68d" Name="Count" AggregationMode="Count" SortPriority="13" TextAlignment="Right" Width="40" IsVisible="false" />
-              <Column Guid="42699aab-80f4-4241-9659-948879aebf07" Name="Source" SortPriority="15" Width="80" IsVisible="false" />
-              <Column Guid="5dc8b11e-45ba-40db-9807-583931a5738b" Name="Min Offset" AggregationMode="Min" SortPriority="16" TextAlignment="Right" Width="140" IsVisible="false" />
-              <Column Guid="ba4dda2c-3924-4b50-8162-69bc5ef926cc" Name="Max Offset" AggregationMode="Max" SortPriority="17" TextAlignment="Right" Width="140" IsVisible="false" />
-              <Column Guid="26c5073e-c597-460f-986d-d8392369ed55" Name="QD/I - Queue Depth at Init Time" SortPriority="18" TextAlignment="Right" Width="50" IsVisible="true" />
-              <Column Guid="56d83e4c-7e1d-4d70-a230-c41269f01473" Name="IBCB - #IOs Init Before Completed Before" SortPriority="19" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="ad341c3d-9a07-4d82-800e-e78f0f9effca" Name="IACB - #IOs Init After Completed Before" SortPriority="20" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="0d9468f1-a731-4539-ad01-72921d1b4ba6" Name="IACA - #IOs Init After Completed After" SortPriority="21" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="87d56527-1be8-40da-aca1-bd274f7cdf05" Name="QD/C - Queue Depth at Complete Time" SortPriority="22" TextAlignment="Right" Width="50" IsVisible="false" />
-              <Column Guid="1addd219-3f20-4c6d-b0d1-30c2cf034a67" Name="IoRate Block Reason" SortPriority="0" Width="50" IsVisible="false" />
-              <Column Guid="eeb919cb-e186-490c-940d-93493a28fada" Name="IoRate Blocked Time" AggregationMode="Sum" SortPriority="0" TextAlignment="Right" Width="120" IsVisible="true" />
-              <Column Guid="4faeb98e-ba24-44f4-93ce-208e0321f438" Name="Disk" SortPriority="23" TextAlignment="Right" Width="40" IsVisible="true" />
-              <Column Guid="c01c5ca8-59e6-4c1d-9db7-32e00186d65c" Name="Disk Service Time" AggregationMode="Sum" SortOrder="Descending" SortPriority="0" TextAlignment="Right" Width="120" IsVisible="true" />
-              <Column Guid="a0cb7c64-4495-494b-baeb-c699693162cc" Name="Size" AggregationMode="Sum" SortPriority="14" TextAlignment="Right" Width="80" IsVisible="true" />
-            </Columns>
-          </Preset>
-        </PersistedPresets>
-      </GraphSchema>
-    </ModifiedGraphs>
+    <ModifiedGraphs />
   </Content>
 </WpaProfileContainer>
