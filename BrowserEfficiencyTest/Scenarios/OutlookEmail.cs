@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
         public OutlookEmail()
         {
             Name = "outlook";
-            Duration = 90;
+            Duration = 100;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
