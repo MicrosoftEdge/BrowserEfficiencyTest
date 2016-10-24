@@ -1,7 +1,14 @@
+
 [
   {
     "Domain": "<matching domain>",
     "UserName": "<userName>",
     "Password": "<password>"
+  },
+  {
+    "Domain": "slack.com",
+    "UserName": "iecompat@gmail.com",
+    "Password": "[INSERTPASSWORD]"  
   }
+
 ]

@@ -25,6 +25,7 @@
 //
 //--------------------------------------------------------------
 
+using System.Collections.Generic;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -146,9 +147,17 @@ namespace BrowserEfficiencyTest
 
                     driver = new ChromeDriver(option);
                     break;
+                case "hwa":
+
+                    var service = EdgeDriverService.CreateDefaultService();
+                    service.Package = "642da805-a44f-4049-aa37-a8572feb22cb_cf1nqpe36y9ty!SlackApp";
+                    driver = new EdgeDriver(service);
+                    
+                    break;
                 default:
                     // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
                     EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
+
                     driver = new EdgeDriver(svc);
                     HttpClient client = new HttpClient();
                     client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();
