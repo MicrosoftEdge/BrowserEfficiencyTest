@@ -70,31 +70,31 @@ namespace BrowserEfficiencyTest
                 driver.Wait(5);
             }
 
-            // Compose a new email and send to self
+            // Compose a new email and send to a test account
             driver.ClickElement(driver.FindElement(By.XPath("//*[@title='Write a new message (N)']")));
+            driver.Wait(3);
+
+            driver.TypeIntoField("echopoweracct@gmail.com" + Keys.Tab);
+            driver.Wait(3);
+
+            driver.TypeIntoField(driver.FindElement(By.XPath("//*[@aria-label='Subject,']")), "Subject" + Keys.Tab);
+            driver.Wait(3);
+
+            driver.TypeIntoField(driver.FindElement(By.XPath("//*[@aria-label='Message body']")), "This is a message.");
+            driver.Wait(1);
+
+            // Send the message with ctrl + Enter shortcut
+            driver.Keyboard.PressKey(Keys.Control);
+            driver.Keyboard.SendKeys(Keys.Enter);
+            driver.Keyboard.ReleaseKey(Keys.Control);
             driver.Wait(5);
 
-            driver.TypeIntoField(username + Keys.Tab);
-            driver.Wait(5);
-
-            driver.TypeIntoField("Subject" + Keys.Tab);
-            driver.Wait(5);
-
-            driver.TypeIntoField("This is a message.");
-
-            driver.ClickElement(driver.FindElement(By.XPath("//*[@title='Send']")));
-
-            // Wait for the email to arrive
-            driver.Wait(10);
-
-            // Jump back up to the top and archive the new email
+            // Arrow back up to the top
             for (int i = 0; i < 5; i++)
             {
                 driver.Keyboard.SendKeys(Keys.Up);
                 driver.Wait(2);
             }
-            driver.TypeIntoField("e");
-            driver.Wait(1);
         }
     }
 }
