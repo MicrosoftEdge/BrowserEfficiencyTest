@@ -146,13 +146,12 @@ namespace BrowserEfficiencyTest
         /// Clicks on the given web element. Makes multiple attempts if necessary.
         /// </summary>
         /// <param name="element">The WebElement to click on</param>
-        public static void ClickElement(this RemoteWebDriver remoteWebDriver, IWebElement element)
+        public static void ClickElement(this RemoteWebDriver remoteWebDriver, IWebElement element, int maxAttemptsToMake = 3)
         {
             int attempt = 0;
-            int attemptsToMake = 3;
-            bool failedLastAttempt = false;
-            Exception exception = null;
-            while (attempt < 3)
+            bool isClickSuccessful = false;
+
+            while (isClickSuccessful == false)
             {
                 try
                 {
@@ -160,23 +159,20 @@ namespace BrowserEfficiencyTest
                     // click() has a bug on high DPI screen we're working around
                     element.SendKeys(string.Empty);
                     element.SendKeys(Keys.Enter);
-                    break;
+                    isClickSuccessful = true;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    exception = e;
-                    if (attempt + 1 == attemptsToMake)
-                    {
-                        failedLastAttempt = true;
-                    }
+                    attempt++;
+
                     Console.WriteLine("Failed attempt " + attempt + " to click element " + element.ToString());
                     Thread.Sleep(1000);
-                    attempt++;
+
+                    if (attempt >= maxAttemptsToMake)
+                    {
+                        throw;
+                    }
                 }
-            }
-            if (failedLastAttempt)
-            {
-                throw exception;
             }
         }
 
