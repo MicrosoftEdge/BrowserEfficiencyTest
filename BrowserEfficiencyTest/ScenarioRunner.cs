@@ -163,7 +163,7 @@ namespace BrowserEfficiencyTest
         {
             if (_usingTraceController)
             {
-                Console.WriteLine("[{0}] - Waiting briefly to let E3 system clear out data from before running the test.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                Console.WriteLine("[{0}] - Pausing before first tracing session to reduce interference.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
                 // that the browser energy data reported by E3 going forward is from this test run and not from warmup or before running the test pass.
@@ -271,7 +271,7 @@ namespace BrowserEfficiencyTest
                                     {
                                         if (_usingTraceController)
                                         {
-                                            Console.WriteLine("[{0}] - Pausing between tracing sessions to reduce interference -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                                            Console.WriteLine("[{0}] - Pausing between tracing sessions to reduce interference.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
                                             // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
                                             // that the browser energy data reported by E3 for this run is only for this run and does not bleed into any other runs.

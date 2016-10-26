@@ -287,7 +287,6 @@ namespace BrowserEfficiencyTest
             AddScenario(new GmailGoThroughEmails());
             AddScenario(new Msn());
             AddScenario(new Msnbc());
-            AddScenario(new OutlookViewEmails());
             AddScenario(new WikipediaUnitedStates());
             AddScenario(new YoutubeWatchVideo());
             AddScenario(new AmazonSearch());
@@ -298,6 +297,9 @@ namespace BrowserEfficiencyTest
             AddScenario(new BbcNews());
             AddScenario(new CnnOneStory());
             AddScenario(new FastScenario());
+            AddScenario(new AzureDashboard());
+            AddScenario(new OutlookOffice());
+            AddScenario(new OutlookEmail());
         }
 
         private void AddScenario(Scenario scenario)

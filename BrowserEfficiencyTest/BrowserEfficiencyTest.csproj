@@ -65,9 +65,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
+    <Compile Include="Scenarios\AzureDashboard.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
+    <Compile Include="Scenarios\OutlookEmail.cs" />
+    <Compile Include="Scenarios\OutlookOffice.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />
     <Compile Include="RemoteWebDriverExtension.cs" />
     <Compile Include="ScenarioRunner.cs" />
@@ -76,7 +79,6 @@
     <Compile Include="Scenarios\GmailGoThroughEmails.cs" />
     <Compile Include="Scenarios\Msn.cs" />
     <Compile Include="Scenarios\Msnbc.cs" />
-    <Compile Include="Scenarios\OutlookViewEmails.cs" />
     <Compile Include="Scenarios\TechRadarSurfacePro4Review.cs" />
     <Compile Include="Scenarios\WikipediaUnitedStates.cs" />
     <Compile Include="Scenarios\YoutubeWatchVideo.cs" />

@@ -43,17 +43,10 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
         {
             driver.Navigate().GoToUrl("http://www.google.com");
-
-            Thread.Sleep(5 * 1000);
+            driver.Wait(5);
 
             // Search for "Seattle" and hit enter
-            var searchBox = driver.FindElementByXPath("//*[@title='Search']");
-            foreach (char c in "Seattle")
-            {
-                searchBox.SendKeys(c.ToString());
-                Thread.Sleep(75);
-            }
-            driver.Keyboard.SendKeys(Keys.Enter);
+            driver.TypeIntoField(driver.FindElementByXPath("//*[@title='Search']"), "Seattle" + Keys.Enter);
 
             // Simply yield control back to the main thread and look at results
         }

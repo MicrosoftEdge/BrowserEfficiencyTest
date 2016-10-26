@@ -58,7 +58,7 @@ namespace BrowserEfficiencyTest
             }
             catch (WebDriverTimeoutException)
             {
-                Thread.Sleep(3 * 1000);
+                driver.Wait(3);
                 driver.Keyboard.SendKeys(Keys.Escape);
             }
 
@@ -89,12 +89,12 @@ namespace BrowserEfficiencyTest
             }
             catch (WebDriverTimeoutException)
             {
-                Thread.Sleep(3 * 1000);
+                driver.Wait(3);
                 driver.Keyboard.SendKeys(Keys.Escape);
             }
 
             // And let that load
-            Thread.Sleep(5 * 1000);
+            driver.Wait(5);
 
             // Scroll down multiple times
             driver.ScrollPage(10);
