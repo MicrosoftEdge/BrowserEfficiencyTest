@@ -300,6 +300,10 @@ namespace BrowserEfficiencyTest
             AddScenario(new AzureDashboard());
             AddScenario(new OutlookOffice());
             AddScenario(new OutlookEmail());
+            AddScenario(new PowerBIBrowse());
+            AddScenario(new OfficePowerpoint());
+            AddScenario(new AboutBlank());
+            AddScenario(new OfficeLauncher());
         }
 
         private void AddScenario(Scenario scenario)

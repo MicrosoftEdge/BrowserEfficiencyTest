@@ -31,60 +31,57 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class OutlookOffice : Scenario
+    class PowerBIBrowse : Scenario
     {
-        public OutlookOffice()
+        public PowerBIBrowse()
         {
-            Name = "office";
-            Duration = 80;
+            Name = "powerBi";
+            Duration = 70;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver d, string browser, List<UserInfo> logins)
         {
+            // Get the relevant username and password
             string username = "";
             string password = "";
             foreach (UserInfo item in logins)
             {
-                if (item.Domain == "outlook.com")
+                if (item.Domain == "powerbi.com")
                 {
                     username = item.UserName;
                     password = item.PassWord;
                 }
             }
 
-            // Navigate
-            driver.Navigate().GoToUrl("http://www.outlook.com");
-            driver.Wait(5);
+            // Navigate and log in
+            d.Navigate().GoToUrl("http://app.powerbi.com");
+            d.Wait(5);
 
-            // Log in
-            driver.TypeIntoField(driver.FindElementById("i0116"), username + Keys.Enter);
-            driver.Wait(1);
+            d.ClickElement(d.FindElement(By.XPath("//*[@data-event-property='signin']")));
+            d.Wait(5);
 
-            driver.TypeIntoField(driver.FindElementById("i0118"), password + Keys.Enter);
-            driver.Wait(10);
+            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), username);
+            d.Wait(1);
 
-            // Go to office
-            driver.ClickElement(driver.FindElementByClassName("o365cs-nav-button"));
-            driver.ClickElement(driver.FindElementById("O365_AppTile_ShellWordOnline"));
-            driver.Wait(8);
+            d.TypeIntoField(d.FindElementById("cred_password_inputtext"), password);
+            d.Wait(1);
+            d.Keyboard.SendKeys(Keys.Enter);
+            d.Wait(5);
 
-            // That opens up a new tab, so we have to give Webdriver focus in the new tab
-            driver.SwitchTo().Window(driver.WindowHandles[driver.WindowHandles.Count - 1]);
-            driver.Wait(1);
+            // Click into Gross Margin %
+            d.ClickElement(d.FindElement(By.XPath("//*[@data-id='2423882']")).FindElement(By.ClassName("inFocusTileBtn")));
+            d.Wait(10);
 
-            // Open up a Word doc
-            driver.ClickElement(driver.FindElementById("mruitem_0"));
-            driver.Wait(6);
+            // Back to dashboard
+            d.ClickElement(d.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
+            d.Wait(3);
 
-            // This next section is in an iframe, so we have to switch to the iframe to access content in it
-            driver.SwitchTo().Frame(driver.FindElement(By.Id("sdx_ow_iframe")));
+            // Click into Total Revenue
+            d.ClickElement(d.FindElement(By.XPath("//*[@data-id='2423887']")).FindElement(By.ClassName("inFocusTileBtn")));
+            d.Wait(10);
 
-            // Edit the document
-            driver.ClickElement(driver.FindElementById("flyoutWordViewerEdit-Medium20"));
-            driver.Wait(1);
-            driver.ClickElement(driver.FindElementById("btnFlyoutEditOnWeb-Menu32"));
-            driver.Wait(6);
-            driver.ScrollPage(2);
+            // Back to dashboard
+            d.ClickElement(d.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
         }
     }
 }

@@ -31,60 +31,41 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class OutlookOffice : Scenario
+    class OfficeLauncher : Scenario
     {
-        public OutlookOffice()
+        public OfficeLauncher()
         {
-            Name = "office";
-            Duration = 80;
+            Name = "officeLauncher";
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver d, string browser, List<UserInfo> logins)
         {
             string username = "";
             string password = "";
-            foreach (UserInfo item in logins)
+
+            foreach (var item in logins)
             {
-                if (item.Domain == "outlook.com")
+                if (item.Domain == "office.com")
                 {
                     username = item.UserName;
                     password = item.PassWord;
+                    break;
                 }
             }
 
             // Navigate
-            driver.Navigate().GoToUrl("http://www.outlook.com");
-            driver.Wait(5);
+            d.Navigate().GoToUrl("http://www.office.com");
+            d.Wait(5);
+
+            // Click on "Sign In" button
+            d.ClickElement(d.FindElementByLinkText("Sign in"));
+            d.Wait(2);
 
             // Log in
-            driver.TypeIntoField(driver.FindElementById("i0116"), username + Keys.Enter);
-            driver.Wait(1);
-
-            driver.TypeIntoField(driver.FindElementById("i0118"), password + Keys.Enter);
-            driver.Wait(10);
-
-            // Go to office
-            driver.ClickElement(driver.FindElementByClassName("o365cs-nav-button"));
-            driver.ClickElement(driver.FindElementById("O365_AppTile_ShellWordOnline"));
-            driver.Wait(8);
-
-            // That opens up a new tab, so we have to give Webdriver focus in the new tab
-            driver.SwitchTo().Window(driver.WindowHandles[driver.WindowHandles.Count - 1]);
-            driver.Wait(1);
-
-            // Open up a Word doc
-            driver.ClickElement(driver.FindElementById("mruitem_0"));
-            driver.Wait(6);
-
-            // This next section is in an iframe, so we have to switch to the iframe to access content in it
-            driver.SwitchTo().Frame(driver.FindElement(By.Id("sdx_ow_iframe")));
-
-            // Edit the document
-            driver.ClickElement(driver.FindElementById("flyoutWordViewerEdit-Medium20"));
-            driver.Wait(1);
-            driver.ClickElement(driver.FindElementById("btnFlyoutEditOnWeb-Menu32"));
-            driver.Wait(6);
-            driver.ScrollPage(2);
+            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), username + Keys.Tab);
+            d.Wait(8);
+            d.TypeIntoField(d.FindElementByName("passwd"), password + Keys.Enter);
+            d.Wait(5);
         }
     }
 }
