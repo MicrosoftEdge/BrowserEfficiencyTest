@@ -40,38 +40,28 @@ namespace BrowserEfficiencyTest
             Duration = 60;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://www.facebook.com");
             driver.Wait(5);
+
+            UserInfo credentials = credentialManager.GetCredentials("facebook.com");
 
             // if not logged on, log on
             var elems = driver.FindElements(By.CssSelector("H2"));
             foreach (IWebElement elem in elems)
             {
-                string userName = string.Empty, passWord = string.Empty;
-
-                foreach (var item in logins)
-                {
-                    if (item.Domain == "facebook.com")
-                    {
-                        userName = item.UserName;
-                        passWord = item.PassWord;
-                        break;
-                    }
-                }
-
-                Thread.Sleep(2000);
+                driver.Wait(2);
                 var username = driver.FindElement(By.Id("email"));
                 var password = driver.FindElement(By.Id("pass"));
 
                 username.Clear();
-                driver.TypeIntoField(username, userName);
+                driver.TypeIntoField(username, credentials.Username);
                 driver.Wait(1);
 
                 password.Clear();
                 driver.Wait(3);
-                driver.TypeIntoField(password, passWord);
+                driver.TypeIntoField(password, credentials.Password);
                 driver.Wait(1);
 
                 // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI

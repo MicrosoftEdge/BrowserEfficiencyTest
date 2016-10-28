@@ -39,19 +39,10 @@ namespace BrowserEfficiencyTest
             Duration = 70;
         }
 
-        public override void Run(RemoteWebDriver d, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver d, string browser, CredentialManager credentialManager)
         {
             // Get the relevant username and password
-            string username = "";
-            string password = "";
-            foreach (UserInfo item in logins)
-            {
-                if (item.Domain == "powerbi.com")
-                {
-                    username = item.UserName;
-                    password = item.PassWord;
-                }
-            }
+            UserInfo credentials = credentialManager.GetCredentials("powerbi.com");
 
             // Navigate and log in
             d.Navigate().GoToUrl("http://app.powerbi.com");
@@ -60,10 +51,10 @@ namespace BrowserEfficiencyTest
             d.ClickElement(d.FindElement(By.XPath("//*[@data-event-property='signin']")));
             d.Wait(5);
 
-            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), username);
+            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), credentials.Username);
             d.Wait(1);
 
-            d.TypeIntoField(d.FindElementById("cred_password_inputtext"), password);
+            d.TypeIntoField(d.FindElementById("cred_password_inputtext"), credentials.Password);
             d.Wait(1);
             d.Keyboard.SendKeys(Keys.Enter);
             d.Wait(5);

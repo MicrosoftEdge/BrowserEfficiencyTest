@@ -39,28 +39,19 @@ namespace BrowserEfficiencyTest
             Duration = 60;
         }
 
-        public override void Run(RemoteWebDriver d, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver d, string browser, CredentialManager credentialManager)
         {
-            string username = "";
-            string password = "";
-            foreach (UserInfo item in logins)
-            {
-                if (item.Domain == "outlook.com")
-                {
-                    username = item.UserName;
-                    password = item.PassWord;
-                }
-            }
+            UserInfo credentials = credentialManager.GetCredentials("office.com");
 
             // Navigate
             d.Navigate().GoToUrl("http://www.outlook.com");
             d.Wait(5);
 
             // Log in
-            d.TypeIntoField(d.FindElementById("i0116"), username + Keys.Enter);
+            d.TypeIntoField(d.FindElementById("i0116"), credentials.Username + Keys.Enter);
             d.Wait(1);
 
-            d.TypeIntoField(d.FindElementById("i0118"), password + Keys.Enter);
+            d.TypeIntoField(d.FindElementById("i0118"), credentials.Password + Keys.Enter);
             d.Wait(10);
 
             // Go to office

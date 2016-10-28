@@ -38,20 +38,9 @@ namespace BrowserEfficiencyTest
             Name = "officeLauncher";
         }
 
-        public override void Run(RemoteWebDriver d, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver d, string browser, CredentialManager credentialManager)
         {
-            string username = "";
-            string password = "";
-
-            foreach (var item in logins)
-            {
-                if (item.Domain == "office.com")
-                {
-                    username = item.UserName;
-                    password = item.PassWord;
-                    break;
-                }
-            }
+            UserInfo credentials = credentialManager.GetCredentials("office.com");
 
             // Navigate
             d.Navigate().GoToUrl("http://www.office.com");
@@ -62,9 +51,9 @@ namespace BrowserEfficiencyTest
             d.Wait(2);
 
             // Log in
-            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), username + Keys.Tab);
+            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), credentials.Username + Keys.Tab);
             d.Wait(8);
-            d.TypeIntoField(d.FindElementByName("passwd"), password + Keys.Enter);
+            d.TypeIntoField(d.FindElementByName("passwd"), credentials.Password + Keys.Enter);
             d.Wait(5);
         }
     }

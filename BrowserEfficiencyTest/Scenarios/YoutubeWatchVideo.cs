@@ -39,7 +39,7 @@ namespace BrowserEfficiencyTest
             // Leave the default time
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             // Browse to Youtube if we're not there already
             if (!driver.Url.Contains("youtube.com"))

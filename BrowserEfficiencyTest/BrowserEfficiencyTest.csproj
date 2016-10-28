@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
+    <Compile Include="CredentialManager.cs" />
     <Compile Include="Scenarios\AboutBlank.cs" />
     <Compile Include="Scenarios\AzureDashboard.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />

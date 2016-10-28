@@ -40,7 +40,7 @@ namespace BrowserEfficiencyTest
             Name = "wikipedia";
             Duration = 30;
         }
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             // Nagivate to wikipedia
             driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");

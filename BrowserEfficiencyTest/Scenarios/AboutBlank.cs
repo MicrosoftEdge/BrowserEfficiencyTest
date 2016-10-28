@@ -39,7 +39,7 @@ namespace BrowserEfficiencyTest
             Duration = 60;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("about:blank");
         }

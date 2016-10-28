@@ -39,27 +39,18 @@ namespace BrowserEfficiencyTest
             Duration = 120;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             // Get the relevant username and password
-            string username = "";
-            string password = "";
-            foreach (UserInfo item in logins)
-            {
-                if (item.Domain == "azure.com")
-                {
-                    username = item.UserName;
-                    password = item.PassWord;
-                }
-            }
+            UserInfo credentials = credentialManager.GetCredentials("azure.com");
 
             // Go to the login
             driver.Navigate().GoToUrl("http://portal.azure.com");
             driver.Wait(3);
 
             // Log in
-            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), username);
-            driver.TypeIntoField(driver.FindElementById("cred_password_inputtext"), password + Keys.Enter);
+            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), credentials.Username);
+            driver.TypeIntoField(driver.FindElementById("cred_password_inputtext"), credentials.Password + Keys.Enter);
             driver.Wait(8);
 
             // Open a blade
