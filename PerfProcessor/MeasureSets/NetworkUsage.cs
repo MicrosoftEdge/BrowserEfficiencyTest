@@ -42,7 +42,7 @@ namespace BrowserEfficiencyTest
             WprProfile = "networkUsage";
             TracingMode = TraceCaptureMode.File;
             Name = "networkUsage";
-            _wpaExportedDataFileNames = new List<string>() { "TcpIp_Events_Throughput_over_Time.csv" };
+            _wpaExportedDataFileNames = new List<string>() { "TcpIp_Events_SendReceiveBytes.csv" };
         }
 
         /// <summary>
@@ -57,35 +57,18 @@ namespace BrowserEfficiencyTest
             // Process the raw string data into a usable format.
             var rawNetworkUsageData = from row in csvData.First().Value
                                       let fields = SplitCsvString(row)
-                                      select new { ProcessName = fields[1], EventType = fields[2], Protocol = fields[3], NumBytes = Convert.ToUInt64(fields[4]) };
+                                      select new { EventType = fields[0], NumBytes = Convert.ToUInt64(fields[1]) };
 
-            // Compute the disk usage aggregated by process name and IO type.
-            var networkUsageData = from row in rawNetworkUsageData
-                                   group row by new { ProcessName = row.ProcessName, EventType = row.EventType } into g
-                                   orderby g.Key.ProcessName, g.Key.EventType
-                                   select new { ProcessName = g.Key.ProcessName, EventType = g.Key.EventType, NumBytes = g.Sum(b => (decimal)b.NumBytes) };
-
-            if (networkUsageData.Count() == 0)
+            if (rawNetworkUsageData.Count() == 0)
             {
                 return null;
             }
 
-            // Format the received usage bytes results to metric form.
-            var receivedBytes = (from row in networkUsageData
-                                 where row.EventType == "Receive"
-                                 select new KeyValuePair<string, string>("Received Bytes | " + row.ProcessName, row.NumBytes.ToString())).ToDictionary(k => k.Key, v => v.Value);
+            // Format the network usage bytes results to metric form.
+            var totalBytes = (from row in rawNetworkUsageData
+                                 select new KeyValuePair<string, string>("Total Bytes | " + row.EventType, row.NumBytes.ToString())).ToDictionary(k => k.Key, v => v.Value);
 
-            // Format the received usage bytes results to metric form.
-            var sentBytes = (from row in networkUsageData
-                             where row.EventType == "Send"
-                             select new KeyValuePair<string, string>("Sent Bytes | " + row.ProcessName, row.NumBytes.ToString())).ToDictionary(k => k.Key, v => v.Value);
-
-            metrics = receivedBytes;
-
-            foreach (var item in sentBytes)
-            {
-                metrics.Add(item.Key, item.Value);
-            }
+            metrics = totalBytes;
 
             return metrics;
         }
