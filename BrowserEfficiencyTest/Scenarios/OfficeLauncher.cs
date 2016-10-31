@@ -31,30 +31,30 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    class OfficeLauncher : Scenario
+    internal class OfficeLauncher : Scenario
     {
         public OfficeLauncher()
         {
             Name = "officeLauncher";
         }
 
-        public override void Run(RemoteWebDriver d, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             UserInfo credentials = credentialManager.GetCredentials("office.com");
 
             // Navigate
-            d.Navigate().GoToUrl("http://www.office.com");
-            d.Wait(5);
+            driver.Navigate().GoToUrl("http://www.office.com");
+            driver.Wait(5);
 
             // Click on "Sign In" button
-            d.ClickElement(d.FindElementByLinkText("Sign in"));
-            d.Wait(2);
+            driver.ClickElement(driver.FindElementByLinkText("Sign in"));
+            driver.Wait(2);
 
             // Log in
-            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), credentials.Username + Keys.Tab);
-            d.Wait(8);
-            d.TypeIntoField(d.FindElementByName("passwd"), credentials.Password + Keys.Enter);
-            d.Wait(5);
+            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), credentials.Username + Keys.Tab);
+            driver.Wait(8);
+            driver.TypeIntoField(driver.FindElementByName("passwd"), credentials.Password + Keys.Enter);
+            driver.Wait(5);
         }
     }
 }

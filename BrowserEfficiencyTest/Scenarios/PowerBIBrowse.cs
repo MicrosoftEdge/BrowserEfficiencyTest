@@ -31,7 +31,7 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    class PowerBIBrowse : Scenario
+    internal class PowerBIBrowse : Scenario
     {
         public PowerBIBrowse()
         {
@@ -39,40 +39,40 @@ namespace BrowserEfficiencyTest
             Duration = 70;
         }
 
-        public override void Run(RemoteWebDriver d, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             // Get the relevant username and password
             UserInfo credentials = credentialManager.GetCredentials("powerbi.com");
 
             // Navigate and log in
-            d.Navigate().GoToUrl("http://app.powerbi.com");
-            d.Wait(5);
+            driver.Navigate().GoToUrl("http://app.powerbi.com");
+            driver.Wait(5);
 
-            d.ClickElement(d.FindElement(By.XPath("//*[@data-event-property='signin']")));
-            d.Wait(5);
+            driver.ClickElement(driver.FindElement(By.XPath("//*[@data-event-property='signin']")));
+            driver.Wait(5);
 
-            d.TypeIntoField(d.FindElementById("cred_userid_inputtext"), credentials.Username);
-            d.Wait(1);
+            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), credentials.Username);
+            driver.Wait(1);
 
-            d.TypeIntoField(d.FindElementById("cred_password_inputtext"), credentials.Password);
-            d.Wait(1);
-            d.Keyboard.SendKeys(Keys.Enter);
-            d.Wait(5);
+            driver.TypeIntoField(driver.FindElementById("cred_password_inputtext"), credentials.Password);
+            driver.Wait(1);
+            driver.Keyboard.SendKeys(Keys.Enter);
+            driver.Wait(5);
 
             // Click into Gross Margin %
-            d.ClickElement(d.FindElement(By.XPath("//*[@data-id='2423882']")).FindElement(By.ClassName("inFocusTileBtn")));
-            d.Wait(10);
+            driver.ClickElement(driver.FindElement(By.XPath("//*[@data-id='2423882']")).FindElement(By.ClassName("inFocusTileBtn")));
+            driver.Wait(10);
 
             // Back to dashboard
-            d.ClickElement(d.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
-            d.Wait(3);
+            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
+            driver.Wait(3);
 
             // Click into Total Revenue
-            d.ClickElement(d.FindElement(By.XPath("//*[@data-id='2423887']")).FindElement(By.ClassName("inFocusTileBtn")));
-            d.Wait(10);
+            driver.ClickElement(driver.FindElement(By.XPath("//*[@data-id='2423887']")).FindElement(By.ClassName("inFocusTileBtn")));
+            driver.Wait(10);
 
             // Back to dashboard
-            d.ClickElement(d.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
+            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
         }
     }
 }

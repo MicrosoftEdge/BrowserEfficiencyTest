@@ -32,9 +32,9 @@ using System.IO;
 
 namespace BrowserEfficiencyTest
 {
-    class CredentialManager
+    internal class CredentialManager
     {
-        List<UserInfo> _logins;
+        private List<UserInfo> _logins;
 
         public CredentialManager()
         {

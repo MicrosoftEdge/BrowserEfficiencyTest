@@ -31,7 +31,7 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    class OfficePowerpoint : Scenario
+    internal class OfficePowerpoint : Scenario
     {
         public OfficePowerpoint()
         {
@@ -39,43 +39,43 @@ namespace BrowserEfficiencyTest
             Duration = 60;
         }
 
-        public override void Run(RemoteWebDriver d, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             UserInfo credentials = credentialManager.GetCredentials("office.com");
 
             // Navigate
-            d.Navigate().GoToUrl("http://www.outlook.com");
-            d.Wait(5);
+            driver.Navigate().GoToUrl("http://www.outlook.com");
+            driver.Wait(5);
 
             // Log in
-            d.TypeIntoField(d.FindElementById("i0116"), credentials.Username + Keys.Enter);
-            d.Wait(1);
+            driver.TypeIntoField(driver.FindElementById("i0116"), credentials.Username + Keys.Enter);
+            driver.Wait(1);
 
-            d.TypeIntoField(d.FindElementById("i0118"), credentials.Password + Keys.Enter);
-            d.Wait(10);
+            driver.TypeIntoField(driver.FindElementById("i0118"), credentials.Password + Keys.Enter);
+            driver.Wait(10);
 
             // Go to office
-            d.ClickElement(d.FindElementByClassName("o365cs-nav-button"));
-            d.ClickElement(d.FindElementById("O365_AppTile_ShellPowerPointOnline"));
-            d.Wait(8);
+            driver.ClickElement(driver.FindElementByClassName("o365cs-nav-button"));
+            driver.ClickElement(driver.FindElementById("O365_AppTile_ShellPowerPointOnline"));
+            driver.Wait(8);
 
             // That opens up a new tab, so we have to give Webdriver focus in the new tab
-            d.SwitchTo().Window(d.WindowHandles[d.WindowHandles.Count - 1]);
-            d.Wait(1);
+            driver.SwitchTo().Window(driver.WindowHandles[driver.WindowHandles.Count - 1]);
+            driver.Wait(1);
 
             // Open up a  doc
-            d.ClickElement(d.FindElementById("mruitem_0"));
-            d.Wait(6);
+            driver.ClickElement(driver.FindElementById("mruitem_0"));
+            driver.Wait(6);
 
             // This next section is in an iframe, so we have to switch to the iframe to access content in it
-            d.SwitchTo().Frame(d.FindElement(By.Id("sdx_ow_iframe")));
+            driver.SwitchTo().Frame(driver.FindElement(By.Id("sdx_ow_iframe")));
 
             // Edit the document
-            d.ClickElement(d.FindElementById("PptUpperToolbar.LeftButtonDock.FlyoutPptEdit-Medium20"));
-            d.Wait(1);
-            d.ClickElement(d.FindElementById("PptUpperToolbar.LeftButtonDock.FlyoutPptEdit.EditInWebApp-Menu32"));
-            d.Wait(6);
-            d.ScrollPage(2);
+            driver.ClickElement(driver.FindElementById("PptUpperToolbar.LeftButtonDock.FlyoutPptEdit-Medium20"));
+            driver.Wait(1);
+            driver.ClickElement(driver.FindElementById("PptUpperToolbar.LeftButtonDock.FlyoutPptEdit.EditInWebApp-Menu32"));
+            driver.Wait(6);
+            driver.ScrollPage(2);
         }
     }
 }

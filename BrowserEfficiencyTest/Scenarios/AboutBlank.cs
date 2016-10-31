@@ -31,7 +31,7 @@ using OpenQA.Selenium.Remote;
 
 namespace BrowserEfficiencyTest
 {
-    class AboutBlank : Scenario
+    internal class AboutBlank : Scenario
     {
         public AboutBlank()
         {

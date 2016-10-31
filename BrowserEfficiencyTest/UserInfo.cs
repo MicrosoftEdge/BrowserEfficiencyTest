@@ -34,7 +34,7 @@ namespace BrowserEfficiencyTest
         [JsonProperty("Domain")]
         public string Domain { get; set; }
 
-        [JsonProperty("UserName")]
+        [JsonProperty("Username")]
         public string Username { get; set; }
 
         [JsonProperty("Password")]
