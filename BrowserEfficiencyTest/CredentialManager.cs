@@ -1,4 +1,4 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
 // Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
@@ -25,31 +25,41 @@
 //
 //--------------------------------------------------------------
 
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.IO;
 
 namespace BrowserEfficiencyTest
 {
-    internal class Msnbc : Scenario
+    internal class CredentialManager
     {
-        public Msnbc()
+        private List<UserInfo> _logins;
+
+        /// <summary>
+        /// Creates a new CredentialManager with info from config.json
+        /// </summary>
+        public CredentialManager()
         {
-            Name = "msnbc";
-            Duration = 50;
+            string jsonText = File.ReadAllText("config.json");
+            _logins = JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        /// <summary>
+        /// Given the domain requested, it returns the username and password as a UserInfo object
+        /// </summary>
+        /// <param name="domain">The desired domain, matching the domain in the config.json file</param>
+        /// <returns>A UserInfo object with the desired credentials</returns>
+        public UserInfo GetCredentials(string domain)
         {
-            driver.Navigate().GoToUrl("http://www.msnbc.com");
-            // and scroll up / down
-            driver.ScrollPage(10);
-
-            // click on one of the links on the page
-            // first get back to the top
-            driver.ExecuteScript("return window.scrollTo(0,0);");
-            Thread.Sleep(2000);
+            foreach (UserInfo item in _logins)
+            {
+                if (item.Domain == domain)
+                {
+                    return item;
+                }
+            }
+            throw new Exception("No credentials matching that domain were found");
         }
     }
 }

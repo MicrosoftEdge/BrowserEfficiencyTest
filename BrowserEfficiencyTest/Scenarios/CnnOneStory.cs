@@ -41,7 +41,7 @@ namespace BrowserEfficiencyTest
             Name = "cnnOneStory";
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://bleacherreport.com/articles/2657513-tim-duncan-declined-olympic-invitation-from-president-obama?utm_source=cnn.com&utm_medium=referral&utm_campaign=editorial");
         }

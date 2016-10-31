@@ -39,28 +39,19 @@ namespace BrowserEfficiencyTest
             Duration = 80;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            string username = "";
-            string password = "";
-            foreach (UserInfo item in logins)
-            {
-                if (item.Domain == "outlook.com")
-                {
-                    username = item.UserName;
-                    password = item.PassWord;
-                }
-            }
+            UserInfo credentials = credentialManager.GetCredentials("outlook.com");
 
             // Navigate
             driver.Navigate().GoToUrl("http://www.outlook.com");
             driver.Wait(5);
 
             // Log in
-            driver.TypeIntoField(driver.FindElementById("i0116"), username + Keys.Enter);
+            driver.TypeIntoField(driver.FindElementById("i0116"), credentials.Username + Keys.Enter);
             driver.Wait(1);
 
-            driver.TypeIntoField(driver.FindElementById("i0118"), password + Keys.Enter);
+            driver.TypeIntoField(driver.FindElementById("i0118"), credentials.Password + Keys.Enter);
             driver.Wait(10);
 
             // Go to office
@@ -74,7 +65,7 @@ namespace BrowserEfficiencyTest
 
             // Open up a Word doc
             driver.ClickElement(driver.FindElementById("mruitem_0"));
-            driver.Wait(3);
+            driver.Wait(6);
 
             // This next section is in an iframe, so we have to switch to the iframe to access content in it
             driver.SwitchTo().Frame(driver.FindElement(By.Id("sdx_ow_iframe")));

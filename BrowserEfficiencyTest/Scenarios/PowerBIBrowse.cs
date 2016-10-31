@@ -25,41 +25,54 @@
 //
 //--------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
-using System.Threading;
 
 namespace BrowserEfficiencyTest
 {
-    internal class YahooNews : Scenario
+    internal class PowerBIBrowse : Scenario
     {
-        public YahooNews()
+        public PowerBIBrowse()
         {
-            Name = "yahooNews";
-            Duration = 90;
+            Name = "powerBi";
+            Duration = 70;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            driver.Navigate().GoToUrl("http://www.yahoo.com");
+            // Get the relevant username and password
+            UserInfo credentials = credentialManager.GetCredentials("powerbi.com");
+
+            // Navigate and log in
+            driver.Navigate().GoToUrl("http://app.powerbi.com");
+            driver.Wait(5);
+
+            driver.ClickElement(driver.FindElement(By.XPath("//*[@data-event-property='signin']")));
+            driver.Wait(5);
+
+            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), credentials.Username);
+            driver.Wait(1);
+
+            driver.TypeIntoField(driver.FindElementById("cred_password_inputtext"), credentials.Password);
+            driver.Wait(1);
+            driver.Keyboard.SendKeys(Keys.Enter);
+            driver.Wait(5);
+
+            // Click into Gross Margin %
+            driver.ClickElement(driver.FindElement(By.XPath("//*[@data-id='2423882']")).FindElement(By.ClassName("inFocusTileBtn")));
             driver.Wait(10);
 
-            // No reliable class or id for the news link, so get the news icon, then find its parent
-            IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
-            newsLink.SendKeys(String.Empty);
-            newsLink.SendKeys(Keys.Enter);
+            // Back to dashboard
+            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
+            driver.Wait(3);
 
-            Thread.Sleep(10000);
+            // Click into Total Revenue
+            driver.ClickElement(driver.FindElement(By.XPath("//*[@data-id='2423887']")).FindElement(By.ClassName("inFocusTileBtn")));
+            driver.Wait(10);
 
-            // Get the "mega" story and navigate to it
-            // We appear to be taking advantage of a test hook in the page for their own tests
-            IWebElement newsArticles = driver.FindElement(By.Id("tgtm-YDC-Stream"));
-            IWebElement mega = newsArticles.FindElement(By.XPath("//*[@data-test-locator='mega']"));
-            IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
-            articleLink.SendKeys(String.Empty);
-            articleLink.SendKeys(Keys.Enter);
+            // Back to dashboard
+            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Exit Focus mode')]")).FindElement(By.XPath("..")));
         }
     }
 }

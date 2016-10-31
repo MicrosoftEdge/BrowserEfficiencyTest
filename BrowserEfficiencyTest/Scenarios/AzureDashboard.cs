@@ -36,36 +36,27 @@ namespace BrowserEfficiencyTest
         public AzureDashboard()
         {
             Name = "azure";
-            Duration = 7 * 60;
+            Duration = 120;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             // Get the relevant username and password
-            string username = "";
-            string password = "";
-            foreach (UserInfo item in logins)
-            {
-                if (item.Domain == "azure.com")
-                {
-                    username = item.UserName;
-                    password = item.PassWord;
-                }
-            }
+            UserInfo credentials = credentialManager.GetCredentials("azure.com");
 
             // Go to the login
             driver.Navigate().GoToUrl("http://portal.azure.com");
             driver.Wait(3);
 
             // Log in
-            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), username);
-            driver.TypeIntoField(driver.FindElementById("cred_password_inputtext"), password + Keys.Enter);
+            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), credentials.Username);
+            driver.TypeIntoField(driver.FindElementById("cred_password_inputtext"), credentials.Password + Keys.Enter);
             driver.Wait(8);
 
             // Open a blade
             var sidebar = driver.FindElementByClassName("fxs-sidebar-bar");
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='All resources']")));
-            driver.Wait(30);
+            driver.Wait(10);
 
             // Open the marketplace
             driver.ClickElement(sidebar.FindElement(By.ClassName("fxs-sidebar-browse")));
@@ -76,29 +67,23 @@ namespace BrowserEfficiencyTest
 
             // Search for Visual studio
             driver.TypeIntoField(driver.FindElementByClassName("ext-gallery-search-container").FindElement(By.ClassName("azc-input")), "Visual studio" + Keys.Enter);
-            driver.Wait(30);
+            driver.Wait(10);
 
             // Open more blades
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Billing']")));
-            driver.Wait(30);
+            driver.Wait(10);
 
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Resource groups']")));
-            driver.Wait(30);
+            driver.Wait(10);
 
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='App Services']")));
-            driver.Wait(30);
+            driver.Wait(10);
 
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='SQL databases']")));
-            driver.Wait(30);
+            driver.Wait(10);
 
             driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Virtual machines']")));
-            driver.Wait(30);
-
-            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Load balancers']")));
-            driver.Wait(30);
-
-            driver.ClickElement(sidebar.FindElement(By.XPath("//*[@title='Storage accounts']")));
-            driver.Wait(120);
+            driver.Wait(10);
         }
     }
 }

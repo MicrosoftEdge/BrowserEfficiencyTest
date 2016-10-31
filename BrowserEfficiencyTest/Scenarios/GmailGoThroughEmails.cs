@@ -41,11 +41,11 @@ namespace BrowserEfficiencyTest
             Duration = 80;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             NavigateToGmail(driver);
             driver.Wait(2);
-            LogIn(driver, logins);
+            LogIn(driver, credentialManager);
             driver.Wait(7);
             BrowseEmails(driver, 5);
         }
@@ -55,24 +55,15 @@ namespace BrowserEfficiencyTest
             driver.Navigate().GoToUrl("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/#identifier");
         }
 
-        private void LogIn(RemoteWebDriver driver, List<UserInfo> logins)
+        private void LogIn(RemoteWebDriver driver, CredentialManager credentialManager)
         {
             // Get the relevant username and password
-            string username = "";
-            string password = "";
-            foreach (UserInfo item in logins)
-            {
-                if (item.Domain == "gmail.com")
-                {
-                    username = item.UserName;
-                    password = item.PassWord;
-                }
-            }
+            UserInfo credentials = credentialManager.GetCredentials("gmail.com");
 
             try
             {
                 // Enter username
-                driver.TypeIntoField(driver.FindElementById("Email"), username);
+                driver.TypeIntoField(driver.FindElementById("Email"), credentials.Username);
                 driver.Wait(1);
 
                 // Tab down and hit next button
@@ -87,7 +78,7 @@ namespace BrowserEfficiencyTest
             }
 
             // Enter password
-            driver.TypeIntoField(driver.FindElementById("Passwd"), password);
+            driver.TypeIntoField(driver.FindElementById("Passwd"), credentials.Password);
 
             // Tab down and hit submit button
             driver.Keyboard.SendKeys(Keys.Tab);

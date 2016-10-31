@@ -50,7 +50,7 @@ namespace BrowserEfficiencyTest
 
         private List<Scenario> _scenarios = new List<Scenario>();
         private List<string> _browsers = new List<string>();
-        private List<UserInfo> _logins;
+        private CredentialManager _logins;
 
         private string _scenarioName;
         private int _e3RefreshDelaySeconds;
@@ -78,7 +78,7 @@ namespace BrowserEfficiencyTest
 
             _scenarioName = args.ScenarioName;
             _measureSets = GetMeasureSetInfo(args.SelectedMeasureSets.ToList());
-            _logins = GetLoginsFromFile();
+            _logins = new CredentialManager();
         }
 
         // Creates a data structure of measure sets name, wprp file and tracing mode and creates an empty one
@@ -121,14 +121,6 @@ namespace BrowserEfficiencyTest
             }
 
             RunMainLoop();
-        }
-
-        private List<UserInfo> GetLoginsFromFile()
-        {
-            // Get the usernames and passwords from an external file for any scenarios that need them.
-            // Json makes this easy =)
-            string jsonText = File.ReadAllText("config.json");
-            return JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
         }
 
         private void RunWarmupPass()

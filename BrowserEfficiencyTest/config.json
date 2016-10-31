@@ -1,7 +1,7 @@
 [
   {
-    "Domain": "<matching domain>",
-    "UserName": "<userName>",
-    "Password": "<password>"
+    "Domain": "example.com",
+    "Username": "user@example.com",
+    "Password": "password"
   }
 ]
