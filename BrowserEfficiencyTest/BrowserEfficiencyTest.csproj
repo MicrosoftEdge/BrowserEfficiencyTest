@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
+    <Compile Include="HtmlTimer.cs" />
     <Compile Include="Scenarios\AzureDashboard.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
