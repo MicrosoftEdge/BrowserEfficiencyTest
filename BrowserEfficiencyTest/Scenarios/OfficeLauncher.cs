@@ -1,4 +1,4 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
 // Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
@@ -25,31 +25,36 @@
 //
 //--------------------------------------------------------------
 
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
-using System.Threading;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class Msnbc : Scenario
+    internal class OfficeLauncher : Scenario
     {
-        public Msnbc()
+        public OfficeLauncher()
         {
-            Name = "msnbc";
-            Duration = 50;
+            Name = "officeLauncher";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            driver.Navigate().GoToUrl("http://www.msnbc.com");
-            // and scroll up / down
-            driver.ScrollPage(10);
+            UserInfo credentials = credentialManager.GetCredentials("office.com");
 
-            // click on one of the links on the page
-            // first get back to the top
-            driver.ExecuteScript("return window.scrollTo(0,0);");
-            Thread.Sleep(2000);
+            // Navigate
+            driver.Navigate().GoToUrl("http://www.office.com");
+            driver.Wait(5);
+
+            // Click on "Sign In" button
+            driver.ClickElement(driver.FindElementByLinkText("Sign in"));
+            driver.Wait(2);
+
+            // Log in
+            driver.TypeIntoField(driver.FindElementById("cred_userid_inputtext"), credentials.Username + Keys.Tab);
+            driver.Wait(8);
+            driver.TypeIntoField(driver.FindElementByName("passwd"), credentials.Password + Keys.Enter);
+            driver.Wait(5);
         }
     }
 }

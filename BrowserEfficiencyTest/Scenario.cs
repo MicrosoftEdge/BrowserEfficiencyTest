@@ -39,6 +39,6 @@ namespace BrowserEfficiencyTest
         public int Duration { get; set; } = 40;
 
         // Override this function with the "stuff" to do in the scenario
-        public abstract void Run(RemoteWebDriver driver, string browser, List<UserInfo> logins);
+        public abstract void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager);
     }
 }

@@ -31,17 +31,17 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class OutlookEmail : Scenario
+    internal class OfficePowerpoint : Scenario
     {
-        public OutlookEmail()
+        public OfficePowerpoint()
         {
-            Name = "outlook";
-            Duration = 100;
+            Name = "powerpoint";
+            Duration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            UserInfo credentials = credentialManager.GetCredentials("outlook.com");
+            UserInfo credentials = credentialManager.GetCredentials("office.com");
 
             // Navigate
             driver.Navigate().GoToUrl("http://www.outlook.com");
@@ -52,40 +52,30 @@ namespace BrowserEfficiencyTest
             driver.Wait(1);
 
             driver.TypeIntoField(driver.FindElementById("i0118"), credentials.Password + Keys.Enter);
-            driver.Wait(5);
-            
-            // Cycle through some emails, simply with the down arrow key
-            for (int i = 0; i < 5; i++)
-            {
-                driver.Keyboard.SendKeys(Keys.Down);
-                driver.Wait(5);
-            }
+            driver.Wait(10);
 
-            // Compose a new email and send to a test account
-            driver.ClickElement(driver.FindElement(By.XPath("//*[@title='Write a new message (N)']")));
-            driver.Wait(3);
+            // Go to office
+            driver.ClickElement(driver.FindElementByClassName("o365cs-nav-button"));
+            driver.ClickElement(driver.FindElementById("O365_AppTile_ShellPowerPointOnline"));
+            driver.Wait(8);
 
-            driver.TypeIntoField("echopoweracct@gmail.com" + Keys.Tab);
-            driver.Wait(3);
-
-            driver.TypeIntoField(driver.FindElement(By.XPath("//*[@aria-label='Subject,']")), "Subject" + Keys.Tab);
-            driver.Wait(3);
-
-            driver.TypeIntoField(driver.FindElement(By.XPath("//*[@aria-label='Message body']")), "This is a message.");
+            // That opens up a new tab, so we have to give Webdriver focus in the new tab
+            driver.SwitchTo().Window(driver.WindowHandles[driver.WindowHandles.Count - 1]);
             driver.Wait(1);
 
-            // Send the message with ctrl + Enter shortcut
-            driver.Keyboard.PressKey(Keys.Control);
-            driver.Keyboard.SendKeys(Keys.Enter);
-            driver.Keyboard.ReleaseKey(Keys.Control);
-            driver.Wait(5);
+            // Open up a  doc
+            driver.ClickElement(driver.FindElementById("mruitem_0"));
+            driver.Wait(6);
 
-            // Arrow back up to the top
-            for (int i = 0; i < 5; i++)
-            {
-                driver.Keyboard.SendKeys(Keys.Up);
-                driver.Wait(2);
-            }
+            // This next section is in an iframe, so we have to switch to the iframe to access content in it
+            driver.SwitchTo().Frame(driver.FindElement(By.Id("sdx_ow_iframe")));
+
+            // Edit the document
+            driver.ClickElement(driver.FindElementById("PptUpperToolbar.LeftButtonDock.FlyoutPptEdit-Medium20"));
+            driver.Wait(1);
+            driver.ClickElement(driver.FindElementById("PptUpperToolbar.LeftButtonDock.FlyoutPptEdit.EditInWebApp-Menu32"));
+            driver.Wait(6);
+            driver.ScrollPage(2);
         }
     }
 }

@@ -66,12 +66,17 @@
   <ItemGroup>
     <Compile Include="Arguments.cs" />
     <Compile Include="HtmlTimer.cs" />
+    <Compile Include="CredentialManager.cs" />
+    <Compile Include="Scenarios\AboutBlank.cs" />
     <Compile Include="Scenarios\AzureDashboard.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
+    <Compile Include="Scenarios\OfficeLauncher.cs" />
+    <Compile Include="Scenarios\OfficePowerpoint.cs" />
     <Compile Include="Scenarios\OutlookEmail.cs" />
     <Compile Include="Scenarios\OutlookOffice.cs" />
+    <Compile Include="Scenarios\PowerBIBrowse.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />
     <Compile Include="RemoteWebDriverExtension.cs" />
     <Compile Include="ScenarioRunner.cs" />

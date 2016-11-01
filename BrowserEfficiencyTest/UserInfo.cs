@@ -34,10 +34,10 @@ namespace BrowserEfficiencyTest
         [JsonProperty("Domain")]
         public string Domain { get; set; }
 
-        [JsonProperty("UserName")]
-        public string UserName { get; set; }
+        [JsonProperty("Username")]
+        public string Username { get; set; }
 
         [JsonProperty("Password")]
-        public string PassWord { get; set; }
+        public string Password { get; set; }
     }
 }
