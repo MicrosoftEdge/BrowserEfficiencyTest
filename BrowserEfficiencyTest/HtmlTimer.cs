@@ -34,37 +34,45 @@ using System.Threading.Tasks;
 
 namespace BrowserEfficiencyTest
 {
-    class HtmlTimer
+    internal class HtmlTimer
     {
-        RemoteWebDriver _driver;
+        private RemoteWebDriver _driver;
 
+        /// <summary>
+        /// Creates a new HtmlTimer. Must be created after page has been loaded. Data will be cleared when navigating to a new domain
+        /// </summary>
+        /// <param name="driver">The driver to send commands to</param>
         public HtmlTimer(RemoteWebDriver driver)
         {
             _driver = driver;
+
+            // Create an object in the javascript heap that will collect perf measures
+            _driver.ExecuteScript("htmlTimerResults = { };");
         }
 
-        public void Init()
+        /// <summary>
+        /// Must be called before a navigation occurs.
+        /// </summary>
+        public void CollectMetrics()
         {
-            _driver.ExecuteScript(@"
-console.log('Initialize htmlTimer');
-            ");
-        }
+            Dictionary<string, object> results = (Dictionary <string, object>) _driver.ExecuteScript("return htmlTimerResults;");
+            _driver.ExecuteScript("htmlTimerResults = { };");
+            for (int i = 0; i < results.Count; i++)
+            {
 
-        public void Finish()
-        {
-            _driver.ExecuteScript(@"
-console.log('Finish htmlTimer');
-            ");
+            }
         }
 
         public void StartMeasure(string key)
         {
-
+            // TODO validate key
+            _driver.ExecuteScript("htmlTimerResults." + key + " = { }; htmlTimerResults." + key + ".Start = Date();");
         }
 
         public void EndMeasure(string key)
         {
-
+            // TODO validate key
+            _driver.ExecuteScript("htmlTimerResults." + key + ".End = Date();");
         }
 
         public void MeasureToElementExists(string key, string domIdentifier)
