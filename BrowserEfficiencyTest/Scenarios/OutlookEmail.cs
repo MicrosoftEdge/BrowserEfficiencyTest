@@ -39,7 +39,7 @@ namespace BrowserEfficiencyTest
             Duration = 100;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, HtmlTimer timer)
         {
             UserInfo credentials = credentialManager.GetCredentials("outlook.com");
 

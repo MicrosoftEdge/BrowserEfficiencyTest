@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
             this.Name = "msn";
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, HtmlTimer timer)
         {
             driver.Navigate().GoToUrl("http://www.msn.com");
             Thread.Sleep(1000);

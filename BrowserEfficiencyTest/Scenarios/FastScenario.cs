@@ -45,7 +45,7 @@ namespace BrowserEfficiencyTest
             Duration = 10;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, HtmlTimer timer)
         {
             driver.Navigate().GoToUrl("http://www.google.com");
         }

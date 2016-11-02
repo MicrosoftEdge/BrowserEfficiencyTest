@@ -39,7 +39,7 @@ namespace BrowserEfficiencyTest
             Duration = 70;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, HtmlTimer timer)
         {
             // Get the relevant username and password
             UserInfo credentials = credentialManager.GetCredentials("powerbi.com");

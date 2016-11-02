@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
             Name = "officeLauncher";
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, HtmlTimer timer)
         {
             UserInfo credentials = credentialManager.GetCredentials("office.com");
 

@@ -40,7 +40,7 @@ namespace BrowserEfficiencyTest
             Duration = 60;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, HtmlTimer timer)
         {
             // Navigate
             driver.Navigate().GoToUrl("http://www.bbc.co.uk");

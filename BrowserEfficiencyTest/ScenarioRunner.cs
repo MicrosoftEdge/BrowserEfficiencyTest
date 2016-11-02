@@ -58,6 +58,9 @@ namespace BrowserEfficiencyTest
         // _measureSets format: Dictionary< "measure set name", Tuple < "WPR profile name", "tracing mode" >>
         private Dictionary<string, Tuple<string, string>> _measureSets;
 
+        // For results from timing metrics that won't be in traces:
+        private List<List<string>> _htmlTimerResults;
+
         /// <summary>
         /// Instantiates a ScenarioRunner with the passed in arguments
         /// </summary>
@@ -79,6 +82,8 @@ namespace BrowserEfficiencyTest
             _scenarioName = args.ScenarioName;
             _measureSets = GetMeasureSetInfo(args.SelectedMeasureSets.ToList());
             _logins = new CredentialManager();
+
+            _htmlTimerResults = new List<List<string>>();
         }
 
         // Creates a data structure of measure sets name, wprp file and tracing mode and creates an empty one
@@ -135,9 +140,11 @@ namespace BrowserEfficiencyTest
                 {
                     foreach (var scenario in _scenarios)
                     {
-                        Console.WriteLine("[{0}] - Warmup - Browser: {1}  Scenario: {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, scenario.Name);
+                        HtmlTimer timer = new HtmlTimer(driver, browser, scenario.Name, 0);
 
-                        scenario.Run(driver, browser, _logins);
+                        Console.WriteLine("[{0}] - Warmup - Browser: {1}  Scenario: {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, scenario.Name);
+                        
+                        scenario.Run(driver, browser, _logins, timer);
 
                         Thread.Sleep(1 * 1000);
                     }
@@ -218,10 +225,13 @@ namespace BrowserEfficiencyTest
                                                 isFirstScenario = false;
                                             }
 
+                                            // Create a new timer for measuring durations if the scenario desires
+                                            HtmlTimer timer = new HtmlTimer(driver, browser, scenario.Name, iteration);
+
                                             Console.WriteLine("[{0}] - Executing - Iteration: {1}  Browser: {2}  Scenario: {3}  MeasureSet: {4}.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Name, currentMeasureSet.Key);
 
                                             // Here, control is handed to the scenario to navigate, and do whatever it wants
-                                            scenario.Run(driver, browser, _logins);
+                                            scenario.Run(driver, browser, _logins, timer);
 
                                             // When we get control back, we sleep for the remaining time for the scenario. This ensures
                                             // the total time for a scenario is always the same
@@ -237,6 +247,9 @@ namespace BrowserEfficiencyTest
                                             Console.WriteLine("[{0}] - Completed - Iteration: {1}  Browser: {2}  Scenario: {3}  MeasureSet: {4}. Scenario ran for {5} seconds.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Name, currentMeasureSet.Key, runTime.TotalSeconds);
 
                                             Thread.Sleep(timeLeft);
+
+                                            // Add the responsiveness results from this scenario to all our responsiveness results
+                                            _htmlTimerResults.AddRange(timer.GetAllResults());
                                         }
 
                                         Console.WriteLine("[{0}] - Completed Browser: {1}  Iteration: {2}  MeasureSet: {3}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, iteration, currentMeasureSet.Key);
@@ -283,6 +296,11 @@ namespace BrowserEfficiencyTest
                 Console.WriteLine("[{0}] - Ending Test Pass -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                 elevatorClient.SendControllerMessageAsync(Elevator.Commands.END_PASS).Wait();
             }
+        }
+
+        public List<List<string>> GetResponsivenessResults()
+        {
+            return _htmlTimerResults;
         }
     }
 }
