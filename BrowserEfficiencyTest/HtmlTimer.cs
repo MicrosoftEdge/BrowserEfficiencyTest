@@ -65,8 +65,8 @@ namespace BrowserEfficiencyTest
         /// </summary>
         public void CollectMetricsFromPage()
         {
-            Dictionary<string, object> results = (Dictionary <string, object>) _driver.ExecuteScript("return htmlTimerResults;");
-            _driver.ExecuteScript("htmlTimerResults = { };");
+            Dictionary<string, object> results = (Dictionary <string, object>) _driver.ExecuteScript("return window.htmlTimerResults;");
+            _driver.ExecuteScript("window.htmlTimerResults = { };");
             foreach (KeyValuePair<string, object> entry in results)
             {
                 Dictionary<string, object> measureResult = (Dictionary<string, object>) entry.Value;
@@ -106,7 +106,7 @@ namespace BrowserEfficiencyTest
         /// </summary>
         private void Initialize()
         {
-            _driver.ExecuteScript("htmlTimerResults = { };");
+            _driver.ExecuteScript("if (window.htmlTimerResults == undefined) { window.htmlTimerResults = { }; }");
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace BrowserEfficiencyTest
         {
             // TODO validate key
             Initialize();
-            _driver.ExecuteScript("htmlTimerResults." + key + " = { }; htmlTimerResults." + key + ".Start = new Date().getTime();");
+            _driver.ExecuteScript("window.htmlTimerResults." + key + " = { }; window.htmlTimerResults." + key + ".Start = new Date().getTime();");
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace BrowserEfficiencyTest
         public void EndMeasure(string key)
         {
             // TODO validate key
-            _driver.ExecuteScript("htmlTimerResults." + key + ".End = new Date().getTime();");
+            _driver.ExecuteScript("window.htmlTimerResults." + key + ".End = new Date().getTime();");
         }
 
         /// <summary>
@@ -139,8 +139,29 @@ namespace BrowserEfficiencyTest
         public void MeasureToElementExists(string key, string domIdType, string domIdentifier)
         {
             // TODO validate key
-            Initialize();
-            throw new NotImplementedException();
+            // StartMeasure(key);
+            _driver.ExecuteScript(@"
+                observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (!mutation.addedNodes) {
+                            return;
+                        }
+                        for (var i = 0; i < mutation.addedNodes.length; i++) {
+                            //console.log(mutation.addedNodes[i]);
+                            if (mutation.addedNodes[i].id == """ + domIdentifier + @""" ) {
+                                console.log(""found it!"");
+                            }
+                        }
+                    });
+                });
+
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true,
+                    attributes: false,
+                    characterData: false
+                });
+            ");
         }
     }
 }

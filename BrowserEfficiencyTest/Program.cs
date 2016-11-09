@@ -43,7 +43,7 @@ namespace BrowserEfficiencyTest
             {
                 PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
 
-                perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath);
+                perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.GetResponsivenessResults());
             }
         }
     }

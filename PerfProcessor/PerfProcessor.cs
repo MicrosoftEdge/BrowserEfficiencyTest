@@ -71,7 +71,7 @@ namespace BrowserEfficiencyTest
         /// </summary>
         /// <param name="etlFolderPath">Location of the ETL files to process the performance data from.</param>
         /// <param name="saveFolderPath">Location of where to save the results csv file.</param>
-        public void Execute(string etlFolderPath = ".", string saveFolderPath = "")
+        public void Execute(string etlFolderPath = ".", string saveFolderPath = "", List<List<string>> durationResults = null)
         {
             Dictionary<string, Dictionary<string, Dictionary<string, string>>> results = null;
             List<string> formattedResults = null;
@@ -82,6 +82,9 @@ namespace BrowserEfficiencyTest
             results = ProcessEtls(etlFiles);
 
             formattedResults = FormatResults(results);
+
+            List<string> formattedDurationResults = formatDurationResults(durationResults);
+            formattedResults.AddRange(formattedDurationResults);
 
             SaveResults(formattedResults, saveFolderPath);
         }
@@ -179,6 +182,21 @@ namespace BrowserEfficiencyTest
             }
 
             return formattedData;
+        }
+
+        private List<string> formatDurationResults(List<List<string>> input)
+        {
+            List<string> output = new List<string>();
+            foreach (List<string> row in input)
+            {
+                string rowString = row[0];
+                for (int i = 1; i < row.Count; i++)
+                {
+                    rowString += "," + row[i];
+                }
+                output.Add(rowString);
+            }
+            return output;
         }
 
         // Saves the results data to a file in csv format.

@@ -50,7 +50,7 @@ namespace BrowserEfficiencyTest
             // Type "Game of Thrones" in the search box and hit enter
             driver.TypeIntoField(driver.FindElementById("twotabsearchtextbox"), "Game of Thrones" + Keys.Enter);
             driver.Wait(5);
-
+            
             // Click into "Game of Thrones Season 1"
             driver.ClickElement(driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']"));
             driver.Wait(2);

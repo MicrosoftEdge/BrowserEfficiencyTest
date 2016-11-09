@@ -45,6 +45,8 @@ namespace BrowserEfficiencyTest
             driver.Navigate().GoToUrl("http://www.google.com");
             driver.Wait(5);
 
+            timer.MeasureToElementExists("key", "id", "extabar");
+
             // Search for "Seattle" and hit enter
             driver.TypeIntoField(driver.FindElementByXPath("//*[@title='Search']"), "Seattle" + Keys.Enter);
 
