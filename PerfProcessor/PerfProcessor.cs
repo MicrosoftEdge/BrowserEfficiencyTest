@@ -47,9 +47,10 @@ namespace BrowserEfficiencyTest
         /// </summary>
         public static IReadOnlyDictionary<string, MeasureSet> AvailableMeasureSets = new Dictionary<string, MeasureSet>((new List<MeasureSet>()
         {
-            new Energy(),
             new CpuUsage(),
             new DiskUsage(),
+            new Energy(),
+            new EnergyVerbose(),
             new NetworkUsage(),
             new RefSet()
             // Add new MeasureSets here.
@@ -106,7 +107,8 @@ namespace BrowserEfficiencyTest
             {
                 // Find a matching measureset to use with the etl (ETL will have the measureset name in the title)
                 var etlNameTokens = Path.GetFileName(etl).Split('_');
-                var measureSet = _selectedMeasureSets.Find(s => s.Name.Equals(etlNameTokens[3], StringComparison.OrdinalIgnoreCase));
+
+                var measureSet = _selectedMeasureSets.Find(s => s.WprProfile.Equals(etlNameTokens[3], StringComparison.OrdinalIgnoreCase));
 
                 if (measureSet != null)
                 {
