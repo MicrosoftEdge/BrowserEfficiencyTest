@@ -59,6 +59,8 @@ BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -sce
 
 *   **-attempts|-a** Defines the number of attempts to make per iteration. If an exception is caught, the trace is discarded and a new attempt is made. This paramater allows you to override the default number of attempts before giving up on the iteration, which is 3.
 
+*   **-notimeout** Allows the test run to continue even if the scenario took longer than expected to complete. Without this flag, the test harness will throw out the run and attempt again if any scenario takes longer to complete than its specified duration.
+
 ## Examples
 
 ### Simple one tab, one browser, no measures

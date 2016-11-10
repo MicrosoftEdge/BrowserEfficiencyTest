@@ -53,6 +53,7 @@ namespace BrowserEfficiencyTest
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
         public int MaxAttempts { get; private set; }
+        public bool OverrideTimeout { get; private set;  }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -100,6 +101,7 @@ namespace BrowserEfficiencyTest
             UsingTraceController = false;
             EtlPath = "";
             MaxAttempts = 3;
+            OverrideTimeout = false;
 
             CreatePossibleScenarios();
             ProcessArgs(args);
@@ -259,6 +261,10 @@ namespace BrowserEfficiencyTest
                         {
                             throw new DirectoryNotFoundException("The profile path does not exist!");
                         }
+                        break;
+                    case "-notimeout":
+                        argNum++;
+                        OverrideTimeout = true;
                         break;
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
