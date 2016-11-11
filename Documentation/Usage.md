@@ -49,6 +49,8 @@ BrowserEfficiencyTest.exe -browser|-b [chrome|edge|firefox|opera|operabeta] -sce
 
       **Note:** The `energy` measure set only works on a Surface Book with the Maxim power chip driver installed, and in order to measure total system power, the top must be detached from the keyboard and unplugged from power.
 
+    * `energyVerbose` detailed version of the 'energy' measure set. Reports the energy for the system broken down by component and applications that ran during the test pass.
+
     * `networkUsage` will measure the network activity during the test pass.
 
     * `refSet` is a measure of the memory used during the test pass.
