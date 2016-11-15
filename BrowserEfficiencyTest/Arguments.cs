@@ -263,7 +263,6 @@ namespace BrowserEfficiencyTest
                         }
                         break;
                     case "-notimeout":
-                        argNum++;
                         OverrideTimeout = true;
                         break;
                     default:
