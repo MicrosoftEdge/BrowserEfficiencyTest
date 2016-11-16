@@ -66,6 +66,8 @@ namespace BrowserEfficiencyTest
                 metrics.Add(columns[0] + " | NetworkEnergy(mJ)", columns[6]);
                 metrics.Add(columns[0] + " | OtherEnergy(mJ)", columns[7]);
                 metrics.Add(columns[0] + " | TotalEnergy(mJ)", columns[8]);
+                metrics.Add(columns[0] + " | StartTime(ns)", columns[9]);
+                metrics.Add(columns[0] + " | EndTime(ns)", columns[10]);
             }
 
             return metrics;
