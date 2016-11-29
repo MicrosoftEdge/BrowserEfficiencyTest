@@ -105,7 +105,9 @@ or
 
 ### Collecting measurement traces but processing the measurement results at a later time
 
-This example is the same as the above example except the post processing of the measurement results is skipped. Since the length of time needed for post processing of the measurement increases the more browsers, scenarios, measuresets and iterations there are it may be desirable to skip the immediate post processing of the trace files when the test completes so it can be done at a later time. This is where the -noprocessing|-np option is useful. This example will create a trace file (.ETL file) for each combination of browser, scenario, and iteration for the cpuUsage measureset but the traces will not be processed after the test.
+This example is the same as the above example except the post processing of the measurement results is skipped. Since the length of time needed for post processing of the measurement increases the more browsers, scenarios, measuresets and iterations there are it may be desirable to skip the immediate post processing of the trace files when the test completes so it can be done at a later time. This is where the -noprocessing|-np option is useful.
+
+This example will create a trace file (.ETL file) for each combination of browser, scenario, and iteration for the cpuUsage measureset but the traces will not be automatically processed after the test.
 
 Remember that an instance of Elevator must be running and listening for a client connection in order for this command to complete.
 
