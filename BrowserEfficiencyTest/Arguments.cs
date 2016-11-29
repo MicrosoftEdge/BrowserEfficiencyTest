@@ -54,6 +54,7 @@ namespace BrowserEfficiencyTest
         public string EtlPath { get; private set; }
         public int MaxAttempts { get; private set; }
         public bool OverrideTimeout { get; private set;  }
+        public bool DoPostProcessing { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -102,6 +103,7 @@ namespace BrowserEfficiencyTest
             EtlPath = "";
             MaxAttempts = 3;
             OverrideTimeout = false;
+            DoPostProcessing = true;
 
             CreatePossibleScenarios();
             ProcessArgs(args);
@@ -263,8 +265,11 @@ namespace BrowserEfficiencyTest
                         }
                         break;
                     case "-notimeout":
-                        argNum++;
                         OverrideTimeout = true;
+                        break;
+                    case "-noprocessing":
+                    case "-np":
+                        DoPostProcessing = false;
                         break;
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");

@@ -35,11 +35,14 @@ namespace BrowserEfficiencyTest
         {
             Arguments arguments = new Arguments(args);
 
-            ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
+            if (arguments.Browsers.Count > 0 && arguments.Scenarios.Count > 0)
+            {
+                ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
 
-            scenarioRunner.Run();
+                scenarioRunner.Run();
+            }
 
-            if (arguments.UsingTraceController)
+            if (arguments.UsingTraceController && arguments.DoPostProcessing)
             {
                 PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
 
