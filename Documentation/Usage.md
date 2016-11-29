@@ -13,13 +13,13 @@ Usage:
 BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np]
 ```
 
-*   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided along with the '-scenario|-s' option. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
+*   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided along with the `-scenario|-s` option. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
     * `edge` will include Microsoft Edge in the test pass
     * `chrome` will include Chrome in the test pass
     * `firefox` will include Firefox in the test pass
     * `opera` will include Opera in the test pass
 
-*   **-scenario|-s** Selects the scenario or scenarios to run. This option must be provided along with the '-browser|-b' option. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
+*   **-scenario|-s** Selects the scenario or scenarios to run. This option must be provided along with the `-browser|-b` option. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
     * `amazon` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
     * `bbcNews` will load BBC, click on the top story, and scroll down
     * `cnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
@@ -63,7 +63,7 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -sc
 
 *   **-notimeout** Allows the test run to continue even if the scenario took longer than expected to complete. Without this flag, the test harness will throw out the run and attempt again if any scenario takes longer to complete than its specified duration.
 
-*   **-noprocessing|-np** Allows the test to run without post processing the results at the end of the test. Use this flag with the '-tracecontrolled|-tc' and '-measureset|-ms' options to collect trace files for the specified measureset but skip post processing of the results after the test completes. This is useful where you want to run the test and collect etl traces but want to process the results separately at a later time.
+*   **-noprocessing|-np** Allows the test to run without post processing the results at the end of the test. Use this flag with the `-tracecontrolled|-tc` and `-measureset|-ms` options to collect trace files for the specified measureset but skip post processing of the results after the test completes. This is useful where you want to run the test and collect etl traces but want to process the results separately at a later time.
 
 ## Examples
 
@@ -105,7 +105,7 @@ or
 
 ### Collecting measurement traces but processing the measurement results at a later time
 
-This example is the same as the above example except the post processing of the measurement results is skipped. Since the length of time needed for post processing of the measurement increases the more browsers, scenarios, measuresets and iterations there are, it may be desirable to skip the immediate post processing of the trace files so it can be done at a later time. This is where the -noprocessing|-np option is useful. This example will create a trace file (.ETL file) for each combination of browser, scenario, and iteration for the cpuUsage measureset but the traces will not be processed after the test.
+This example is the same as the above example except the post processing of the measurement results is skipped. Since the length of time needed for post processing of the measurement increases the more browsers, scenarios, measuresets and iterations there are it may be desirable to skip the immediate post processing of the trace files when the test completes so it can be done at a later time. This is where the -noprocessing|-np option is useful. This example will create a trace file (.ETL file) for each combination of browser, scenario, and iteration for the cpuUsage measureset but the traces will not be processed after the test.
 
 Remember that an instance of Elevator must be running and listening for a client connection in order for this command to complete.
 
@@ -115,7 +115,7 @@ or
 
 ```BrowserEfficiencyTest.exe -b edge chrome firefox -s wikipedia youtube facebook -tc C:\Some\Path\To\Store\Traces -ms cpuUsage -i 10 -np```
 
-Then, with the resulting trace files, we can process the results separately by running BrowserEfficiencyTest.exe again but omitting the '-browser|-b' and '-scenario|-s' options. We still need to include the '-tracecontrolled|-tc' and '-measureset|-ms' options so that BrowserEfficiencyTest knows where the ETL files are and what measureset to process the ETL files with.
+Then, with the resulting trace files, we can process the results separately without running the test again by executing BrowserEfficiencyTest.exe and omitting the `-browser|-b` and `-scenario|-s` options. We still need to include the `-tracecontrolled|-tc` and `-measureset|-ms` options so that BrowserEfficiencyTest knows where the ETL files are and what measureset to process the ETL files with.
 
 ```BrowserEfficiencyTest.exe -tracecontrolled C:\Some\Path\To\Store\Traces -measureset cpuUsage```
 
