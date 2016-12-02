@@ -37,18 +37,18 @@ namespace BrowserEfficiencyTest
         private List<UserInfo> _logins;
 
         /// <summary>
-        /// Creates a new CredentialManager with info from config.json
+        /// Creates a new CredentialManager with info from credentials.json
         /// </summary>
         public CredentialManager()
         {
-            string jsonText = File.ReadAllText("config.json");
+            string jsonText = File.ReadAllText("credentials.json");
             _logins = JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
         }
 
         /// <summary>
         /// Given the domain requested, it returns the username and password as a UserInfo object
         /// </summary>
-        /// <param name="domain">The desired domain, matching the domain in the config.json file</param>
+        /// <param name="domain">The desired domain, matching the domain in the credentials.json file</param>
         /// <returns>A UserInfo object with the desired credentials</returns>
         public UserInfo GetCredentials(string domain)
         {
