@@ -44,7 +44,7 @@ namespace BrowserEfficiencyTest
             UserInfo credentials = credentialManager.GetCredentials("office.com");
 
             // Navigate
-            driver.Navigate().GoToUrl("http://www.outlook.com");
+            driver.Navigate().GoToUrl("https://outlook.live.com/owa/?nlp=1");
             driver.Wait(5);
 
             // Log in
