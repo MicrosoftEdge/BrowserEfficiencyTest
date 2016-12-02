@@ -80,7 +80,7 @@ namespace BrowserEfficiencyTest
 
             _scenarioName = args.ScenarioName;
             _measureSets = GetMeasureSetInfo(args.SelectedMeasureSets.ToList());
-            _logins = new CredentialManager();
+            _logins = new CredentialManager(args.CredentialPath);
         }
 
         // Creates a data structure of measure sets name, wprp file and tracing mode and creates an empty one

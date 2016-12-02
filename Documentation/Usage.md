@@ -24,13 +24,13 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -sc
     * `bbcNews` will load BBC, click on the top story, and scroll down
     * `cnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
     * `cnnTopStory` will load CNN, load the top story, and scroll down
-    * `facebook` will log into facebook with the provided credentials, and scroll through the news feed. Requires facebook credentials to be provided in the `config.json` file
+    * `facebook` will log into facebook with the provided credentials, and scroll through the news feed. Requires facebook credentials to be provided in the `credentials.json` file
     * `fastScenario` will load google and quickly exit. This is designed to be fast, and is for testing BrowserEfficiencyTest
-    * `gmail` will load Gmail, and scroll through 5 emails in the inbox. Requires gmail credentials to be provided in the `config.json` file
+    * `gmail` will load Gmail, and scroll through 5 emails in the inbox. Requires gmail credentials to be provided in the `credentials.json` file
     * `google` will navigate to google.com and then search for "Seattle". It sees the results of the search, but doesn't navigate to any of them
     * `msn` will navigate to MSN
     * `msnbc` will navigate to MSNBC
-    * `outlook` will navigate to outlook.com, log in, and scroll through 10 emails. Requires outlook credentials to be provided in the `config.json` file
+    * `outlook` will navigate to outlook.com, log in, and scroll through 10 emails. Requires outlook credentials to be provided in the `credentials.json` file
     * `techRadar` will navigate to techradar.com's review of the Surface Pro 4 and scroll through the page
     * `wikipedia` will navigate to the Wikipedia article on the United States and scroll
     * `yahooNews` will navigate to Yahoo.com, go to news, and navigate to the top story. It will then scroll through it.
@@ -65,6 +65,8 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -sc
 
 *   **-noprocessing|-np** Allows the test to run without post processing the results at the end of the test. Use this flag with the `-tracecontrolled|-tc` and `-measureset|-ms` options to collect trace files for the specified measureset but skip post processing of the results after the test completes. This is useful where you want to run the test and collect etl traces but want to process the results separately at a later time.
 
+*   **-credentialpath|-cp** Allows a path to be specified that points to a different credentials.json file. An absolute or a relative path can be provided, though the path cannot contain any spaces.
+
 ## Examples
 
 ### Simple one tab, one browser, no measures
@@ -81,7 +83,7 @@ This example will run the wikipedia scenario on Microsoft Edge. Since it's only 
 
 This example will run wikipedia, youtube, and facebook on Microsoft Edge, Chrome, and Firefox. Each scenario (site) will be run in its own tab on each browser. No measureset is defined, so this run will only automate the actions on each browser; it won't result in any measurements being taken.
 
-Remember that using the Facebook scenario requires defining a Facebook login inside the `config.json` file.
+Remember that using the Facebook scenario requires defining a Facebook login inside the `credentials.json` file.
 
 ```BrowserEfficiencyTest.exe -browser edge chrome firefox -scenario wikipedia youtube facebook```
 

@@ -13,8 +13,8 @@ This guide will walk through getting started with BrowserEfficiencyTest.
 * First, go download or clone [Elevator](https://github.com/MicrosoftEdge/Elevator). Elevator is used to trace while a browser is automatically running through scenarios. This results in a trace file (with a .etl extension), which will later be used to extract measures (e.g. how much CPU, networking, or power was used while the browser was working). Traces can also be opened in Windows Performance Analyzer, so you can see what was going on during the test.
 * Next, download the Windows Performance Toolkit. It's available as part of the Windows Assessment and Deployment Kit (ADK), and can be downloaded [here](http://go.microsoft.com/fwlink/p/?LinkId=526740).
     * In the ADK installer, select "Install to this computer"
-	* Keep the default path
-	* In "Select the features you want to install", Uncheck every item except "Windows Performance Toolkit".
+    * Keep the default path
+    * In "Select the features you want to install", Uncheck every item except "Windows Performance Toolkit".
 
 ## Webdriver
 
@@ -69,7 +69,7 @@ You should now have a folder on your device with the respective Webdriver for ea
 ## Configuration
 
 * In Microsoft Edge, go to settings, "View advanced settings", then turn "Block pop-ups" to off. This is required in order for BrowserEfficiencyTest to open new tabs in Microsoft Edge.
-* Under \BrowserEfficiencyTest\BrowserEfficiencyTest\bin\Debug, you'll see the JSON file `config.json`. You will have to provide credentials for any sceanrios that require them. No test accounts/credentials are provided as part of this repo. If you're running the default set of scenarios (`-s all`), you'll need to provide credentials for test accounts for `facebook.com` and `gmail.com`.
+* Under \BrowserEfficiencyTest\BrowserEfficiencyTest\bin\Debug, you'll see the JSON file `credentials.json`. You will have to provide credentials for any sceanrios that require them. No test accounts/credentials are provided as part of this repo. If you're running the default set of scenarios (`-s all`), you'll need to provide credentials for test accounts for `facebook.com` and `gmail.com`.
 
 ### Recommendations to reduce variability
 
@@ -86,7 +86,7 @@ The items in this section are not required, but they are useful recommendations 
 
 * From an elevated command prompt, run:
     `reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SRUM\Parameters" /v Tier1Period /t REG_DWORD /d 10 /f`
-	This will set the energy estimation engine in Windows to fire an event every 10s.
+  This will set the energy estimation engine in Windows to fire an event every 10s.
 * Ensure that the drivers are installed if you have power-measuring hardware like a [Maxim 34407 Power Accumulator chip](https://www.maximintegrated.com/en/products/analog/amplifiers/MAX34407.html)
 
 ## Run the test

@@ -39,9 +39,9 @@ namespace BrowserEfficiencyTest
         /// <summary>
         /// Creates a new CredentialManager with info from credentials.json
         /// </summary>
-        public CredentialManager()
+        public CredentialManager(string path)
         {
-            string jsonText = File.ReadAllText("credentials.json");
+            string jsonText = File.ReadAllText(path);
             _logins = JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
         }
 

@@ -55,6 +55,7 @@ namespace BrowserEfficiencyTest
         public int MaxAttempts { get; private set; }
         public bool OverrideTimeout { get; private set;  }
         public bool DoPostProcessing { get; private set; }
+        public string CredentialPath { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -104,6 +105,7 @@ namespace BrowserEfficiencyTest
             MaxAttempts = 3;
             OverrideTimeout = false;
             DoPostProcessing = true;
+            CredentialPath = "credentials.json";
 
             CreatePossibleScenarios();
             ProcessArgs(args);
@@ -270,6 +272,11 @@ namespace BrowserEfficiencyTest
                     case "-noprocessing":
                     case "-np":
                         DoPostProcessing = false;
+                        break;
+                    case "-credentialpath":
+                    case "-cp":
+                        argNum++;
+                        CredentialPath = args[argNum];
                         break;
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
