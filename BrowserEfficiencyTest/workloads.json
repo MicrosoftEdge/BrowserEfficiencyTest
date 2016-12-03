@@ -41,31 +41,42 @@
     "Scenarios": [
       {
         "ScenarioName": "gmail",
-        "Tab": "new"
-      },
-      {
-        "ScenarioName": "youtube",
         "Tab": "new",
-        "Duration": 300
+        "Duration": 90
       },
+
       {
         "ScenarioName": "bbcNews",
-        "Tab": "same",
+        "Tab": "new",
         "Duration": 150
-      },
-      {
+      }, {
         "ScenarioName": "yahooNews",
         "Tab": "same",
         "Duration": 150
       },
+
       {
-        "ScenarioName": "facebook",
+        "ScenarioName": "youtube",
         "Tab": "new",
+        "Duration": 180
+      }, {
+        "ScenarioName": "facebook",
+        "Tab": "same",
         "Duration": 120
       },
+
       {
+        "ScenarioName": "amazon",
+        "Tab": "new",
+        "Duration": 120
+      }, {
         "ScenarioName": "wikipedia",
-        "Tab": "new"
+        "Tab": "same",
+        "Duration": 120
+      }, {
+        "ScenarioName": "google",
+        "Tab": "same",
+        "Duration": 120
       }
     ]
   }
