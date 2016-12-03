@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
         public AzureDashboard()
         {
             Name = "azure";
-            Duration = 120;
+            DefaultDuration = 120;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

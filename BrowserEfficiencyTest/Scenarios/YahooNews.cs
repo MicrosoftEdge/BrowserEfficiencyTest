@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         public YahooNews()
         {
             Name = "yahooNews";
-            Duration = 90;
+            DefaultDuration = 90;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         public GmailGoThroughEmails()
         {
             Name = "gmail";
-            Duration = 80;
+            DefaultDuration = 80;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

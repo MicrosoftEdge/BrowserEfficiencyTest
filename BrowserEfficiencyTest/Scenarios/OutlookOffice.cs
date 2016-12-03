@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
         public OutlookOffice()
         {
             Name = "office";
-            Duration = 80;
+            DefaultDuration = 80;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

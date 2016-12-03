@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
         public FacebookNewsfeedScroll()
         {
             Name = "facebook";
-            Duration = 60;
+            DefaultDuration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

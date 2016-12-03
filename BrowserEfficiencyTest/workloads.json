@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "heavymultitab",
+    "Scenarios": [
+      {
+        "ScenarioName": "youtube",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "bbcNews",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "yahooNews",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "amazon",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "facebook",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "google",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "gmail",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "wikipedia",
+        "Tab": "new"
+      }
+    ]
+  },
+  {
+    "Name": "representativelong",
+    "Scenarios": [
+      {
+        "ScenarioName": "gmail",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "youtube",
+        "Tab": "new",
+        "Duration": 300
+      },
+      {
+        "ScenarioName": "bbcNews",
+        "Tab": "same",
+        "Duration": 150
+      },
+      {
+        "ScenarioName": "yahooNews",
+        "Tab": "same",
+        "Duration": 150
+      },
+      {
+        "ScenarioName": "facebook",
+        "Tab": "new",
+        "Duration": 120
+      },
+      {
+        "ScenarioName": "wikipedia",
+        "Tab": "new"
+      }
+    ]
+  }
+]

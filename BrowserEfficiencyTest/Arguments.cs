@@ -40,11 +40,12 @@ namespace BrowserEfficiencyTest
     {
         private static readonly List<string> s_SupportedBrowsers = new List<string> { "chrome", "edge", "firefox", "opera" };
 
-        private Dictionary<string, Scenario> _possibleScenarios;
-        private List<Scenario> _scenarios;
+        private Dictionary<string, WorkloadScenario> _possibleScenarios;
+        private List<WorkloadScenario> _scenarios;
         private List<string> _browsers;
         private Dictionary<string, MeasureSet> _availableMeasureSets;
         private List<MeasureSet> _selectedMeasureSets;
+        private List<Workload> _workloads;
 
         public string ScenarioName { get; private set; }
         public string BrowserProfilePath { get; private set; }
@@ -60,7 +61,7 @@ namespace BrowserEfficiencyTest
         /// <summary>
         /// List of all scenarios to be run.
         /// </summary>
-        public IReadOnlyCollection<Scenario> Scenarios
+        public IReadOnlyCollection<WorkloadScenario> Scenarios
         {
             get { return _scenarios.AsReadOnly(); }
         }
@@ -91,11 +92,12 @@ namespace BrowserEfficiencyTest
         /// <param name="args">Array of strings containing the command line arguments.</param>
         public Arguments(string[] args)
         {
-            _possibleScenarios = new Dictionary<string, Scenario>();
-            _scenarios = new List<Scenario>();
+            _possibleScenarios = new Dictionary<string, WorkloadScenario>();
+            _scenarios = new List<WorkloadScenario>();
             _browsers = new List<string>();
             _availableMeasureSets = PerfProcessor.AvailableMeasureSets.ToDictionary(k => k.Key, v => v.Value);
             _selectedMeasureSets = new List<MeasureSet>();
+            _workloads = new List<Workload>();
             ScenarioName = "";
             BrowserProfilePath = "";
             DoWarmup = false;
@@ -108,6 +110,7 @@ namespace BrowserEfficiencyTest
             CredentialPath = "credentials.json";
 
             CreatePossibleScenarios();
+            ProcessWorkloads();
             ProcessArgs(args);
         }
 
@@ -156,24 +159,14 @@ namespace BrowserEfficiencyTest
                         }
 
                         break;
+                    case "-workload":
+                    case "-w":
+                        argNum++;
+                        AddScenariosInWorkload(args[argNum]);
+                        break;
                     case "-scenario":
                     case "-s":
                         argNum++;
-
-                        if (args[argNum] == "all")
-                        {
-                            // Specify the "official" runs, including order
-                            _scenarios.Add(_possibleScenarios["youtube"]);
-                            _scenarios.Add(_possibleScenarios["bbcNews"]);
-                            _scenarios.Add(_possibleScenarios["yahooNews"]);
-                            _scenarios.Add(_possibleScenarios["amazon"]);
-                            _scenarios.Add(_possibleScenarios["facebook"]);
-                            _scenarios.Add(_possibleScenarios["google"]);
-                            _scenarios.Add(_possibleScenarios["gmail"]);
-                            _scenarios.Add(_possibleScenarios["wikipedia"]);
-                            ScenarioName = "all";
-                            break;
-                        }
 
                         while (argNum < args.Length)
                         {
@@ -244,7 +237,6 @@ namespace BrowserEfficiencyTest
 
                         break;
                     case "-warmup":
-                    case "-w":
                         DoWarmup = true;
                         break;
                     case "-iterations":
@@ -326,7 +318,33 @@ namespace BrowserEfficiencyTest
 
         private void AddScenario(Scenario scenario)
         {
-            _possibleScenarios.Add(scenario.Name, scenario);
+            _possibleScenarios.Add(scenario.Name, new WorkloadScenario(scenario.Name, "new", scenario.DefaultDuration, scenario));
+        }
+
+        private void ProcessWorkloads()
+        {
+            string jsonText = File.ReadAllText("workloads.json");
+            _workloads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Workload>>(jsonText);
+        }
+
+        private void AddScenariosInWorkload(string workloadName)
+        {
+            foreach (Workload workload in _workloads)
+            {
+                if (workload.Name == workloadName)
+                {
+                    foreach (WorkloadScenario scenario in workload.Scenarios)
+                    {
+                        int runtimeDuration = _possibleScenarios[scenario.ScenarioName].Duration;
+                        if (scenario.Duration > 0)
+                        {
+                            runtimeDuration = scenario.Duration;
+                        }
+                        _scenarios.Add(new WorkloadScenario(scenario.ScenarioName, scenario.Tab, runtimeDuration, _possibleScenarios[scenario.ScenarioName].Scenario));
+                    }
+                    break;
+                }
+            }
         }
     }
 }

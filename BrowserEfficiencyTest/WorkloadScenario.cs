@@ -1,4 +1,4 @@
-//--------------------------------------------------------------
+﻿//--------------------------------------------------------------
 //
 // Browser Efficiency Test
 // Copyright(c) Microsoft Corporation
@@ -25,35 +25,29 @@
 //
 //--------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using OpenQA.Selenium.Remote;
-using System.Threading;
+using Newtonsoft.Json;
 
 namespace BrowserEfficiencyTest
 {
-    internal class WikipediaUnitedStates : Scenario
+    internal class WorkloadScenario
     {
-        public WikipediaUnitedStates()
-        {
-            // Specifify name and that it's 30s
-            Name = "wikipedia";
-            DefaultDuration = 30;
-        }
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
-        {
-            // Nagivate to wikipedia
-            driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
+        [JsonProperty("ScenarioName")]
+        public string ScenarioName { get; set; }
 
-            Thread.Sleep(2 * 1000);
-            if (browser == "firefox")
-            {
-                // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
-                driver.FindElementById("firstHeading").SendKeys(string.Empty);
-            }
+        [JsonProperty("Tab")]
+        public string Tab { get; set; }
 
-            // Scroll a bit
-            driver.ScrollPage(12);
+        [JsonProperty("Duration")]
+        public int Duration { get; set; }
+
+        public Scenario Scenario { get; private set; }
+
+        public WorkloadScenario(string scenarioName, string tab, int duration, Scenario scenario)
+        {
+            ScenarioName = scenarioName;
+            Tab = tab;
+            Duration = duration;
+            Scenario = scenario;
         }
     }
 }

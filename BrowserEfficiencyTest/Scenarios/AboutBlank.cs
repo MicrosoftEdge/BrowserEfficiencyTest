@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
         public AboutBlank()
         {
             Name = "aboutBlank";
-            Duration = 60;
+            DefaultDuration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

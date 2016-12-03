@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         public TechRadarSurfacePro4Review()
         {
             Name = "techRadar";
-            Duration = 60;
+            DefaultDuration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

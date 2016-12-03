@@ -93,6 +93,8 @@
     <Compile Include="Scenarios\AmazonSearch.cs" />
     <Compile Include="Scenarios\GoogleSearch.cs" />
     <Compile Include="UserInfo.cs" />
+    <Compile Include="Workload.cs" />
+    <Compile Include="WorkloadScenario.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -100,6 +102,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="workloads.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         public AmazonSearch()
         {
             Name = "amazon";
-            Duration = 45;
+            DefaultDuration = 45;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

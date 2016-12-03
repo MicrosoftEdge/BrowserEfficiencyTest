@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
         public Msnbc()
         {
             Name = "msnbc";
-            Duration = 50;
+            DefaultDuration = 50;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
