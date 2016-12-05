@@ -68,6 +68,7 @@
     <Compile Include="CredentialManager.cs" />
     <Compile Include="Scenarios\AboutBlank.cs" />
     <Compile Include="Scenarios\AzureDashboard.cs" />
+    <Compile Include="Scenarios\EspnHomepage.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
@@ -86,12 +87,14 @@
     <Compile Include="Scenarios\Msnbc.cs" />
     <Compile Include="Scenarios\TechRadarSurfacePro4Review.cs" />
     <Compile Include="Scenarios\WikipediaUnitedStates.cs" />
+    <Compile Include="Scenarios\YelpSeattleDinner.cs" />
     <Compile Include="Scenarios\YoutubeWatchVideo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenario.cs" />
     <Compile Include="Scenarios\AmazonSearch.cs" />
     <Compile Include="Scenarios\GoogleSearch.cs" />
+    <Compile Include="Scenarios\ZillowSearch.cs" />
     <Compile Include="UserInfo.cs" />
     <Compile Include="Workload.cs" />
     <Compile Include="WorkloadScenario.cs" />

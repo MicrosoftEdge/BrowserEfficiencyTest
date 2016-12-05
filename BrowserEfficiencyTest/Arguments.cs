@@ -314,6 +314,9 @@ namespace BrowserEfficiencyTest
             AddScenario(new OfficePowerpoint());
             AddScenario(new AboutBlank());
             AddScenario(new OfficeLauncher());
+            AddScenario(new YelpSeattleDinner());
+            AddScenario(new ZillowSearch());
+            AddScenario(new EspnHomepage());
         }
 
         private void AddScenario(Scenario scenario)
