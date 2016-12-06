@@ -33,9 +33,9 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class PintrestExplore : Scenario
+    internal class PinterestExplore : Scenario
     {
-        public PintrestExplore()
+        public PinterestExplore()
         {
             Name = "pintrest";
             DefaultDuration = 60;

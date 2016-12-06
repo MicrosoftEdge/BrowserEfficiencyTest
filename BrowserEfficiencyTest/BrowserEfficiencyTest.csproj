@@ -78,7 +78,7 @@
     <Compile Include="Scenarios\OfficePowerpoint.cs" />
     <Compile Include="Scenarios\OutlookEmail.cs" />
     <Compile Include="Scenarios\OutlookOffice.cs" />
-    <Compile Include="Scenarios\PintrestExplore.cs" />
+    <Compile Include="Scenarios\PinterestExplore.cs" />
     <Compile Include="Scenarios\PowerBIBrowse.cs" />
     <Compile Include="Scenarios\TumblrTrending.cs" />
     <Compile Include="Scenarios\TwitterPublic.cs" />
