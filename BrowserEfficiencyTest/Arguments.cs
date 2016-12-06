@@ -317,6 +317,9 @@ namespace BrowserEfficiencyTest
             AddScenario(new YelpSeattleDinner());
             AddScenario(new ZillowSearch());
             AddScenario(new EspnHomepage());
+            AddScenario(new LinkedInSatya());
+            AddScenario(new TwitterPublic());
+            AddScenario(new TumblrTrending());
         }
 
         private void AddScenario(Scenario scenario)

@@ -43,7 +43,7 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            // Nagivate to wikipedia
+            // Nagivate to espn
             driver.Navigate().GoToUrl("http://www.espn.com");
             driver.Wait(10);
 

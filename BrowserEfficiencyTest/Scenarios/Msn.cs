@@ -35,13 +35,14 @@ namespace BrowserEfficiencyTest
     {
         public Msn()
         {
-            this.Name = "msn";
+            Name = "msn";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://www.msn.com");
-            Thread.Sleep(1000);
+            driver.Wait(20);
+            driver.ScrollPage(5);
         }
     }
 }

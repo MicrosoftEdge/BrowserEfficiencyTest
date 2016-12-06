@@ -33,29 +33,30 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class YelpSeattleDinner : Scenario
+    internal class TumblrTrending : Scenario
     {
-        public YelpSeattleDinner()
+        public TumblrTrending()
         {
-            Name = "yelp";
+            Name = "tumblr";
+            DefaultDuration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            // Nagivate to Yelp (Seattle)
-            driver.Navigate().GoToUrl("http://yelp.com/seattle");
+            // Nagivate to the homepage for Tumblr
+            driver.Navigate().GoToUrl("https://www.tumblr.com/explore/trending");
+            driver.Wait(10);
 
+            // Try changing content with content controls
+            //     At the time of writing, this is interesting because it doesn't require an actual page load
+
+            driver.ClickElement(driver.FindElementByClassName("l-header-container").FindElement(By.XPath("//*[@data-text='Staff picks']")));
+            driver.Wait(10);
+            driver.ClickElement(driver.FindElementByClassName("l-header-container").FindElement(By.XPath("//*[@data-text='Trending']")));
             driver.Wait(5);
 
-            // Search for dinner
-            driver.TypeIntoField(driver.FindElementById("find_desc"), "Dueminuti Healthy Pasta" + Keys.Enter);
-            driver.Wait(3);
-
-            // Click into result
-            driver.ClickElement(driver.FindElementByClassName("regular-search-result").FindElement(By.ClassName("biz-name")));
-            driver.Wait(3);
-
-            driver.ScrollPage(4);
+            // Scroll through the infinite list
+            driver.ScrollPage(10);
         }
     }
 }

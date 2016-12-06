@@ -33,29 +33,21 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class YelpSeattleDinner : Scenario
+    internal class LinkedInSatya : Scenario
     {
-        public YelpSeattleDinner()
+        public LinkedInSatya()
         {
-            Name = "yelp";
+            Name = "linkedin";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            // Nagivate to Yelp (Seattle)
-            driver.Navigate().GoToUrl("http://yelp.com/seattle");
+            // Nagivate to the public page for Satya Nadella
+            driver.Navigate().GoToUrl("https://www.linkedin.com/in/satya-nadella-3145136");
+            driver.Wait(10);
 
-            driver.Wait(5);
-
-            // Search for dinner
-            driver.TypeIntoField(driver.FindElementById("find_desc"), "Dueminuti Healthy Pasta" + Keys.Enter);
-            driver.Wait(3);
-
-            // Click into result
-            driver.ClickElement(driver.FindElementByClassName("regular-search-result").FindElement(By.ClassName("biz-name")));
-            driver.Wait(3);
-
-            driver.ScrollPage(4);
+            // Scroll once; it's not very long
+            driver.ScrollPage(1);
         }
     }
 }
