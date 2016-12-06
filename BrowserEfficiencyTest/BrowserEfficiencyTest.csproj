@@ -72,11 +72,13 @@
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
+    <Compile Include="Scenarios\InstagramNYPL.cs" />
     <Compile Include="Scenarios\LinkedInSatya.cs" />
     <Compile Include="Scenarios\OfficeLauncher.cs" />
     <Compile Include="Scenarios\OfficePowerpoint.cs" />
     <Compile Include="Scenarios\OutlookEmail.cs" />
     <Compile Include="Scenarios\OutlookOffice.cs" />
+    <Compile Include="Scenarios\PintrestExplore.cs" />
     <Compile Include="Scenarios\PowerBIBrowse.cs" />
     <Compile Include="Scenarios\TumblrTrending.cs" />
     <Compile Include="Scenarios\TwitterPublic.cs" />

@@ -320,6 +320,8 @@ namespace BrowserEfficiencyTest
             AddScenario(new LinkedInSatya());
             AddScenario(new TwitterPublic());
             AddScenario(new TumblrTrending());
+            AddScenario(new InstagramNYPL());
+            AddScenario(new PintrestExplore());
         }
 
         private void AddScenario(Scenario scenario)
