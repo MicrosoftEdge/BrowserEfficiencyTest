@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public PinterestExplore()
         {
-            Name = "pintrest";
+            Name = "pinterest";
             DefaultDuration = 60;
         }
 
