@@ -5,18 +5,18 @@
       {
         "ScenarioName": "gmail",
         "Tab": "new",
-        "Duration": 90
+        "Duration": 180
       },
 
       {
         "ScenarioName": "bbcNews",
         "Tab": "new",
-        "Duration": 150
+        "Duration": 180
       },
       {
         "ScenarioName": "yahooNews",
         "Tab": "same",
-        "Duration": 150
+        "Duration": 180
       },
 
       {
@@ -27,68 +27,122 @@
       {
         "ScenarioName": "facebook",
         "Tab": "same",
-        "Duration": 120
+        "Duration": 180
       },
 
       {
         "ScenarioName": "amazon",
         "Tab": "new",
-        "Duration": 120
+        "Duration": 180
       },
       {
         "ScenarioName": "wikipedia",
         "Tab": "same",
-        "Duration": 120
+        "Duration": 180
       },
       {
         "ScenarioName": "google",
         "Tab": "same",
-        "Duration": 120
-      },
-      {
-        "ScenarioName": "yelp",
-        "Tab": "same",
-        "Duration": 120
-      },
-      {
-        "ScenarioName": "zillow",
-        "Tab": "same",
-        "Duration": 120
+        "Duration": 240
       },
       {
         "ScenarioName": "espn",
         "Tab": "same",
-        "Duration": 120
-      },
-      {
-        "ScenarioName": "linkedin",
-        "Tab": "same",
-        "Duration": 120
+        "Duration": 180
       },
       {
         "ScenarioName": "pinterest",
         "Tab": "same",
-        "Duration": 120
+        "Duration": 180
       },
       {
         "ScenarioName": "twitter",
         "Tab": "same",
-        "Duration": 120
+        "Duration": 180
       },
       {
         "ScenarioName": "instagram",
         "Tab": "same",
-        "Duration": 120
-      },
-      {
-        "ScenarioName": "msn",
-        "Tab": "same",
-        "Duration": 120
+        "Duration": 180
       },
       {
         "ScenarioName": "tumblr",
         "Tab": "same",
-        "Duration": 120
+        "Duration": 180
+      }
+    ]
+  },
+
+  {
+    "Name": "representativeshort",
+    "Scenarios": [
+      {
+        "ScenarioName": "gmail",
+        "Tab": "new",
+        "Duration": 90
+      },
+
+      {
+        "ScenarioName": "bbcNews",
+        "Tab": "new",
+        "Duration": 90
+      },
+      {
+        "ScenarioName": "yahooNews",
+        "Tab": "same",
+        "Duration": 90
+      },
+
+      {
+        "ScenarioName": "youtube",
+        "Tab": "new",
+        "Duration": 90
+      },
+      {
+        "ScenarioName": "facebook",
+        "Tab": "same",
+        "Duration": 75
+      },
+
+      {
+        "ScenarioName": "amazon",
+        "Tab": "new",
+        "Duration": 60
+      },
+      {
+        "ScenarioName": "wikipedia",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "google",
+        "Tab": "same",
+        "Duration": 60
+      },
+      {
+        "ScenarioName": "espn",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "pinterest",
+        "Tab": "same",
+        "Duration": 60
+      },
+      {
+        "ScenarioName": "twitter",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "instagram",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "tumblr",
+        "Tab": "same",
+        "Duration": 45
       }
     ]
   },
