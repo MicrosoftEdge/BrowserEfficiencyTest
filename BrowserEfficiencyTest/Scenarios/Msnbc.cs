@@ -37,19 +37,12 @@ namespace BrowserEfficiencyTest
         public Msnbc()
         {
             Name = "msnbc";
-            DefaultDuration = 50;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://www.msnbc.com");
-            // and scroll up / down
-            driver.ScrollPage(10);
-
-            // click on one of the links on the page
-            // first get back to the top
-            driver.ExecuteScript("return window.scrollTo(0,0);");
-            Thread.Sleep(2000);
+            driver.ScrollPage(5);
         }
     }
 }

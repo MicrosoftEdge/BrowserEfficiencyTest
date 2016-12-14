@@ -69,7 +69,8 @@ You should now have a folder on your device with the respective Webdriver for ea
 ## Configuration
 
 * In Microsoft Edge, go to settings, "View advanced settings", then turn "Block pop-ups" to off. This is required in order for BrowserEfficiencyTest to open new tabs in Microsoft Edge.
-* Under \BrowserEfficiencyTest\BrowserEfficiencyTest\bin\Debug, you'll see the JSON file `credentials.json`. You will have to provide credentials for any sceanrios that require them. No test accounts/credentials are provided as part of this repo. If you're running the default set of scenarios (`-s all`), you'll need to provide credentials for test accounts for `facebook.com` and `gmail.com`.
+* Under \BrowserEfficiencyTest\BrowserEfficiencyTest\bin\Debug, you'll see the JSON file `credentials.json`. You will have to provide credentials for any scenarios that require them. No test accounts/credentials are provided as part of this repo. The standard workloads require some credentials to be provided by you. `representativelong` and `representativeshort` require that you provide log in credentials for Facebook, Pinterest, and Gmail (and the Gmail account must have at least 5 emails in the inbox). `heavymultitab` requires credentials for Facebook and Gmail.
+* In [Usage](Usage.md), each scenario specifies if it needs credentials to run. 
 
 ### Recommendations to reduce variability
 
@@ -107,16 +108,16 @@ The items in this section are not required, but they are useful recommendations 
 
 To ensure your configuration and build is correct, here's a good test to run. It will run through each browser twice, using two quick scenarios in two different tabs, and record how much CPU was used for them:
 
-This command assumes the user logged in is "UserName" and places the resulting traces in a folder on the desktop. You should switch in the location you wish the traces to be stored after the `-tc` command. Remember that this also assumes Elevator is already running and waiting for a client connection.
+You'll have to provide a path to place the resulting traces after the `-tc` command. Remember that this also assumes Elevator is already running and waiting for a client connection.
 
 ```
-> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 2 -tc C:\Users\UserName\Desktop\TestTraces -ms cpuUsage -s fastScenario wikipedia
+> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 2 -tc C:\Some\Path\TestTraces -ms cpuUsage -s fastScenario wikipedia
 ```
 
 #### Full test run
 
-To get a full 5 iterations on each browser, running the default set of scenarios, 
+To get a full 5 iterations on each browser running a default set of scenarios, use a workload instead of individual scenarios. These workloads are defined in `workloads.json`.
 
 ```
-> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 5 -tc C:\Users\UserName\Desktop\Traces -ms cpuUsage -s all
+> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 5 -tc C:\Some\Path\TestTraces -ms cpuUsage -w representativeshort
 ```
