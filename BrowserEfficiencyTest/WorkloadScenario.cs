@@ -26,43 +26,28 @@
 //--------------------------------------------------------------
 
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace BrowserEfficiencyTest
 {
-    internal class CredentialManager
+    internal class WorkloadScenario
     {
-        private List<UserInfo> _logins;
-        private string _credentialsPath;
+        [JsonProperty("ScenarioName")]
+        public string ScenarioName { get; set; }
 
-        /// <summary>
-        /// Creates a new CredentialManager with info from credentials.json
-        /// </summary>
-        /// <param name="path">The file path to the json file with the stored credentials</param>
-        public CredentialManager(string path)
-        {
-            _credentialsPath = path;
-            string jsonText = File.ReadAllText(path);
-            _logins = JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
-        }
+        [JsonProperty("Tab")]
+        public string Tab { get; set; }
 
-        /// <summary>
-        /// Given the domain requested, it returns the username and password as a UserInfo object
-        /// </summary>
-        /// <param name="domain">The desired domain, matching the domain in the credentials.json file</param>
-        /// <returns>A UserInfo object with the desired credentials</returns>
-        public UserInfo GetCredentials(string domain)
+        [JsonProperty("Duration")]
+        public int Duration { get; set; }
+
+        public Scenario Scenario { get; private set; }
+
+        public WorkloadScenario(string scenarioName, string tab, int duration, Scenario scenario)
         {
-            foreach (UserInfo item in _logins)
-            {
-                if (item.Domain == domain)
-                {
-                    return item;
-                }
-            }
-            throw new Exception("No credentials matching domain '" + domain + "' were found in " + _credentialsPath);
+            ScenarioName = scenarioName;
+            Tab = tab;
+            Duration = duration;
+            Scenario = scenario;
         }
     }
 }

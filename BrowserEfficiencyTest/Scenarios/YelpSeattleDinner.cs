@@ -25,44 +25,37 @@
 //
 //--------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using OpenQA.Selenium.Remote;
+using System.Threading;
+using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class CredentialManager
+    internal class YelpSeattleDinner : Scenario
     {
-        private List<UserInfo> _logins;
-        private string _credentialsPath;
-
-        /// <summary>
-        /// Creates a new CredentialManager with info from credentials.json
-        /// </summary>
-        /// <param name="path">The file path to the json file with the stored credentials</param>
-        public CredentialManager(string path)
+        public YelpSeattleDinner()
         {
-            _credentialsPath = path;
-            string jsonText = File.ReadAllText(path);
-            _logins = JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
+            Name = "yelp";
         }
 
-        /// <summary>
-        /// Given the domain requested, it returns the username and password as a UserInfo object
-        /// </summary>
-        /// <param name="domain">The desired domain, matching the domain in the credentials.json file</param>
-        /// <returns>A UserInfo object with the desired credentials</returns>
-        public UserInfo GetCredentials(string domain)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            foreach (UserInfo item in _logins)
-            {
-                if (item.Domain == domain)
-                {
-                    return item;
-                }
-            }
-            throw new Exception("No credentials matching domain '" + domain + "' were found in " + _credentialsPath);
+            // Nagivate to Yelp (Seattle)
+            driver.Navigate().GoToUrl("http://yelp.com/seattle");
+
+            driver.Wait(5);
+
+            // Search for dinner
+            driver.TypeIntoField(driver.FindElementById("find_desc"), "Dueminuti Healthy Pasta" + Keys.Enter);
+            driver.Wait(3);
+
+            // Click into result
+            driver.ClickElement(driver.FindElementByClassName("regular-search-result").FindElement(By.ClassName("biz-name")));
+            driver.Wait(3);
+
+            driver.ScrollPage(4);
         }
     }
 }

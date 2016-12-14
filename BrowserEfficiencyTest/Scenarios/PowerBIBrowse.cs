@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
         public PowerBIBrowse()
         {
             Name = "powerBi";
-            Duration = 70;
+            DefaultDuration = 70;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

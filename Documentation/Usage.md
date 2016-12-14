@@ -3,38 +3,59 @@
 BrowserEfficiencyTest is best run from the command line, and requires an instance of [Elevator](https://github.com/MicrosoftEdge/Elevator) running if you use `-tracecontrolled|-tc` and `-measureset|-ms`.
 
 > **WARNING**
-> When run on Microsoft Edge, this will delete all browser data, including bookmarks, saved passwords, and form fill.
+> When run on Microsoft Edge, this will delete browser data, including history, saved passwords, and form fill.
 
 ## Parameters
 
 Usage:
 
 ```
-BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup|-w] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np]
+BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>]
 ```
 
-*   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided along with the `-scenario|-s` option. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
+*   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
     * `edge` will include Microsoft Edge in the test pass
     * `chrome` will include Chrome in the test pass
     * `firefox` will include Firefox in the test pass
     * `opera` will include Opera in the test pass
 
-*   **-scenario|-s** Selects the scenario or scenarios to run. This option must be provided along with the `-browser|-b` option. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
-    * `amazon` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
-    * `bbcNews` will load BBC, click on the top story, and scroll down
-    * `cnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
-    * `cnnTopStory` will load CNN, load the top story, and scroll down
-    * `facebook` will log into facebook with the provided credentials, and scroll through the news feed. Requires facebook credentials to be provided in the `config.json` file
-    * `fastScenario` will load google and quickly exit. This is designed to be fast, and is for testing BrowserEfficiencyTest
-    * `gmail` will load Gmail, and scroll through 5 emails in the inbox. Requires gmail credentials to be provided in the `config.json` file
-    * `google` will navigate to google.com and then search for "Seattle". It sees the results of the search, but doesn't navigate to any of them
-    * `msn` will navigate to MSN
-    * `msnbc` will navigate to MSNBC
-    * `outlook` will navigate to outlook.com, log in, and scroll through 10 emails. Requires outlook credentials to be provided in the `config.json` file
-    * `techRadar` will navigate to techradar.com's review of the Surface Pro 4 and scroll through the page
-    * `wikipedia` will navigate to the Wikipedia article on the United States and scroll
-    * `yahooNews` will navigate to Yahoo.com, go to news, and navigate to the top story. It will then scroll through it.
-    * `youtube` will play the video "Microsoft Design: Connecting Makers" on Youtube
+*   **-workload|-w** Selects the workload to run. This option must be provided unless a scenario is provided instead. The possible options are provided here, but they can be easily modified in `workloads.json`:
+
+    *   `representativelong` This workload runs through 13 common sites across 4 tabs, spending a few minutes on each one with some meaningful interaction with each of them. This workload takes 40 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook, Gmail, and Pinterest.
+    *   `representativeshort` This workload runs through 13 common sites across 4 tabs, spending between 45s and 90s on each one with some meaningful interaction with each of them. It is very similar to the above workload, but takes less time to execute. This workload takes 15 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook, Gmail, and Pinterest.
+    *   `heavymultitab` This workload runs through 8 sites all in different tabs, with interaction on each of them. It represents heavy usage of the browser especially across many tabs. It takes about 8 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook and Gmail.
+
+*   **-scenario|-s** Selects the scenario or scenarios to run. This option must be provided unless a workload is provided instead. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
+
+    *   `aboutBlank` will go to about:blank, loading no content for one minute
+    *   `amazon` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
+    *   `azure` will load an Azure dashboard for the provided credentials and navigate through several blades. It requires Azure credentials to be provided in `credentials.json`
+    *   `bbcNews` will load BBC, click on the top story, and scroll down
+    *   `cnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
+    *   `cnnTopStory` will load CNN, load the top story, and scroll down
+    *   `espn` will load ESPN and scroll through the infinite list on the homepage
+    *   `facebook` will log into facebook with the provided credentials, and scroll through the news feed. Requires facebook credentials to be provided in the `credentials.json` file
+    *   `fastScenario` will load google and quickly exit. This is designed to be fast, and is for testing BrowserEfficiencyTest
+    *   `gmail` will load Gmail, and scroll through 5 emails in the inbox. Requires gmail credentials to be provided in the `credentials.json` file
+    *   `google` will navigate to google.com and then search for "Seattle". It sees the results of the search, but doesn't navigate to any of them
+    *   `instagram` will load up the public feed for the NY public library, scroll down, click on "Load more", then scroll through the infinite list
+    *   `linkedin` will load the LinkedIn profile for Satya Nadella
+    *   `msn` will navigate to MSN
+    *   `msnbc` will navigate to MSNBC
+    *   `officeLauncher` will navigate to Office.com and then log in. It requires credentials to be provided in `credentials.json`
+    *   `powerpoint` will navigate to the office log in page, log in, open PowerPoint in a new tab, open the most recent book, then go to edit mode. It requires credentials to be provided in `credentials.json`
+    *   `outlook` will navigate to outlook.com, log in, and scroll through 5 emails. It will then send a new email to another account. Requires outlook credentials to be provided in the `credentials.json` file
+    *   `office` will navigate to the office log in page, log in, open Word in a new tab, open the most recent document, then go to edit mode. It requires credentials to be provided in `credentials.json`
+    *   `pinterest` will navigate to pinterest, log in, and scroll through pins. It requires credentials to be provided in `credentials.json`
+    *   `powerBi` will navigate to PowerBI, log in, click through two graphs and go back to the dashboard. It requires credentials to be provided in `credentials.json`
+    *   `techRadar` will navigate to techradar.com's review of the Surface Pro 4 and scroll through the page
+    *   `tumblr` will navigate to tumblr.com, click on "staff picks", then click on "trending", before scrolling through the trending posts
+    *   `twitter` will navigate to twitter and scroll through the featured posts on the homepage
+    *   `wikipedia` will navigate to the Wikipedia article on the United States and scroll
+    *   `yahooNews` will navigate to Yahoo.com, go to news, and navigate to the top story. It will then scroll through it
+    *   `yelp` will navigate to Yelp, search for a restaurant, and click into it
+    *   `youtube` will play the video "Microsoft Design: Connecting Makers" on Youtube
+    *   `zillow` will load a map of places for sale, expand the map view, then load the top listing
 
 *   **-iterations|-i** Selects the number of times to run each set of scenarios on each browser. Each time will result in its own trace file, and its own measurement(s) which can be aggregated and analyzed however desired. Running multiple iterations is highly recommended to account for variablity in the test. If not provided, 1 iteration will be run
 
@@ -65,6 +86,8 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -sc
 
 *   **-noprocessing|-np** Allows the test to run without post processing the results at the end of the test. Use this flag with the `-tracecontrolled|-tc` and `-measureset|-ms` options to collect trace files for the specified measureset but skip post processing of the results after the test completes. This is useful where you want to run the test and collect etl traces but want to process the results separately at a later time.
 
+*   **-credentialpath|-cp** Allows a path to be specified that points to a different credentials.json file. An absolute or a relative path can be provided, though the path cannot contain any spaces.
+
 ## Examples
 
 ### Simple one tab, one browser, no measures
@@ -81,13 +104,23 @@ This example will run the wikipedia scenario on Microsoft Edge. Since it's only 
 
 This example will run wikipedia, youtube, and facebook on Microsoft Edge, Chrome, and Firefox. Each scenario (site) will be run in its own tab on each browser. No measureset is defined, so this run will only automate the actions on each browser; it won't result in any measurements being taken.
 
-Remember that using the Facebook scenario requires defining a Facebook login inside the `config.json` file.
+Remember that using the Facebook scenario requires defining a Facebook login inside the `credentials.json` file.
 
 ```BrowserEfficiencyTest.exe -browser edge chrome firefox -scenario wikipedia youtube facebook```
 
 or
 
 ```BrowserEfficiencyTest.exe -b edge chrome firefox -s wikipedia youtube facebook```
+
+### Running a workload
+
+Instead of specifying individual scenarios, a workload can be provided, which will execute the scenarios in `workloads.json`. The defined workloads generally require credentials to be provided. More details on each workload are provided above.
+
+```BrowserEfficiencyTest.exe -browser edge chrome -workload representativeshort```
+
+or
+
+```BrowserEfficiencyTest.exe -b edge chrome -w representativeshort```
 
 ### Getting measurements through tracing
 

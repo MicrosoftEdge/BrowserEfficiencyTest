@@ -25,44 +25,38 @@
 //
 //--------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using OpenQA.Selenium.Remote;
+using System.Threading;
+using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class CredentialManager
+    internal class PinterestExplore : Scenario
     {
-        private List<UserInfo> _logins;
-        private string _credentialsPath;
-
-        /// <summary>
-        /// Creates a new CredentialManager with info from credentials.json
-        /// </summary>
-        /// <param name="path">The file path to the json file with the stored credentials</param>
-        public CredentialManager(string path)
+        public PinterestExplore()
         {
-            _credentialsPath = path;
-            string jsonText = File.ReadAllText(path);
-            _logins = JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
+            Name = "pinterest";
+            DefaultDuration = 60;
         }
 
-        /// <summary>
-        /// Given the domain requested, it returns the username and password as a UserInfo object
-        /// </summary>
-        /// <param name="domain">The desired domain, matching the domain in the credentials.json file</param>
-        /// <returns>A UserInfo object with the desired credentials</returns>
-        public UserInfo GetCredentials(string domain)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            foreach (UserInfo item in _logins)
-            {
-                if (item.Domain == domain)
-                {
-                    return item;
-                }
-            }
-            throw new Exception("No credentials matching domain '" + domain + "' were found in " + _credentialsPath);
+            UserInfo credentials = credentialManager.GetCredentials("pinterest.com");
+
+            // Nagivate to the Pintrest explore page
+            driver.Navigate().GoToUrl("https://www.pinterest.com/");
+            driver.Wait(5);
+
+            // Log in
+            driver.TypeIntoField(driver.FindElement(By.Name("id")), credentials.Username);
+            driver.Wait(2);
+            driver.TypeIntoField(driver.FindElement(By.Name("password")), credentials.Password + Keys.Enter);
+            driver.Wait(8);
+
+            // Scroll
+            driver.ScrollPage(10);
         }
     }
 }

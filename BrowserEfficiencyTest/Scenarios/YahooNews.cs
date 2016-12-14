@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         public YahooNews()
         {
             Name = "yahooNews";
-            Duration = 90;
+            DefaultDuration = 90;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
@@ -55,11 +55,9 @@ namespace BrowserEfficiencyTest
 
             // Get the "mega" story and navigate to it
             // We appear to be taking advantage of a test hook in the page for their own tests
-            IWebElement newsArticles = driver.FindElement(By.Id("tgtm-YDC-Stream"));
-            IWebElement mega = newsArticles.FindElement(By.XPath("//*[@data-test-locator='mega']"));
+            IWebElement mega = driver.FindElement(By.XPath("//*[@data-test-locator='mega']"));
             IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
-            articleLink.SendKeys(String.Empty);
-            articleLink.SendKeys(Keys.Enter);
+            driver.ClickElement(articleLink);
         }
     }
 }

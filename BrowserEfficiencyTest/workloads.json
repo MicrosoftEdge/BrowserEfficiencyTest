@@ -1,0 +1,187 @@
+[
+  {
+    "Name": "representativelong",
+    "Scenarios": [
+      {
+        "ScenarioName": "gmail",
+        "Tab": "new",
+        "Duration": 180
+      },
+
+      {
+        "ScenarioName": "bbcNews",
+        "Tab": "new",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "yahooNews",
+        "Tab": "same",
+        "Duration": 180
+      },
+
+      {
+        "ScenarioName": "youtube",
+        "Tab": "new",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "facebook",
+        "Tab": "same",
+        "Duration": 180
+      },
+
+      {
+        "ScenarioName": "amazon",
+        "Tab": "new",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "wikipedia",
+        "Tab": "same",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "google",
+        "Tab": "same",
+        "Duration": 240
+      },
+      {
+        "ScenarioName": "espn",
+        "Tab": "same",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "pinterest",
+        "Tab": "same",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "twitter",
+        "Tab": "same",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "instagram",
+        "Tab": "same",
+        "Duration": 180
+      },
+      {
+        "ScenarioName": "tumblr",
+        "Tab": "same",
+        "Duration": 180
+      }
+    ]
+  },
+
+  {
+    "Name": "representativeshort",
+    "Scenarios": [
+      {
+        "ScenarioName": "gmail",
+        "Tab": "new",
+        "Duration": 90
+      },
+
+      {
+        "ScenarioName": "bbcNews",
+        "Tab": "new",
+        "Duration": 90
+      },
+      {
+        "ScenarioName": "yahooNews",
+        "Tab": "same",
+        "Duration": 90
+      },
+
+      {
+        "ScenarioName": "youtube",
+        "Tab": "new",
+        "Duration": 90
+      },
+      {
+        "ScenarioName": "facebook",
+        "Tab": "same",
+        "Duration": 75
+      },
+
+      {
+        "ScenarioName": "amazon",
+        "Tab": "new",
+        "Duration": 60
+      },
+      {
+        "ScenarioName": "wikipedia",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "google",
+        "Tab": "same",
+        "Duration": 60
+      },
+      {
+        "ScenarioName": "espn",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "pinterest",
+        "Tab": "same",
+        "Duration": 60
+      },
+      {
+        "ScenarioName": "twitter",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "instagram",
+        "Tab": "same",
+        "Duration": 45
+      },
+      {
+        "ScenarioName": "tumblr",
+        "Tab": "same",
+        "Duration": 45
+      }
+    ]
+  },
+
+  {
+    "Name": "heavymultitab",
+    "Scenarios": [
+      {
+        "ScenarioName": "youtube",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "bbcNews",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "yahooNews",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "amazon",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "facebook",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "google",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "gmail",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "wikipedia",
+        "Tab": "new"
+      }
+    ]
+  }
+]

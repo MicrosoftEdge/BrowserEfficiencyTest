@@ -25,44 +25,38 @@
 //
 //--------------------------------------------------------------
 
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using OpenQA.Selenium.Remote;
+using System.Threading;
+using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class CredentialManager
+    internal class TumblrTrending : Scenario
     {
-        private List<UserInfo> _logins;
-        private string _credentialsPath;
-
-        /// <summary>
-        /// Creates a new CredentialManager with info from credentials.json
-        /// </summary>
-        /// <param name="path">The file path to the json file with the stored credentials</param>
-        public CredentialManager(string path)
+        public TumblrTrending()
         {
-            _credentialsPath = path;
-            string jsonText = File.ReadAllText(path);
-            _logins = JsonConvert.DeserializeObject<List<UserInfo>>(jsonText);
+            Name = "tumblr";
+            DefaultDuration = 60;
         }
 
-        /// <summary>
-        /// Given the domain requested, it returns the username and password as a UserInfo object
-        /// </summary>
-        /// <param name="domain">The desired domain, matching the domain in the credentials.json file</param>
-        /// <returns>A UserInfo object with the desired credentials</returns>
-        public UserInfo GetCredentials(string domain)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            foreach (UserInfo item in _logins)
-            {
-                if (item.Domain == domain)
-                {
-                    return item;
-                }
-            }
-            throw new Exception("No credentials matching domain '" + domain + "' were found in " + _credentialsPath);
+            // Nagivate to the homepage for Tumblr
+            driver.Navigate().GoToUrl("https://www.tumblr.com/explore/trending");
+            driver.Wait(10);
+
+            // Try changing content with content controls
+            //     At the time of writing, this is interesting because it doesn't require an actual page load
+
+            driver.ClickElement(driver.FindElementByClassName("l-header-container").FindElement(By.XPath("//*[@data-text='Staff picks']")));
+            driver.Wait(10);
+            driver.ClickElement(driver.FindElementByClassName("l-header-container").FindElement(By.XPath("//*[@data-text='Trending']")));
+            driver.Wait(5);
+
+            // Scroll through the infinite list
+            driver.ScrollPage(10);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace BrowserEfficiencyTest
         private string _etlPath;
         private bool _overrideTimeout;
 
-        private List<Scenario> _scenarios = new List<Scenario>();
+        private List<WorkloadScenario> _scenarios = new List<WorkloadScenario>();
         private List<string> _browsers = new List<string>();
         private CredentialManager _logins;
 
@@ -80,7 +80,7 @@ namespace BrowserEfficiencyTest
 
             _scenarioName = args.ScenarioName;
             _measureSets = GetMeasureSetInfo(args.SelectedMeasureSets.ToList());
-            _logins = new CredentialManager();
+            _logins = new CredentialManager(args.CredentialPath);
         }
 
         // Creates a data structure of measure sets name, wprp file and tracing mode and creates an empty one
@@ -137,9 +137,9 @@ namespace BrowserEfficiencyTest
                 {
                     foreach (var scenario in _scenarios)
                     {
-                        Console.WriteLine("[{0}] - Warmup - Browser: {1}  Scenario: {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, scenario.Name);
+                        Console.WriteLine("[{0}] - Warmup - Browser: {1}  Scenario: {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, scenario.Scenario.Name);
 
-                        scenario.Run(driver, browser, _logins);
+                        scenario.Scenario.Run(driver, browser, _logins);
 
                         Thread.Sleep(1 * 1000);
                     }
@@ -211,7 +211,7 @@ namespace BrowserEfficiencyTest
 
                                             // The first scenario naviagates in the browser's new tab / welcome page.
                                             // After that, scenarios open in their own tabs
-                                            if (!isFirstScenario)
+                                            if (!isFirstScenario && scenario.Tab == "new")
                                             {
                                                 driver.CreateNewTab(browser);
                                             }
@@ -220,10 +220,10 @@ namespace BrowserEfficiencyTest
                                                 isFirstScenario = false;
                                             }
 
-                                            Console.WriteLine("[{0}] - Executing - Iteration: {1}  Browser: {2}  Scenario: {3}  MeasureSet: {4}.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Name, currentMeasureSet.Key);
+                                            Console.WriteLine("[{0}] - Executing - Iteration: {1}  Browser: {2}  Scenario: {3}  MeasureSet: {4}.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Scenario.Name, currentMeasureSet.Key);
 
                                             // Here, control is handed to the scenario to navigate, and do whatever it wants
-                                            scenario.Run(driver, browser, _logins);
+                                            scenario.Scenario.Run(driver, browser, _logins);
 
                                             // When we get control back, we sleep for the remaining time for the scenario. This ensures
                                             // the total time for a scenario is always the same
@@ -240,7 +240,7 @@ namespace BrowserEfficiencyTest
                                                 Thread.Sleep(timeLeft);
                                             }
 
-                                            Console.WriteLine("[{0}] - Completed - Iteration: {1}  Browser: {2}  Scenario: {3}  MeasureSet: {4}. Scenario ran for {5} seconds.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Name, currentMeasureSet.Key, runTime.TotalSeconds); 
+                                            Console.WriteLine("[{0}] - Completed - Iteration: {1}  Browser: {2}  Scenario: {3}  MeasureSet: {4}. Scenario ran for {5} seconds.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Scenario.Name, currentMeasureSet.Key, runTime.TotalSeconds); 
                                         }
 
                                         Console.WriteLine("[{0}] - Completed Browser: {1}  Iteration: {2}  MeasureSet: {3}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, iteration, currentMeasureSet.Key);

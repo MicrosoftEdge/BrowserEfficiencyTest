@@ -68,14 +68,20 @@
     <Compile Include="CredentialManager.cs" />
     <Compile Include="Scenarios\AboutBlank.cs" />
     <Compile Include="Scenarios\AzureDashboard.cs" />
+    <Compile Include="Scenarios\EspnHomepage.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
+    <Compile Include="Scenarios\InstagramNYPL.cs" />
+    <Compile Include="Scenarios\LinkedInSatya.cs" />
     <Compile Include="Scenarios\OfficeLauncher.cs" />
     <Compile Include="Scenarios\OfficePowerpoint.cs" />
     <Compile Include="Scenarios\OutlookEmail.cs" />
     <Compile Include="Scenarios\OutlookOffice.cs" />
+    <Compile Include="Scenarios\PinterestExplore.cs" />
     <Compile Include="Scenarios\PowerBIBrowse.cs" />
+    <Compile Include="Scenarios\TumblrTrending.cs" />
+    <Compile Include="Scenarios\TwitterPublic.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />
     <Compile Include="RemoteWebDriverExtension.cs" />
     <Compile Include="ScenarioRunner.cs" />
@@ -86,20 +92,27 @@
     <Compile Include="Scenarios\Msnbc.cs" />
     <Compile Include="Scenarios\TechRadarSurfacePro4Review.cs" />
     <Compile Include="Scenarios\WikipediaUnitedStates.cs" />
+    <Compile Include="Scenarios\YelpSeattleDinner.cs" />
     <Compile Include="Scenarios\YoutubeWatchVideo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenario.cs" />
     <Compile Include="Scenarios\AmazonSearch.cs" />
     <Compile Include="Scenarios\GoogleSearch.cs" />
+    <Compile Include="Scenarios\ZillowSearch.cs" />
     <Compile Include="UserInfo.cs" />
+    <Compile Include="Workload.cs" />
+    <Compile Include="WorkloadScenario.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="config.json">
+    <None Include="credentials.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="workloads.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

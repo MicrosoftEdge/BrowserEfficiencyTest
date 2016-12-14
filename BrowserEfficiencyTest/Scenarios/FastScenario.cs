@@ -42,7 +42,7 @@ namespace BrowserEfficiencyTest
         public FastScenario()
         {
             Name = "fastScenario";
-            Duration = 10;
+            DefaultDuration = 10;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

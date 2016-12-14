@@ -40,7 +40,7 @@ namespace BrowserEfficiencyTest
             Name = "cnnTopStory";
 
             // Using 90s as sometimes Chrome takes just over 80 seconds to run
-            Duration = 90;
+            DefaultDuration = 90;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

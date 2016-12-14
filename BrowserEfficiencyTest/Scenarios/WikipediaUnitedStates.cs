@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         {
             // Specifify name and that it's 30s
             Name = "wikipedia";
-            Duration = 30;
+            DefaultDuration = 30;
         }
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
