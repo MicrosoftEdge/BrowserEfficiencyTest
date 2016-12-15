@@ -51,11 +51,6 @@
         "Duration": 180
       },
       {
-        "ScenarioName": "pinterest",
-        "Tab": "same",
-        "Duration": 180
-      },
-      {
         "ScenarioName": "twitter",
         "Tab": "same",
         "Duration": 180
@@ -123,11 +118,6 @@
         "ScenarioName": "espn",
         "Tab": "same",
         "Duration": 45
-      },
-      {
-        "ScenarioName": "pinterest",
-        "Tab": "same",
-        "Duration": 60
       },
       {
         "ScenarioName": "twitter",
