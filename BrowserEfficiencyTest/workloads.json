@@ -1,75 +1,6 @@
 [
   {
-    "Name": "representativelong",
-    "Scenarios": [
-      {
-        "ScenarioName": "gmail",
-        "Tab": "new",
-        "Duration": 180
-      },
-
-      {
-        "ScenarioName": "bbcNews",
-        "Tab": "new",
-        "Duration": 180
-      },
-      {
-        "ScenarioName": "yahooNews",
-        "Tab": "same",
-        "Duration": 180
-      },
-
-      {
-        "ScenarioName": "youtube",
-        "Tab": "new",
-        "Duration": 180
-      },
-      {
-        "ScenarioName": "facebook",
-        "Tab": "same",
-        "Duration": 180
-      },
-
-      {
-        "ScenarioName": "amazon",
-        "Tab": "new",
-        "Duration": 180
-      },
-      {
-        "ScenarioName": "wikipedia",
-        "Tab": "same",
-        "Duration": 180
-      },
-      {
-        "ScenarioName": "google",
-        "Tab": "same",
-        "Duration": 240
-      },
-      {
-        "ScenarioName": "espn",
-        "Tab": "same",
-        "Duration": 180
-      },
-      {
-        "ScenarioName": "twitter",
-        "Tab": "same",
-        "Duration": 180
-      },
-      {
-        "ScenarioName": "instagram",
-        "Tab": "same",
-        "Duration": 180
-      },
-      {
-        "ScenarioName": "tumblr",
-        "Tab": "same",
-        "Duration": 180
-      }
-    ]
-  },
-
-  {
-    "Name": "representativeshort",
+    "Name": "representative",
     "Scenarios": [
       {
         "ScenarioName": "gmail",
@@ -96,43 +27,43 @@
       {
         "ScenarioName": "facebook",
         "Tab": "same",
-        "Duration": 75
+        "Duration": 90
       },
 
       {
         "ScenarioName": "amazon",
         "Tab": "new",
-        "Duration": 60
+        "Duration": 90
       },
       {
         "ScenarioName": "wikipedia",
         "Tab": "same",
-        "Duration": 45
+        "Duration": 90
       },
       {
         "ScenarioName": "google",
         "Tab": "same",
-        "Duration": 60
+        "Duration": 90
       },
       {
         "ScenarioName": "espn",
         "Tab": "same",
-        "Duration": 45
+        "Duration": 90
       },
       {
         "ScenarioName": "twitter",
         "Tab": "same",
-        "Duration": 45
+        "Duration": 90
       },
       {
         "ScenarioName": "instagram",
         "Tab": "same",
-        "Duration": 45
+        "Duration": 90
       },
       {
         "ScenarioName": "tumblr",
         "Tab": "same",
-        "Duration": 45
+        "Duration": 90
       }
     ]
   },
