@@ -38,3 +38,13 @@ Finally, to make the scenario accessible from the command line, make sure you ad
 In its current form, you can use BrowserEfficiencyTest to measure power consumption, CPU, memory reference set, disk, and networking throughput. New measures can be added by extending `MeasureSet.cs`. In your new measure set, you must specify a trace profile (.wprp) to use, a WPA profile (.wpaprofile) to use, and define the logic to convert the CSVs outputted from the WPA profile to your final measures, which is speficied in `CalculateMetrics(Dictionary<string, List<string>> csvData)`. The trace profile will be defined in Elevator, and so adding a new trace profile will also require changes to Elevator.
 
 This is an expert workflow, and requires a working knowledge of the Windows Performance Toolkit.
+
+## Versioning
+
+BrowserEfficiencyTest uses a versioning scheme based on [Semantic Versioning](http://semver.org/).
+
+The versioning scheme is simply `Major.Minor`.
+* `Major` is incremented when significant changes in functionality are added.
+* `Minor` is incremented when incremental improvements and bug fixes are added.
+
+Version information is stored in the `AssemblyVersion` property located in the `AssemblyInfo.cs` file of both the BrowserEfficiencyTest and PerfProcessor assemblies. When incrementing the version, the version number in both assemblies must be incremented. Both assemblies will have the same version number.
