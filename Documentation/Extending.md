@@ -44,7 +44,15 @@ This is an expert workflow, and requires a working knowledge of the Windows Perf
 BrowserEfficiencyTest uses a versioning scheme based on [Semantic Versioning](http://semver.org/).
 
 The versioning scheme is simply `Major.Minor`.
-* `Major` is incremented when significant changes in functionality are added.
+* `Major` is incremented when breaking changes in functionality are added.
 * `Minor` is incremented when incremental improvements and bug fixes are added.
+
+Breaking changes include changes to existing scenarios or measure sets that cause the results of the test pass to be different than the same test pass ran on a previous version. An example of this would be changing an existing scenario to add a new navigation or action that significantly changes the outcome of the test when compared to the previous version. 
+
+Changes such as adding a new scenario or measure set would constitute a minor change. However, significant additions may be considered a major change. 
+
+Changes to items like documentation do not require a version change.
+
+Ultimately, version incrementing is at the discretion of the project administrators and enforced in the master branch. Version incrementing will be done either as part of a pull request into the master branch or by the developer in their working branch before submitting a pull request into the master branch.
 
 Version information is stored in the `AssemblyVersion` property located in the `AssemblyInfo.cs` file of both the BrowserEfficiencyTest and PerfProcessor assemblies. When incrementing the version, the version number in both assemblies must be incremented. Both assemblies will have the same version number.
