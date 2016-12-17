@@ -43,7 +43,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             // Navigate
-            driver.Navigate().GoToUrl("http://www.bbc.co.uk");
+            driver.Navigate().GoToUrl("http://www.bbc.com");
             driver.Wait(10);
 
             // Navigate to the hero headline

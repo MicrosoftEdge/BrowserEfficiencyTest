@@ -74,7 +74,7 @@ namespace BrowserEfficiencyTest
 
             // Once we're logged in, all we're going to do is scroll through the page
             // We're simply measuring a user looking through their news feed for a minute
-
+            driver.Wait(5);
             driver.ScrollPage(20);
         }
     }

@@ -54,7 +54,7 @@ namespace BrowserEfficiencyTest
             driver.Wait(3);
 
             // Then scroll through it
-            driver.ScrollPage(5);
+            driver.ScrollPage(8);
         }
     }
 }

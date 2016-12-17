@@ -45,7 +45,8 @@ namespace BrowserEfficiencyTest
             // Nagivate to wikipedia
             driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
 
-            Thread.Sleep(2 * 1000);
+            driver.Wait(5);
+
             if (browser == "firefox")
             {
                 // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
