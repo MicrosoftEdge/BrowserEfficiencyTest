@@ -21,8 +21,7 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -sc
 
 *   **-workload|-w** Selects the workload to run. This option must be provided unless a scenario is provided instead. The possible options are provided here, but they can be easily modified in `workloads.json`:
 
-    *   `representativelong` This workload runs through 13 common sites across 4 tabs, spending a few minutes on each one with some meaningful interaction with each of them. This workload takes 40 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook, Gmail, and Pinterest.
-    *   `representativeshort` This workload runs through 13 common sites across 4 tabs, spending between 45s and 90s on each one with some meaningful interaction with each of them. It is very similar to the above workload, but takes less time to execute. This workload takes 15 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook, Gmail, and Pinterest.
+    *   `representative` This workload runs through 12 common sites across 4 tabs, spending a minute and a half on each one, with some meaningful interaction with each of them. This workload takes 18 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook and Gmail.
     *   `heavymultitab` This workload runs through 8 sites all in different tabs, with interaction on each of them. It represents heavy usage of the browser especially across many tabs. It takes about 8 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook and Gmail.
 
 *   **-scenario|-s** Selects the scenario or scenarios to run. This option must be provided unless a workload is provided instead. Multiple scenarios can be selected by separating each scenario with a space. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
@@ -52,7 +51,7 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -sc
     *   `tumblr` will navigate to tumblr.com, click on "staff picks", then click on "trending", before scrolling through the trending posts
     *   `twitter` will navigate to twitter and scroll through the featured posts on the homepage
     *   `wikipedia` will navigate to the Wikipedia article on the United States and scroll
-    *   `yahooNews` will navigate to Yahoo.com, go to news, and navigate to the top story. It will then scroll through it
+    *   `yahooNews` will navigate to Yahoo.com, go to news, and navigate to the top story. It will then scroll through it before going back to the listing of all news.
     *   `yelp` will navigate to Yelp, search for a restaurant, and click into it
     *   `youtube` will play the video "Microsoft Design: Connecting Makers" on Youtube
     *   `zillow` will load a map of places for sale, expand the map view, then load the top listing

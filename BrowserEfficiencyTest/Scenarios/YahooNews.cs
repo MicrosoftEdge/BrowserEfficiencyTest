@@ -44,20 +44,28 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://www.yahoo.com");
-            driver.Wait(10);
+            driver.Wait(5);
 
             // No reliable class or id for the news link, so get the news icon, then find its parent
             IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
-            newsLink.SendKeys(String.Empty);
-            newsLink.SendKeys(Keys.Enter);
+            driver.ClickElement(newsLink);
 
-            Thread.Sleep(10000);
+            driver.Wait(5);
 
             // Get the "mega" story and navigate to it
             // We appear to be taking advantage of a test hook in the page for their own tests
             IWebElement mega = driver.FindElement(By.XPath("//*[@data-test-locator='mega']"));
             IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
             driver.ClickElement(articleLink);
+
+            driver.Wait(10);
+            driver.ScrollPage(2);
+            driver.Wait(10);
+            driver.ScrollPage(2);
+            driver.Wait(10);
+
+            // Then go back to the news homepage
+            driver.Navigate().Back();
         }
     }
 }
