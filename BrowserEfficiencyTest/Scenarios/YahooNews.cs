@@ -46,23 +46,38 @@ namespace BrowserEfficiencyTest
             driver.Navigate().GoToUrl("http://www.yahoo.com");
             driver.Wait(5);
 
+            // Go to the News section
             // No reliable class or id for the news link, so get the news icon, then find its parent
             IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
             driver.ClickElement(newsLink);
 
             driver.Wait(5);
 
-            // Get the "mega" story and navigate to it
-            // We appear to be taking advantage of a test hook in the page for their own tests
-            IWebElement mega = driver.FindElement(By.XPath("//*[@data-test-locator='mega']"));
-            IWebElement articleLink = mega.FindElement(By.TagName("h3")).FindElement(By.TagName("a"));
-            driver.ClickElement(articleLink);
+            // Add a link to a known article
+            // This hack is a little unfortunate, as no real user is injecting javascript to create a link, but
+            // the overhead of doing this is minimal compared to normal code running on the page, and it allows
+            // us to control exactly which article we navigate to, and is consistent for every run
+            driver.ExecuteScript(@"
+                var newA = document.createElement(""a"");
+                newA.href = ""https://www.yahoo.com/tech/microsoft-surface-studio-hands-on-221123426.html"";
+                newA.innerHTML = ""Go to a typical news story (This link added by automation)"";
+                newA.setAttribute(""id"", ""bet_automationLink"");
+                var stream = document.querySelector(""#YDC-Stream"");
+                stream.insertBefore(newA, stream.firstChild);
+                ");
 
-            driver.Wait(10);
+            // Navigate to the article we added
+            driver.Wait(5);
+            driver.ClickElement(driver.FindElement(By.Id("bet_automationLink")));
+
+            // Simulate reading it
+            driver.Wait(6);
+            // Give focus to some element on the page so that PG DN scrolls
+            driver.FindElement(By.Id("SideTop-0-CanvasTag-Proxy")).FindElement(By.TagName("a")).SendKeys("");
             driver.ScrollPage(2);
-            driver.Wait(10);
-            driver.ScrollPage(2);
-            driver.Wait(10);
+            driver.Wait(6);
+            driver.ScrollPage(1);
+            driver.Wait(6);
 
             // Then go back to the news homepage
             driver.Navigate().Back();
