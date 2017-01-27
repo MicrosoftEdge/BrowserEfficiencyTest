@@ -133,7 +133,7 @@ namespace BrowserEfficiencyTest
 
             foreach (string browser in _browsers)
             {
-                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser))
+                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath))
                 {
                     foreach (var scenario in _scenarios)
                     {
@@ -194,7 +194,7 @@ namespace BrowserEfficiencyTest
                                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {_scenarioName} WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
 
                                 Console.WriteLine("[{0}] - Launching Browser Driver {1} -", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser);
-                                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser))
+                                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath))
                                 {
                                     try
                                     {
