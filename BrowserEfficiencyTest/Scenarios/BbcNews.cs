@@ -44,6 +44,7 @@ namespace BrowserEfficiencyTest
         {
             // Navigate
             driver.Navigate().GoToUrl("http://www.bbc.com");
+            WaitForPageLoad(driver);
             driver.Wait(10);
 
             // Navigate to the hero headline

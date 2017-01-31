@@ -44,7 +44,7 @@ namespace BrowserEfficiencyTest
         {
             // Nagivate to wikipedia
             driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
-
+            WaitForPageLoad(driver);
             driver.Wait(5);
 
             if (browser == "firefox")

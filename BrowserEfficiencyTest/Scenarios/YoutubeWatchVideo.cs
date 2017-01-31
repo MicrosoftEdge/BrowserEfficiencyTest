@@ -45,6 +45,7 @@ namespace BrowserEfficiencyTest
             if (!driver.Url.Contains("youtube.com"))
             {
                 driver.Navigate().GoToUrl("https://www.youtube.com/watch?v=l42U5Cwn1Y0");
+                WaitForPageLoad(driver);
                 Thread.Sleep(2000);
             }
 

@@ -26,7 +26,10 @@
 //--------------------------------------------------------------
 
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
+using OpenQA.Selenium.Support.UI;
 
 namespace BrowserEfficiencyTest
 {
@@ -40,5 +43,12 @@ namespace BrowserEfficiencyTest
 
         // Override this function with the "stuff" to do in the scenario
         public abstract void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager);
+
+        public static void WaitForPageLoad(RemoteWebDriver driver, int timeoutSec = 30)
+        {
+            WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, timeoutSec));
+            IJavaScriptExecutor js = driver as IJavaScriptExecutor;
+            wait.Until( wd => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+        }
     }
 }
