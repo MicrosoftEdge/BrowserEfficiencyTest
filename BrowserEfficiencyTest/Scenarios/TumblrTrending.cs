@@ -44,24 +44,8 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             // Nagivate to the homepage for Tumblr
-            // Tumblr does not always load the content of the page, but a simple reload seems to resolve it.
-            // We'll try up to 5 times to be safe.
-            for (int i = 0; i < 5; i++)
-            {
-                driver.Navigate().GoToUrl("https://www.tumblr.com/explore/trending");
-                WaitForPageLoad(driver);
-                try
-                {
-                    // Immediately after page load, check for 'Staff picks' element.
-                    // If not found, reload the page again until it's there.  Usually takes just 1 reload.
-                    driver.FindElementByClassName("l-header-container").FindElement(By.XPath("//*[@data-text='Staff picks']"));
-                    break;
-                }
-                catch
-                {
-                    Console.WriteLine("Tumblr content failed to load, trying again.");
-                }
-            }
+            driver.Navigate().GoToUrl("https://www.tumblr.com/explore/trending");
+            driver.WaitForPageLoad();
             driver.Wait(10);
 
             // Try changing content with content controls

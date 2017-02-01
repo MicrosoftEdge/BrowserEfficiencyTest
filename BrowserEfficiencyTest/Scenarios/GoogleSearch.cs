@@ -43,7 +43,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://www.google.com");
-            WaitForPageLoad(driver);
+            driver.WaitForPageLoad();
             driver.Wait(5);
 
             // Search for "Seattle" and hit enter

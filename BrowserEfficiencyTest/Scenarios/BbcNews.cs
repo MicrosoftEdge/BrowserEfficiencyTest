@@ -29,6 +29,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
 using System.Threading;
+using System;
+
 
 namespace BrowserEfficiencyTest
 {
@@ -44,7 +46,7 @@ namespace BrowserEfficiencyTest
         {
             // Navigate
             driver.Navigate().GoToUrl("http://www.bbc.com");
-            WaitForPageLoad(driver);
+            driver.WaitForPageLoad();
             driver.Wait(10);
 
             // Navigate to the hero headline

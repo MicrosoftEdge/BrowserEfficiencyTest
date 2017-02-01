@@ -26,6 +26,7 @@
 //--------------------------------------------------------------
 
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
@@ -231,6 +232,16 @@ namespace BrowserEfficiencyTest
             Thread.Sleep(1000);
 
             return driver;
+        }
+
+        /// <summary>
+        /// Waits up to timeoutSec for the page load to complete
+        /// </summary>
+        /// <param name="timeoutSec">Number of seconds to wait</param>
+        public static void WaitForPageLoad(this RemoteWebDriver driver, int timeoutSec = 30)
+        {
+            WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, timeoutSec));
+            wait.Until(wd => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
         }
     }
 }
