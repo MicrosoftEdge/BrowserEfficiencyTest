@@ -222,6 +222,7 @@ namespace BrowserEfficiencyTest
                     // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
                     EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
                     driver = new EdgeDriver(svc);
+                    Thread.Sleep(2000);
                     HttpClient client = new HttpClient();
                     client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();
                     break;
