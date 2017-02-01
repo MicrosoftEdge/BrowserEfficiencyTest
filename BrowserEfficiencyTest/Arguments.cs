@@ -163,6 +163,15 @@ namespace BrowserEfficiencyTest
                     case "-w":
                         argNum++;
                         AddScenariosInWorkload(args[argNum]);
+
+                        if (string.IsNullOrEmpty(ScenarioName))
+                        {
+                            ScenarioName = args[argNum];
+                        }
+                        else
+                        {
+                            ScenarioName = ScenarioName + "-" + args[argNum];
+                        }
                         break;
                     case "-scenario":
                     case "-s":
@@ -184,7 +193,6 @@ namespace BrowserEfficiencyTest
                             }
                             else
                             {
-                                //ScenarioName = ScenarioName + "_" + scenario;
                                 ScenarioName = ScenarioName + "-" + scenario;
                             }
 
