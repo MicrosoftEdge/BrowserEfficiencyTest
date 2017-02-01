@@ -59,11 +59,6 @@
         "ScenarioName": "instagram",
         "Tab": "same",
         "Duration": 90
-      },
-      {
-        "ScenarioName": "tumblr",
-        "Tab": "same",
-        "Duration": 90
       }
     ]
   },

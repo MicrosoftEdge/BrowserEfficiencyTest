@@ -45,6 +45,7 @@ namespace BrowserEfficiencyTest
         {
             // Nagivate to the Instagram page for the NY public library
             driver.Navigate().GoToUrl("https://www.instagram.com/nypl/");
+            driver.WaitForPageLoad();
             driver.Wait(5);
 
             driver.ScrollPage(2);

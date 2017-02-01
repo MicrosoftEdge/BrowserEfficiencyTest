@@ -45,6 +45,7 @@ namespace BrowserEfficiencyTest
         {
             // Nagivate to espn
             driver.Navigate().GoToUrl("http://www.espn.com");
+            driver.WaitForPageLoad();
             driver.Wait(10);
 
             // Scroll through the infinite list

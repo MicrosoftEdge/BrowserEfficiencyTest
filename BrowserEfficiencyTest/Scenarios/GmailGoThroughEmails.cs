@@ -53,6 +53,7 @@ namespace BrowserEfficiencyTest
         private void NavigateToGmail(RemoteWebDriver driver)
         {
             driver.Navigate().GoToUrl("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/#identifier");
+            driver.WaitForPageLoad();
         }
 
         private void LogIn(RemoteWebDriver driver, CredentialManager credentialManager)

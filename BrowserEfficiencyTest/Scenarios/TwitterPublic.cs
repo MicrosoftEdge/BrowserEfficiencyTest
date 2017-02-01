@@ -45,6 +45,7 @@ namespace BrowserEfficiencyTest
         {
             // Nagivate to the homepage for Twitter
             driver.Navigate().GoToUrl("https://www.twitter.com");
+            driver.WaitForPageLoad();
             driver.Wait(5);
 
             // Scroll through the infinite list

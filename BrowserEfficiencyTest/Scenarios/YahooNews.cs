@@ -44,11 +44,27 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://www.yahoo.com");
+            driver.WaitForPageLoad();
             driver.Wait(5);
 
+            IWebElement newsLink;
             // Go to the News section
-            // No reliable class or id for the news link, so get the news icon, then find its parent
-            IWebElement newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
+            // There are a number of different layouts currently.  Trying each one in order of observed probability.
+            try
+            {
+                newsLink = driver.FindElement(By.XPath("//a[@href='https://www.yahoo.com/news/']"));
+            }
+            catch {
+                try
+                {
+                    newsLink = driver.FindElement(By.XPath("//a[@href='https://news.yahoo.com/']"));
+                }
+                catch
+                {
+                    // No reliable class or id for the news link, so get the news icon, then find its parent
+                    newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
+                }
+            }
             driver.ClickElement(newsLink);
 
             driver.Wait(5);

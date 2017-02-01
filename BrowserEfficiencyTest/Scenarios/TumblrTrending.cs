@@ -45,6 +45,7 @@ namespace BrowserEfficiencyTest
         {
             // Nagivate to the homepage for Tumblr
             driver.Navigate().GoToUrl("https://www.tumblr.com/explore/trending");
+            driver.WaitForPageLoad();
             driver.Wait(10);
 
             // Try changing content with content controls

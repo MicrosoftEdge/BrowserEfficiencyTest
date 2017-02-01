@@ -26,7 +26,10 @@
 //--------------------------------------------------------------
 
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
+using System;
 using System.Collections.Generic;
+using OpenQA.Selenium.Support.UI;
 
 namespace BrowserEfficiencyTest
 {

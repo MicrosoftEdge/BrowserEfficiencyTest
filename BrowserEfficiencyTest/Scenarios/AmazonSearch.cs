@@ -45,6 +45,7 @@ namespace BrowserEfficiencyTest
         {
             // Navigate
             driver.Navigate().GoToUrl("http://www.amazon.com");
+            driver.WaitForPageLoad();
             driver.Wait(5);
 
             // Type "Game of Thrones" in the search box and hit enter

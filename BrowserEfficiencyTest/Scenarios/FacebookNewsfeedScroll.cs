@@ -43,6 +43,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
             driver.Navigate().GoToUrl("http://www.facebook.com");
+            driver.WaitForPageLoad();
             driver.Wait(5);
 
             UserInfo credentials = credentialManager.GetCredentials("facebook.com");
