@@ -120,7 +120,7 @@ namespace BrowserEfficiencyTest
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s all|<scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>]");
+            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -179,7 +179,8 @@ namespace BrowserEfficiencyTest
 
                         while (argNum < args.Length)
                         {
-                            var scenario = args[argNum];
+                            var scenario = args[argNum].ToLowerInvariant();
+
                             if (!_possibleScenarios.ContainsKey(scenario))
                             {
                                 throw new Exception($"Unexpected scenario '{scenario}'");
@@ -318,7 +319,7 @@ namespace BrowserEfficiencyTest
             AddScenario(new AzureDashboard());
             AddScenario(new OutlookOffice());
             AddScenario(new OutlookEmail());
-            AddScenario(new PowerBIBrowse());
+            AddScenario(new PowerBiBrowse());
             AddScenario(new OfficePowerpoint());
             AddScenario(new AboutBlank());
             AddScenario(new OfficeLauncher());
@@ -334,7 +335,7 @@ namespace BrowserEfficiencyTest
 
         private void AddScenario(Scenario scenario)
         {
-            _possibleScenarios.Add(scenario.Name, new WorkloadScenario(scenario.Name, "new", scenario.DefaultDuration, scenario));
+            _possibleScenarios.Add(scenario.Name.ToLowerInvariant(), new WorkloadScenario(scenario.Name.ToLowerInvariant(), "new", scenario.DefaultDuration, scenario));
         }
 
         private void ProcessWorkloads()

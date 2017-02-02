@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public AzureDashboard()
         {
-            Name = "azure";
+            Name = "AzureDashboard";
             DefaultDuration = 120;
         }
 

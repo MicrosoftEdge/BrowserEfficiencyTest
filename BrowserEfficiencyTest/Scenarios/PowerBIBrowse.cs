@@ -31,11 +31,11 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class PowerBIBrowse : Scenario
+    internal class PowerBiBrowse : Scenario
     {
-        public PowerBIBrowse()
+        public PowerBiBrowse()
         {
-            Name = "powerBi";
+            Name = "PowerBiBrowse";
             DefaultDuration = 70;
         }
 

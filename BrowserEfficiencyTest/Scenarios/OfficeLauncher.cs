@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public OfficeLauncher()
         {
-            Name = "officeLauncher";
+            Name = "OfficeLauncher";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

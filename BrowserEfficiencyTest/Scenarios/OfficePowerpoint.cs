@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public OfficePowerpoint()
         {
-            Name = "powerpoint";
+            Name = "OfficePowerpoint";
             DefaultDuration = 60;
         }
 

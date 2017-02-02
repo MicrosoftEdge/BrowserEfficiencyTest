@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public Msn()
         {
-            Name = "msn";
+            Name = "Msn";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

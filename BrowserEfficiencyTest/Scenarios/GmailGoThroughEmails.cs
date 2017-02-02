@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public GmailGoThroughEmails()
         {
-            Name = "gmail";
+            Name = "GmailGoThroughEmails";
             DefaultDuration = 80;
         }
 
@@ -46,7 +46,6 @@ namespace BrowserEfficiencyTest
             NavigateToGmail(driver);
             driver.Wait(2);
             LogIn(driver, credentialManager);
-            driver.Wait(7);
             BrowseEmails(driver, 5);
         }
 
@@ -85,6 +84,16 @@ namespace BrowserEfficiencyTest
             driver.Keyboard.SendKeys(Keys.Tab);
             driver.Wait(1);
             driver.Keyboard.SendKeys(Keys.Enter);
+
+            // give the page some time to load
+            driver.Wait(7);
+
+            // Check the url to make sure login was successful
+            if(driver.Url != @"https://mail.google.com/mail/u/0/#inbox")
+            {
+                throw new Exception("Login to Gmail failed!");
+            }
+
         }
 
         private void BrowseEmails(RemoteWebDriver driver, int numOfEmailsToBrowse)

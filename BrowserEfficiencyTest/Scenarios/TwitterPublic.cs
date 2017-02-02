@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public TwitterPublic()
         {
-            Name = "twitter";
+            Name = "TwitterPublic";
             DefaultDuration = 60;
         }
 

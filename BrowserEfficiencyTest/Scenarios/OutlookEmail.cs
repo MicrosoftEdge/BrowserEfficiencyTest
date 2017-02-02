@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public OutlookEmail()
         {
-            Name = "outlook";
+            Name = "OutlookEmail";
             DefaultDuration = 100;
         }
 

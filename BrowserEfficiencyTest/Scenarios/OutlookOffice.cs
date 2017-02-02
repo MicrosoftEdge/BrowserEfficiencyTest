@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public OutlookOffice()
         {
-            Name = "office";
+            Name = "OutlookOffice";
             DefaultDuration = 80;
         }
 

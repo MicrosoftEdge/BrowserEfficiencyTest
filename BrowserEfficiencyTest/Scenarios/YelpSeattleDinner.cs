@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public YelpSeattleDinner()
         {
-            Name = "yelp";
+            Name = "YelpSeattleDinner";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public YoutubeWatchVideo()
         {
-            this.Name = "youtube";
+            this.Name = "YoutubeWatchVideo";
             // Leave the default time
         }
 

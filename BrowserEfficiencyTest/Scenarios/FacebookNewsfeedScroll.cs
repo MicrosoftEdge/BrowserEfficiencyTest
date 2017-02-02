@@ -28,7 +28,7 @@
 using System.Collections.Generic;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
-using System.Threading;
+using System;
 
 namespace BrowserEfficiencyTest
 {
@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
     {
         public FacebookNewsfeedScroll()
         {
-            Name = "facebook";
+            Name = "FacebookNewsfeedScroll";
             DefaultDuration = 60;
         }
 
@@ -50,27 +50,30 @@ namespace BrowserEfficiencyTest
 
             // if not logged on, log on
             var elems = driver.FindElements(By.CssSelector("H2"));
-            foreach (IWebElement elem in elems)
+            driver.Wait(2);
+
+            var username = driver.FindElement(By.Id("email"));
+            var password = driver.FindElement(By.Id("pass"));
+
+            username.Clear();
+            driver.TypeIntoField(username, credentials.Username);
+            driver.Wait(1);
+
+            password.Clear();
+            driver.Wait(3);
+            driver.TypeIntoField(password, credentials.Password);
+            driver.Wait(1);
+
+            // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI
+            // Instead use tab and enter. Seemed to be pretty reliable across browsers
+            driver.Keyboard.SendKeys(Keys.Tab);
+            driver.Keyboard.SendKeys(Keys.Enter);
+            driver.Wait(2);
+
+            // Check to makes sure the login was successful
+            if(driver.Title == "Log into Facebook | Facebook")
             {
-                driver.Wait(2);
-                var username = driver.FindElement(By.Id("email"));
-                var password = driver.FindElement(By.Id("pass"));
-
-                username.Clear();
-                driver.TypeIntoField(username, credentials.Username);
-                driver.Wait(1);
-
-                password.Clear();
-                driver.Wait(3);
-                driver.TypeIntoField(password, credentials.Password);
-                driver.Wait(1);
-
-                // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI
-                // Instead use tab and enter. Seemed to be pretty reliable across browsers
-                driver.Keyboard.SendKeys(Keys.Tab);
-                driver.Keyboard.SendKeys(Keys.Enter);
-                driver.Wait(2);
-                break;
+                throw new Exception("Login to Facebook failed!");
             }
 
             // Once we're logged in, all we're going to do is scroll through the page
