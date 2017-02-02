@@ -37,12 +37,12 @@ namespace BrowserEfficiencyTest
         public WikipediaUnitedStates()
         {
             // Specifify name and that it's 30s
-            Name = "wikipedia";
+            Name = "WikipediaUnitedStates";
             DefaultDuration = 30;
         }
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
         {
-            // Nagivate to wikipedia
+            // Nagivate to Wikipedia/United_States
             driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
             driver.WaitForPageLoad();
             driver.Wait(5);

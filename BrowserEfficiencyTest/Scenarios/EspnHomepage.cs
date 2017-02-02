@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public EspnHomepage()
         {
-            Name = "espn";
+            Name = "EspnHomepage";
             DefaultDuration = 75;
         }
 

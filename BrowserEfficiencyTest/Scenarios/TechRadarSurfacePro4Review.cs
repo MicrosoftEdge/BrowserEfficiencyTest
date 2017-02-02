@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public TechRadarSurfacePro4Review()
         {
-            Name = "techRadar";
+            Name = "TechRadarSurfacePro4Review";
             DefaultDuration = 60;
         }
 

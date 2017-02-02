@@ -41,7 +41,7 @@ namespace BrowserEfficiencyTest
     {
         public FastScenario()
         {
-            Name = "fastScenario";
+            Name = "FastScenario";
             DefaultDuration = 10;
         }
 

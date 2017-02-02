@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public LinkedInSatya()
         {
-            Name = "linkedin";
+            Name = "LinkedInSatya";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

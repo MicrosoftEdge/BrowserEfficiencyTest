@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public InstagramNYPL()
         {
-            Name = "instagram";
+            Name = "InstagramNYPL";
             DefaultDuration = 60;
         }
 

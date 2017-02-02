@@ -36,7 +36,7 @@ namespace BrowserEfficiencyTest
     {
         public GoogleSearch()
         {
-            Name = "google";
+            Name = "GoogleSearch";
             // Default time
         }
 

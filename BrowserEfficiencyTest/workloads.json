@@ -3,60 +3,60 @@
     "Name": "representative",
     "Scenarios": [
       {
-        "ScenarioName": "gmail",
+        "ScenarioName": "GmailGoThroughEmails",
         "Tab": "new",
         "Duration": 90
       },
 
       {
-        "ScenarioName": "bbcNews",
+        "ScenarioName": "BbcNews",
         "Tab": "new",
         "Duration": 90
       },
       {
-        "ScenarioName": "yahooNews",
+        "ScenarioName": "YahooNews",
         "Tab": "same",
         "Duration": 90
       },
 
       {
-        "ScenarioName": "youtube",
+        "ScenarioName": "YoutubeWatchVideo",
         "Tab": "new",
         "Duration": 90
       },
       {
-        "ScenarioName": "facebook",
+        "ScenarioName": "FacebookNewsfeedScroll",
         "Tab": "same",
         "Duration": 90
       },
 
       {
-        "ScenarioName": "amazon",
+        "ScenarioName": "AmazonSearch",
         "Tab": "new",
         "Duration": 90
       },
       {
-        "ScenarioName": "wikipedia",
+        "ScenarioName": "WikipediaUnitedStates",
         "Tab": "same",
         "Duration": 90
       },
       {
-        "ScenarioName": "google",
+        "ScenarioName": "GoogleSearch",
         "Tab": "same",
         "Duration": 90
       },
       {
-        "ScenarioName": "espn",
+        "ScenarioName": "EspnHomepage",
         "Tab": "same",
         "Duration": 90
       },
       {
-        "ScenarioName": "twitter",
+        "ScenarioName": "TwitterPublic",
         "Tab": "same",
         "Duration": 90
       },
       {
-        "ScenarioName": "instagram",
+        "ScenarioName": "InstagramNYPL",
         "Tab": "same",
         "Duration": 90
       }
@@ -67,35 +67,35 @@
     "Name": "heavymultitab",
     "Scenarios": [
       {
-        "ScenarioName": "youtube",
+        "ScenarioName": "YoutubeWatchVideo",
         "Tab": "new"
       },
       {
-        "ScenarioName": "bbcNews",
+        "ScenarioName": "BbcNews",
         "Tab": "new"
       },
       {
-        "ScenarioName": "yahooNews",
+        "ScenarioName": "YahooNews",
         "Tab": "new"
       },
       {
-        "ScenarioName": "amazon",
+        "ScenarioName": "AmazonSearch",
         "Tab": "new"
       },
       {
-        "ScenarioName": "facebook",
+        "ScenarioName": "FacebookNewsfeedScroll",
         "Tab": "new"
       },
       {
-        "ScenarioName": "google",
+        "ScenarioName": "GoogleSearch",
         "Tab": "new"
       },
       {
-        "ScenarioName": "gmail",
+        "ScenarioName": "GmailGoThroughEmails",
         "Tab": "new"
       },
       {
-        "ScenarioName": "wikipedia",
+        "ScenarioName": "WikipediaUnitedStates",
         "Tab": "new"
       }
     ]

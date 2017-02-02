@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
     {
         public BbcNews()
         {
-            Name = "bbcNews";
+            Name = "BbcNews";
             DefaultDuration = 60;
         }
 

@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public ZillowSearch()
         {
-            Name = "zillow";
+            Name = "ZillowSearch";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

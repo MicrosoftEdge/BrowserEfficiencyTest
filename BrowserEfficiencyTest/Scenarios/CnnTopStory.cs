@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public CnnTopStory()
         {
-            Name = "cnnTopStory";
+            Name = "CnnTopStory";
 
             // Using 90s as sometimes Chrome takes just over 80 seconds to run
             DefaultDuration = 90;

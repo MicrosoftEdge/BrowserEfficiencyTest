@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public AmazonSearch()
         {
-            Name = "amazon";
+            Name = "AmazonSearch";
             DefaultDuration = 45;
         }
 

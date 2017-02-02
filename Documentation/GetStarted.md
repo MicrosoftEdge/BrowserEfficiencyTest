@@ -69,7 +69,7 @@ You should now have a folder on your device with the respective Webdriver for ea
 ## Configuration
 
 * In Microsoft Edge, go to settings, "View advanced settings", then turn "Block pop-ups" to off. This is required in order for BrowserEfficiencyTest to open new tabs in Microsoft Edge.
-* Under \BrowserEfficiencyTest\BrowserEfficiencyTest\bin\Debug, you'll see the JSON file `credentials.json`. You will have to provide credentials for any scenarios that require them. No test accounts/credentials are provided as part of this repo. The standard workloads require some credentials to be provided by you. `representativelong` and `representativeshort` require that you provide log in credentials for Facebook, Pinterest, and Gmail (and the Gmail account must have at least 5 emails in the inbox). `heavymultitab` requires credentials for Facebook and Gmail.
+* Under \BrowserEfficiencyTest\BrowserEfficiencyTest\bin\Debug, you'll see the JSON file `credentials.json`. You will have to provide credentials for any scenarios that require them. No test accounts/credentials are provided as part of this repo. The standard workloads require some credentials to be provided by you. `representative` require that you provide log in credentials for Facebook, Pinterest, and Gmail (and the Gmail account must have at least 5 emails in the inbox). `heavymultitab` requires credentials for Facebook and Gmail.
 * In [Usage](Usage.md), each scenario specifies if it needs credentials to run. 
 
 ### Recommendations to reduce variability
@@ -111,7 +111,7 @@ To ensure your configuration and build is correct, here's a good test to run. It
 You'll have to provide a path to place the resulting traces after the `-tc` command. Remember that this also assumes Elevator is already running and waiting for a client connection.
 
 ```
-> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 2 -tc C:\Some\Path\TestTraces -ms cpuUsage -s fastScenario wikipedia
+> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 2 -tc C:\Some\Path\TestTraces -ms cpuUsage -s FastScenario WikipediaUnitedStates
 ```
 
 #### Full test run
@@ -119,5 +119,5 @@ You'll have to provide a path to place the resulting traces after the `-tc` comm
 To get a full 5 iterations on each browser running a default set of scenarios, use a workload instead of individual scenarios. These workloads are defined in `workloads.json`.
 
 ```
-> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 5 -tc C:\Some\Path\TestTraces -ms cpuUsage -w representativeshort
+> BrowserEfficiencyTest.exe -b edge chrome opera firefox -i 5 -tc C:\Some\Path\TestTraces -ms cpuUsage -w representative
 ```

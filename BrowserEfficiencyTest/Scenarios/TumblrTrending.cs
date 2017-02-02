@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public TumblrTrending()
         {
-            Name = "tumblr";
+            Name = "TumblrTrending";
             DefaultDuration = 60;
         }
 

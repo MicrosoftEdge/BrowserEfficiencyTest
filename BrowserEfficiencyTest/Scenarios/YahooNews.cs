@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
     {
         public YahooNews()
         {
-            Name = "yahooNews";
+            Name = "YahooNews";
             DefaultDuration = 90;
         }
 

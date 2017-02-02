@@ -35,7 +35,7 @@ namespace BrowserEfficiencyTest
     {
         public AboutBlank()
         {
-            Name = "aboutBlank";
+            Name = "AboutBlank";
             DefaultDuration = 60;
         }
 

@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
     {
         public CnnOneStory()
         {
-            Name = "cnnOneStory";
+            Name = "CnnOneStory";
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)

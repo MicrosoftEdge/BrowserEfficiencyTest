@@ -44,7 +44,7 @@ namespace BrowserEfficiencyTest
 
         public WorkloadScenario(string scenarioName, string tab, int duration, Scenario scenario)
         {
-            ScenarioName = scenarioName;
+            ScenarioName = scenarioName.ToLowerInvariant();
             Tab = tab;
             Duration = duration;
             Scenario = scenario;
