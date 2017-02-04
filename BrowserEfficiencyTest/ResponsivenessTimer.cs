@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium.Remote;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,12 +80,10 @@ namespace BrowserEfficiencyTest
             _enabled = true;
         }
 
-        private void makeRecord(string measure, int result)
+        private void makeRecord(string measure, string result)
         {
-            DateTime now = new DateTime();
-            string date = "" + now.Year + now.Month + now.Day;
-            string time = "" + now.Hour + now.Minute + now.Second;
-            MeasureRecord record = new MeasureRecord("no_etl", _currentSceanrio, _iteration.ToString(), _browser, date, time, "responsiveness (" + _measureSet + ")", measure, result.ToString());
+            DateTime now = DateTime.Now;
+            MeasureRecord record = new MeasureRecord("no_etl", _currentSceanrio, _iteration.ToString(), _browser, now.ToString("yyyyMMdd"), now.ToString("HHmmss"), "responsiveness (" + _measureSet + ")", measure, result);
             _results.Add(record);
         }
 
@@ -94,8 +93,10 @@ namespace BrowserEfficiencyTest
         {
             if (_enabled)
             {
-                makeRecord("Page Load Time (ms)", 99);
-                Console.WriteLine("new record created: " + _results[_results.Count - 1].ToString());
+                IJavaScriptExecutor javascriptEngine = _driver as IJavaScriptExecutor;
+                var timeToLoad = javascriptEngine.ExecuteScript("return performance.timing.loadEventEnd - performance.timing.navigationStart");
+                makeRecord("Page Load Time (ms)", timeToLoad.ToString());
+                Console.WriteLine("Recorded page load time");
             }
         }
     }
