@@ -57,6 +57,7 @@ namespace BrowserEfficiencyTest
         public bool OverrideTimeout { get; private set;  }
         public bool DoPostProcessing { get; private set; }
         public string CredentialPath { get; private set; }
+        public bool MeasureResponsiveness { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -108,6 +109,7 @@ namespace BrowserEfficiencyTest
             OverrideTimeout = false;
             DoPostProcessing = true;
             CredentialPath = "credentials.json";
+            MeasureResponsiveness = false;
 
             CreatePossibleScenarios();
             ProcessWorkloads();
@@ -278,6 +280,10 @@ namespace BrowserEfficiencyTest
                     case "-cp":
                         argNum++;
                         CredentialPath = args[argNum];
+                        break;
+                    case "-responsiveness":
+                    case "-r":
+                        MeasureResponsiveness = true;
                         break;
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");

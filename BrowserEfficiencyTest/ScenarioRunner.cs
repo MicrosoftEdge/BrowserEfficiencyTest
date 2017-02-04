@@ -41,6 +41,9 @@ namespace BrowserEfficiencyTest
     /// </summary>
     internal class ScenarioRunner
     {
+        private ResponsivenessTimer _timer;
+        private bool _useTimer;
+
         private bool _doWarmup;
         private int _iterations;
         private int _maxAttempts;
@@ -81,6 +84,16 @@ namespace BrowserEfficiencyTest
             _scenarioName = args.ScenarioName;
             _measureSets = GetMeasureSetInfo(args.SelectedMeasureSets.ToList());
             _logins = new CredentialManager(args.CredentialPath);
+
+            _timer = new ResponsivenessTimer();
+            if (args.MeasureResponsiveness)
+            {
+                _useTimer = true;
+            }
+            else
+            {
+                _useTimer = false;
+            }
         }
 
         // Creates a data structure of measure sets name, wprp file and tracing mode and creates an empty one
@@ -122,6 +135,11 @@ namespace BrowserEfficiencyTest
                 RunWarmupPass();
             }
 
+            if (_useTimer)
+            {
+                _timer.enable();
+            }
+
             RunMainLoop();
         }
 
@@ -139,7 +157,7 @@ namespace BrowserEfficiencyTest
                     {
                         Console.WriteLine("[{0}] - Warmup - Browser: {1}  Scenario: {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), browser, scenario.Scenario.Name);
 
-                        scenario.Scenario.Run(driver, browser, _logins);
+                        scenario.Scenario.Run(driver, browser, _logins, _timer);
 
                         Thread.Sleep(1 * 1000);
                     }
@@ -175,14 +193,19 @@ namespace BrowserEfficiencyTest
                 // TODO: Consider breaking up this large loop into smaller methods to ease readability.
                 for (int iteration = 0; iteration < _iterations; iteration++)
                 {
+                    _timer.setIteration(iteration);
                     foreach (var currentMeasureSet in _measureSets)
                     {
+                        _timer.setMeasureSet(currentMeasureSet.Key);
+
                         // Randomize the order the browsers each iteration to reduce systematic bias in the test
                         Random rand = new Random();
                         _browsers = _browsers.OrderBy(a => rand.Next()).ToList<String>();
 
                         foreach (string browser in _browsers)
                         {
+                            _timer.setBrowser(browser);
+
                             bool passSucceeded = false;
                             for (int attemptNumber = 0; attemptNumber < _maxAttempts && !passSucceeded; attemptNumber++)
                             {
@@ -201,8 +224,12 @@ namespace BrowserEfficiencyTest
                                         Stopwatch watch = Stopwatch.StartNew();
                                         bool isFirstScenario = true;
 
+                                        _timer.setDriver(driver);
+
                                         foreach (var scenario in _scenarios)
                                         {
+                                            _timer.setScenario(scenario.ScenarioName);
+
                                             // We want every scenario to take the same amount of time total, even if there are changes in
                                             // how long pages take to load. The biggest reason for this is so that you can measure energy
                                             // or power and their ratios will be the same either way.
@@ -223,7 +250,7 @@ namespace BrowserEfficiencyTest
                                             Console.WriteLine("[{0}] - Executing - Iteration: {1}  Browser: {2}  Scenario: {3}  MeasureSet: {4}.", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), iteration, browser, scenario.Scenario.Name, currentMeasureSet.Key);
 
                                             // Here, control is handed to the scenario to navigate, and do whatever it wants
-                                            scenario.Scenario.Run(driver, browser, _logins);
+                                            scenario.Scenario.Run(driver, browser, _logins, _timer);
 
                                             // When we get control back, we sleep for the remaining time for the scenario. This ensures
                                             // the total time for a scenario is always the same

@@ -41,7 +41,7 @@ namespace BrowserEfficiencyTest
             DefaultDuration = 80;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             NavigateToGmail(driver);
             driver.Wait(2);
