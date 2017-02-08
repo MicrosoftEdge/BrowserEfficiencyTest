@@ -56,6 +56,8 @@ namespace BrowserEfficiencyTest
 
             // Then scroll through it
             driver.ScrollPage(8);
+
+            timer.extractPageLoadTime();
         }
     }
 }
