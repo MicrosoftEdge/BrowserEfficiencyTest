@@ -104,7 +104,7 @@ namespace BrowserEfficiencyTest
             DoWarmup = false;
             Iterations = 1;
             UsingTraceController = false;
-            EtlPath = "";
+            EtlPath = ".";
             MaxAttempts = 3;
             OverrideTimeout = false;
             DoPostProcessing = true;

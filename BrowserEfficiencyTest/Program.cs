@@ -34,19 +34,25 @@ namespace BrowserEfficiencyTest
         private static void Main(string[] args)
         {
             Arguments arguments = new Arguments(args);
+            ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
 
             if (arguments.Browsers.Count > 0 && arguments.Scenarios.Count > 0)
             {
-                ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
-
                 scenarioRunner.Run();
             }
 
-            if (arguments.UsingTraceController && arguments.DoPostProcessing)
+            if ((arguments.UsingTraceController && arguments.DoPostProcessing) || arguments.MeasureResponsiveness)
             {
                 PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
 
-                perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath);
+                if (!arguments.MeasureResponsiveness)
+                {
+                    perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath);
+                }
+                else
+                {
+                    perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.getResponsivnessResults());
+                }
             }
         }
     }

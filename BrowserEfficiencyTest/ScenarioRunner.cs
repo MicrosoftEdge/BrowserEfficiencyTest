@@ -143,6 +143,11 @@ namespace BrowserEfficiencyTest
             RunMainLoop();
         }
 
+        public List<string> getResponsivnessResults()
+        {
+            return _timer.getResults();
+        }
+
         private void RunWarmupPass()
         {
             // A warmup pass is one run thru the selected scenarios and browsers.
