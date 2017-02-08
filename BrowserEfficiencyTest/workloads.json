@@ -99,5 +99,19 @@
         "Tab": "new"
       }
     ]
+  },
+
+    {
+    "Name": "simple",
+    "Scenarios": [
+      {
+        "ScenarioName": "WikipediaUnitedStates",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "GoogleSearch",
+        "Tab": "new"
+      }
+    ]
   }
 ]
