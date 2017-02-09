@@ -36,11 +36,14 @@ namespace BrowserEfficiencyTest
             Arguments arguments = new Arguments(args);
             ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
 
+            // Run the automation. This will write traces to the current or provided directory if the user requested it
             if (arguments.Browsers.Count > 0 && arguments.Scenarios.Count > 0)
             {
                 scenarioRunner.Run();
             }
 
+            // If traces have been written, process them into a csv of results
+            // Only necessary if we're tracing and/or measuring responsiveness
             if ((arguments.UsingTraceController && arguments.DoPostProcessing) || arguments.MeasureResponsiveness)
             {
                 PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
@@ -51,6 +54,7 @@ namespace BrowserEfficiencyTest
                 }
                 else
                 {
+                    // If we have responsiveness results, pass them to the perf processor to include in the output
                     perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.getResponsivnessResults());
                 }
             }

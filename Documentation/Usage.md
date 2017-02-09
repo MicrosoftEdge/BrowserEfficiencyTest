@@ -1,6 +1,6 @@
 # Usage
 
-BrowserEfficiencyTest is best run from the command line, and requires an instance of [Elevator](https://github.com/MicrosoftEdge/Elevator) running if you use `-tracecontrolled|-tc` and `-measureset|-ms`.
+BrowserEfficiencyTest is best run from the command line, and requires an instance of [Elevator](https://github.com/MicrosoftEdge/Elevator) running if you use  `-measureset` or `-ms`.
 
 > **WARNING**
 > When run on Microsoft Edge, this will delete browser data, including history, saved passwords, and form fill.
@@ -10,7 +10,7 @@ BrowserEfficiencyTest is best run from the command line, and requires an instanc
 Usage:
 
 ```
-BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>]
+BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r]
 ```
 
 *   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
@@ -23,6 +23,7 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
 
     *   `representative` This workload runs through 12 common sites across 4 tabs, spending a minute and a half on each one, with some meaningful interaction with each of them. This workload takes 18 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook and Gmail.
     *   `heavymultitab` This workload runs through 8 sites all in different tabs, with interaction on each of them. It represents heavy usage of the browser especially across many tabs. It takes about 8 minutes to complete and requires credentials to be specified in `credentials.json` for Facebook and Gmail.
+    *   `simple` This is a simple workload that finishes quickly for testing purposes. It does not require any credentials.
 
 *   **-scenario|-s** Selects the scenario or scenarios to run. This option must be provided unless a workload is provided instead. Multiple scenarios can be selected by separating each scenario with a space. Scenario names are not case sensitive. E.g. `-s wikipedia gmail facebook`. When multiple scenarios are selected, they will all be run on every browser, in the order they were provided, all in different tabs. When a scenario completes and there's additional scenarios after it, it will be left running in a background tab. The possible options are:
 
@@ -30,14 +31,17 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
     *   `AmazonSearch` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
     *   `AzureDashboard` will load an Azure dashboard for the provided credentials and navigate through several blades. It requires Azure credentials to be provided in `credentials.json`
     *   `BbcNews` will load BBC, click on the top story, and scroll down
+        *   Responsiveness measures: Homepage load time, article load time
     *   `CnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
     *   `CnnTopStory` will load CNN, load the top story, and scroll down
     *   `EspnHomepage` will load ESPN and scroll through the infinite list on the homepage
+        *   Responsiveness measures: ESPN homepage load time
     *   `FacebookNewsfeedScroll` will log into facebook with the provided credentials, and scroll through the news feed. Requires facebook credentials to be provided in the `credentials.json` file
     *   `FastScenario` will load google and quickly exit. This is designed to be fast, and is for testing BrowserEfficiencyTest
     *   `GmailGoThroughEmails` will load Gmail, and scroll through 5 emails in the inbox. Requires gmail credentials to be provided in the `credentials.json` file
     *   `GoogleSearch` will navigate to google.com and then search for "Seattle". It sees the results of the search, but doesn't navigate to any of them
     *   `InstagramNYPL` will load up the public feed for the NY public library, scroll down, click on "Load more", then scroll through the infinite list
+        *   Responsiveness measures: Page load time
     *   `LinkedInSatya` will load the LinkedIn profile for Satya Nadella
     *   `Msn` will navigate to MSN
     *   `Msnbc` will navigate to MSNBC
@@ -51,7 +55,9 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
     *   `TumblrTrending` will navigate to tumblr.com, click on "staff picks", then click on "trending", before scrolling through the trending posts
     *   `TwitterPublic` will navigate to twitter and scroll through the featured posts on the homepage
     *   `WikipediaUnitedStates` will navigate to the Wikipedia article on the United States and scroll
-    *   `YahooNews` will navigate to Yahoo.com, go to news, and navigate to the top story. It will then scroll through it before going back to the listing of all news.
+        *   Responsiveness measures: Article page load time
+    *   `YahooNews` will navigate to Yahoo.com, go to news, and navigate to a story (the story is injected by Javascript so it will always navigate to the same one). It will then scroll through it before going back to the listing of all news.
+        *   Responsivenss measures: Homepage load time, article page load time
     *   `YelpSeattleDinner` will navigate to Yelp, search for a restaurant, and click into it
     *   `YoutubeWatchVideo` will play the video "Microsoft Design: Connecting Makers" on Youtube
     *   `ZillowSearch` will load a map of places for sale, expand the map view, then load the top listing
@@ -86,6 +92,8 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
 *   **-noprocessing|-np** Allows the test to run without post processing the results at the end of the test. Use this flag with the `-tracecontrolled|-tc` and `-measureset|-ms` options to collect trace files for the specified measureset but skip post processing of the results after the test completes. This is useful where you want to run the test and collect etl traces but want to process the results separately at a later time.
 
 *   **-credentialpath|-cp** Allows a path to be specified that points to a different credentials.json file. An absolute or a relative path can be provided, though the path cannot contain any spaces.
+
+*   **-responsiveness|-r** Records all responsiveness measures specified by the scenarios (e.g. page load time). These will be included in the resulting CSV when the run is complete.
 
 ## Examples
 

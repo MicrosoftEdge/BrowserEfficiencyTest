@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace BrowserEfficiencyTest
 {
+
+    /// <summary>
+    /// Handles the logic for measuring user-perceivable performance. This class makes it easy for scenarios to measure page load time etc
+    /// </summary>
     internal class ResponsivenessTimer
     {
         private List<List<String>> _results;
@@ -20,43 +24,72 @@ namespace BrowserEfficiencyTest
 
         // Functions for test harness:
 
+        /// <summary>
+        /// Creates a new ResponsivenessTimer. It will be disabled unless enabled later on. When disabled, all calls that create measures will be no-ops.
+        /// </summary>
         public ResponsivenessTimer()
         {
             _results = new List<List<String>>();
             _enabled = false;
         }
 
+        /// <summary>
+        /// Sets the iteration, which will be included when a measurement is recorded later.
+        /// </summary>
+        /// <param name="iteration">The current iteration</param>
         public void setIteration(int iteration)
         {
             _iteration = iteration;
         }
 
+        /// <summary>
+        /// Sets the browser, which will be included when a measurement is recorded later.
+        /// </summary>
+        /// <param name="browser">The current browser</param>
         public void setBrowser(string browser)
         {
             _browser = browser;
         }
 
+        /// <summary>
+        /// Sets the measureSet, which will be included when a measurement is recorded later.
+        /// </summary>
+        /// <param name="measureSet"></param>
         public void setMeasureSet(string measureSet)
         {
             _measureSet = measureSet;
         }
 
+        /// <summary>
+        /// Sets the sceanrio, which will be included when a measurement is recorded later.
+        /// </summary>
+        /// <param name="scenario">The current scenario</param>
         public void setScenario(string scenario)
         {
             _currentSceanrio = scenario;
         }
 
+        /// <summary>
+        /// Sets the driver, needed to perform measurements later.
+        /// </summary>
+        /// <param name="driver">The driver to access the browser</param>
         public void setDriver(RemoteWebDriver driver)
         {
             _driver = driver;
         }
 
+        /// <summary>
+        /// Enables the ResponsivenessTimer. After this function is called, measurements will be taken when running scenarios.
+        /// </summary>
         public void enable()
         {
             _enabled = true;
         }
 
-
+        /// <summary>
+        /// Returns all recorded results
+        /// </summary>
+        /// <returns>A list of comma-delimited strings with measurements</returns>
         public List<string> getResults()
         {
             List<string> results = new List<string>();
@@ -78,18 +111,32 @@ namespace BrowserEfficiencyTest
 
         // Functions for scenarios to record responsiveness results:
 
-        public void extractPageLoadTime()
+        /// <summary>
+        /// Records how long the current page took to load (from navigation start to the end of the DOMContentLoaded event).
+        /// </summary>
+        /// <param name="pageLoaded">The name (or other identifier) of the current page. Needed to distinguish multiple page loads in a single scenario.</param>
+        public void extractPageLoadTime(string pageLoaded = null)
         {
             if (_enabled)
             {
                 IJavaScriptExecutor javascriptEngine = _driver as IJavaScriptExecutor;
                 var timeToLoad = javascriptEngine.ExecuteScript("return performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart");
-                makeRecord("Page Load Time (ms)", timeToLoad.ToString());
+                string measureName = "Page Load Time (ms)";
+                if (pageLoaded != null && pageLoaded != "")
+                {
+                    measureName += ": " + pageLoaded;
+                }
+                makeRecord(measureName, timeToLoad.ToString());
             }
         }
 
         // Internal functions:
 
+        /// <summary>
+        /// Records a measurement. Fills in most fields automatically, and so it only needs the measure name and result
+        /// </summary>
+        /// <param name="measure">The measure name</param>
+        /// <param name="result">The result of the measurement</param>
         private void makeRecord(string measure, string result)
         {
             DateTime now = DateTime.Now;
