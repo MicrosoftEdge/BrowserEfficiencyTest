@@ -49,6 +49,8 @@ namespace BrowserEfficiencyTest
             driver.WaitForPageLoad();
             driver.Wait(10);
 
+            timer.extractPageLoadTime("BBC homepage");
+
             // Navigate to the hero headline
             driver.ClickElement(driver.FindElement(By.XPath("//*[@rev='hero1|headline']")));
 
@@ -57,6 +59,8 @@ namespace BrowserEfficiencyTest
             driver.ScrollPage(2);
             driver.Wait(2);
             driver.ScrollPage(2);
+
+            timer.extractPageLoadTime("BBC article");
         }
     }
 }

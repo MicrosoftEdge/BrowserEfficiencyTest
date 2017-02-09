@@ -47,6 +47,8 @@ namespace BrowserEfficiencyTest
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            timer.extractPageLoadTime("Yahoo homepage");
+
             IWebElement newsLink;
             // Go to the News section
             // There are a number of different layouts currently.  Trying each one in order of observed probability.
@@ -94,6 +96,8 @@ namespace BrowserEfficiencyTest
             driver.Wait(6);
             driver.ScrollPage(1);
             driver.Wait(6);
+
+            timer.extractPageLoadTime("Yahoo article");
 
             // Then go back to the news homepage
             driver.Navigate().Back();
