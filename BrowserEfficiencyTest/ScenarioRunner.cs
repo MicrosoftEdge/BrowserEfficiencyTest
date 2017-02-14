@@ -137,7 +137,7 @@ namespace BrowserEfficiencyTest
 
             if (_useTimer)
             {
-                _timer.enable();
+                _timer.Enable();
             }
 
             RunMainLoop();
@@ -145,7 +145,7 @@ namespace BrowserEfficiencyTest
 
         public List<string> getResponsivnessResults()
         {
-            return _timer.getResults();
+            return _timer.GetResults();
         }
 
         private void RunWarmupPass()
@@ -198,10 +198,10 @@ namespace BrowserEfficiencyTest
                 // TODO: Consider breaking up this large loop into smaller methods to ease readability.
                 for (int iteration = 0; iteration < _iterations; iteration++)
                 {
-                    _timer.setIteration(iteration);
+                    _timer.SetIteration(iteration);
                     foreach (var currentMeasureSet in _measureSets)
                     {
-                        _timer.setMeasureSet(currentMeasureSet.Key);
+                        _timer.SetMeasureSet(currentMeasureSet.Key);
 
                         // Randomize the order the browsers each iteration to reduce systematic bias in the test
                         Random rand = new Random();
@@ -209,7 +209,7 @@ namespace BrowserEfficiencyTest
 
                         foreach (string browser in _browsers)
                         {
-                            _timer.setBrowser(browser);
+                            _timer.SetBrowser(browser);
 
                             bool passSucceeded = false;
                             for (int attemptNumber = 0; attemptNumber < _maxAttempts && !passSucceeded; attemptNumber++)
@@ -229,11 +229,11 @@ namespace BrowserEfficiencyTest
                                         Stopwatch watch = Stopwatch.StartNew();
                                         bool isFirstScenario = true;
 
-                                        _timer.setDriver(driver);
+                                        _timer.SetDriver(driver);
 
                                         foreach (var scenario in _scenarios)
                                         {
-                                            _timer.setScenario(scenario.ScenarioName);
+                                            _timer.SetScenario(scenario.ScenarioName);
 
                                             // We want every scenario to take the same amount of time total, even if there are changes in
                                             // how long pages take to load. The biggest reason for this is so that you can measure energy

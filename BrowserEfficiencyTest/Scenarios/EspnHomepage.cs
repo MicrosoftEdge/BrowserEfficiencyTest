@@ -51,7 +51,7 @@ namespace BrowserEfficiencyTest
             // Scroll through the infinite list
             driver.ScrollPage(20);
 
-            timer.extractPageLoadTime("ESPN homepage");
+            timer.ExtractPageLoadTime("ESPN homepage");
         }
     }
 }

@@ -56,7 +56,7 @@ namespace BrowserEfficiencyTest
             // Scroll a bit
             driver.ScrollPage(12);
 
-            timer.extractPageLoadTime("Wikipedia article");
+            timer.ExtractPageLoadTime("Wikipedia article");
         }
     }
 }

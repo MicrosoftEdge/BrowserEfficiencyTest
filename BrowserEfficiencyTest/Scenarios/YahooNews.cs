@@ -47,7 +47,7 @@ namespace BrowserEfficiencyTest
             driver.WaitForPageLoad();
             driver.Wait(5);
 
-            timer.extractPageLoadTime("Yahoo homepage");
+            timer.ExtractPageLoadTime("Yahoo homepage");
 
             IWebElement newsLink;
             // Go to the News section
@@ -97,7 +97,7 @@ namespace BrowserEfficiencyTest
             driver.ScrollPage(1);
             driver.Wait(6);
 
-            timer.extractPageLoadTime("Yahoo article");
+            timer.ExtractPageLoadTime("Yahoo article");
 
             // Then go back to the news homepage
             driver.Navigate().Back();

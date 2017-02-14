@@ -37,7 +37,7 @@ namespace BrowserEfficiencyTest
         /// Sets the iteration, which will be included when a measurement is recorded later.
         /// </summary>
         /// <param name="iteration">The current iteration</param>
-        public void setIteration(int iteration)
+        public void SetIteration(int iteration)
         {
             _iteration = iteration;
         }
@@ -46,7 +46,7 @@ namespace BrowserEfficiencyTest
         /// Sets the browser, which will be included when a measurement is recorded later.
         /// </summary>
         /// <param name="browser">The current browser</param>
-        public void setBrowser(string browser)
+        public void SetBrowser(string browser)
         {
             _browser = browser;
         }
@@ -55,7 +55,7 @@ namespace BrowserEfficiencyTest
         /// Sets the measureSet, which will be included when a measurement is recorded later.
         /// </summary>
         /// <param name="measureSet"></param>
-        public void setMeasureSet(string measureSet)
+        public void SetMeasureSet(string measureSet)
         {
             _measureSet = measureSet;
         }
@@ -64,7 +64,7 @@ namespace BrowserEfficiencyTest
         /// Sets the sceanrio, which will be included when a measurement is recorded later.
         /// </summary>
         /// <param name="scenario">The current scenario</param>
-        public void setScenario(string scenario)
+        public void SetScenario(string scenario)
         {
             _currentSceanrio = scenario;
         }
@@ -73,7 +73,7 @@ namespace BrowserEfficiencyTest
         /// Sets the driver, needed to perform measurements later.
         /// </summary>
         /// <param name="driver">The driver to access the browser</param>
-        public void setDriver(RemoteWebDriver driver)
+        public void SetDriver(RemoteWebDriver driver)
         {
             _driver = driver;
         }
@@ -81,7 +81,7 @@ namespace BrowserEfficiencyTest
         /// <summary>
         /// Enables the ResponsivenessTimer. After this function is called, measurements will be taken when running scenarios.
         /// </summary>
-        public void enable()
+        public void Enable()
         {
             _enabled = true;
         }
@@ -90,7 +90,7 @@ namespace BrowserEfficiencyTest
         /// Returns all recorded results
         /// </summary>
         /// <returns>A list of comma-delimited strings with measurements</returns>
-        public List<string> getResults()
+        public List<string> GetResults()
         {
             List<string> results = new List<string>();
             foreach (List<string> result in _results)
@@ -115,7 +115,7 @@ namespace BrowserEfficiencyTest
         /// Records how long the current page took to load (from navigation start to the end of the DOMContentLoaded event).
         /// </summary>
         /// <param name="pageLoaded">The name (or other identifier) of the current page. Needed to distinguish multiple page loads in a single scenario.</param>
-        public void extractPageLoadTime(string pageLoaded = null)
+        public void ExtractPageLoadTime(string pageLoaded = null)
         {
             if (_enabled)
             {
