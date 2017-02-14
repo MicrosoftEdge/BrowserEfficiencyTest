@@ -44,7 +44,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Navigate
-            driver.Navigate().GoToUrl("http://www.amazon.com");
+            driver.Navigate().GoToUrl("https://www.amazon.com");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
