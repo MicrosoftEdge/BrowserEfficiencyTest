@@ -47,7 +47,7 @@ namespace BrowserEfficiencyTest
             if ((arguments.UsingTraceController && arguments.DoPostProcessing) || arguments.MeasureResponsiveness)
             {
                 PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
-                perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.getResponsivnessResults());
+                perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.GetResponsivenessResults());
             }
         }
     }

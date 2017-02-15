@@ -143,7 +143,7 @@ namespace BrowserEfficiencyTest
             RunMainLoop();
         }
 
-        public List<string> getResponsivnessResults()
+        public List<string> GetResponsivenessResults()
         {
             return _timer.GetResults();
         }

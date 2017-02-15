@@ -126,7 +126,7 @@ namespace BrowserEfficiencyTest
                 {
                     measureName += ": " + pageLoaded;
                 }
-                makeRecord(measureName, timeToLoad.ToString());
+                MakeRecord(measureName, timeToLoad.ToString());
             }
         }
 
@@ -137,7 +137,7 @@ namespace BrowserEfficiencyTest
         /// </summary>
         /// <param name="measure">The measure name</param>
         /// <param name="result">The result of the measurement</param>
-        private void makeRecord(string measure, string result)
+        private void MakeRecord(string measure, string result)
         {
             DateTime now = DateTime.Now;
             List<String> record = new List<String>();
