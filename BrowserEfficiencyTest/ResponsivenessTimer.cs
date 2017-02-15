@@ -1,4 +1,31 @@
-﻿using OpenQA.Selenium;
+﻿//--------------------------------------------------------------
+//
+// Browser Efficiency Test
+// Copyright(c) Microsoft Corporation
+// All rights reserved.
+//
+// MIT License
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files(the ""Software""),
+// to deal in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and / or sell copies
+// of the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions :
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS
+// OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+// OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+//--------------------------------------------------------------
+
+using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
@@ -127,6 +154,53 @@ namespace BrowserEfficiencyTest
                     measureName += ": " + pageLoaded;
                 }
                 makeRecord(measureName, timeToLoad.ToString());
+            }
+        }
+
+        public void MeasureToElementExists(string key, string domIdentifier)
+        {
+            if (_enabled)
+            {
+                _driver.ExecuteScript(@"
+                function recordResult() {
+                    if (!document.responsivenessResults) {
+                        document.responsivenessResults = {};
+                    }
+                    if (!document.responsivenessResults[""" + key + @"""]) {
+                        document.responsivenessResults[""" + key + @"""] = {};
+                    }
+                    document.responsivenessResults[""" + key + @"""][""end""] = new Date();
+                }
+
+                if (document.querySelectorAll(""" + domIdentifier + @""").length > 0) {
+                    recordResult();
+                } else {
+                    if (document.observer instanceof MutationObserver) {
+                        document.observer.disconnect();
+                    } else {
+                        document.observer = new MutationObserver(function (mutations) {
+                            mutations.forEach(function (mutation) {
+                                if (!mutation.addedNodes) {
+                                    return;
+                                }
+                                for (var i = 0; i < mutation.addedNodes.length; i++) {
+                                    if (mutation.addedNodes[i].matches(query)) {
+                                        recordResult();
+                                        document.observer.disconnect();
+                                    }
+                                }
+                            });
+                        });
+                    }
+
+                    document.observer.observe(document.body, {
+                        childList: true,
+                        subtree: true,
+                        attributes: false,
+                        characterData: false
+                    });
+                }
+                ");
             }
         }
 
