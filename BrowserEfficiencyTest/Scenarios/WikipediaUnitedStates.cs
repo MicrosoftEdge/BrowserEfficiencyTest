@@ -40,7 +40,7 @@ namespace BrowserEfficiencyTest
             Name = "WikipediaUnitedStates";
             DefaultDuration = 30;
         }
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Nagivate to Wikipedia/United_States
             driver.Navigate().GoToUrl("https://en.wikipedia.org/wiki/United_States");
@@ -55,6 +55,8 @@ namespace BrowserEfficiencyTest
 
             // Scroll a bit
             driver.ScrollPage(12);
+
+            timer.ExtractPageLoadTime("Wikipedia article");
         }
     }
 }

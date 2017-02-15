@@ -41,7 +41,7 @@ namespace BrowserEfficiencyTest
             DefaultDuration = 60;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Nagivate to the homepage for Twitter
             driver.Navigate().GoToUrl("https://www.twitter.com");

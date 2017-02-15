@@ -41,11 +41,13 @@ namespace BrowserEfficiencyTest
             DefaultDuration = 90;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             driver.Navigate().GoToUrl("http://www.yahoo.com");
             driver.WaitForPageLoad();
             driver.Wait(5);
+
+            timer.ExtractPageLoadTime("Yahoo homepage");
 
             IWebElement newsLink;
             // Go to the News section
@@ -94,6 +96,8 @@ namespace BrowserEfficiencyTest
             driver.Wait(6);
             driver.ScrollPage(1);
             driver.Wait(6);
+
+            timer.ExtractPageLoadTime("Yahoo article");
 
             // Then go back to the news homepage
             driver.Navigate().Back();

@@ -41,7 +41,7 @@ namespace BrowserEfficiencyTest
             DefaultDuration = 80;
         }
 
-        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager)
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             NavigateToGmail(driver);
             driver.Wait(2);
@@ -89,7 +89,7 @@ namespace BrowserEfficiencyTest
             driver.Wait(7);
 
             // Check the url to make sure login was successful
-            if(driver.Url != @"https://mail.google.com/mail/u/0/#inbox")
+            if(driver.Url != @"https://mail.google.com/mail/u/0/#inbox" && driver.Url != @"https://mail.google.com/mail/#inbox")
             {
                 throw new Exception("Login to Gmail failed!");
             }

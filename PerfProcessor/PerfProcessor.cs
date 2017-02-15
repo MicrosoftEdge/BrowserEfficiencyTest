@@ -72,7 +72,8 @@ namespace BrowserEfficiencyTest
         /// </summary>
         /// <param name="etlFolderPath">Location of the ETL files to process the performance data from.</param>
         /// <param name="saveFolderPath">Location of where to save the results csv file.</param>
-        public void Execute(string etlFolderPath = ".", string saveFolderPath = "")
+        /// <param name="resultsToAdd">Any already-measured results to include in the csv file</param>
+        public void Execute(string etlFolderPath = ".", string saveFolderPath = "", List<string> resultsToAdd = null)
         {
             Dictionary<string, Dictionary<string, Dictionary<string, string>>> results = null;
             List<string> formattedResults = null;
@@ -83,6 +84,14 @@ namespace BrowserEfficiencyTest
             results = ProcessEtls(etlFiles);
 
             formattedResults = FormatResults(results);
+
+            if (resultsToAdd != null)
+            {
+                foreach (string result in resultsToAdd)
+                {
+                    formattedResults.Add(result);
+                }
+            }
 
             SaveResults(formattedResults, saveFolderPath);
         }
@@ -98,7 +107,7 @@ namespace BrowserEfficiencyTest
 
             if (etlFiles.Count() == 0)
             {
-                Console.WriteLine("No ETL files were found! Unable to process performance metrics.");
+                Console.WriteLine("No ETL files were found. No trace-based results have been measured.");
                 return null;
             }
 
@@ -145,12 +154,12 @@ namespace BrowserEfficiencyTest
             string metricName = "";
             string metricValue = "";
 
+            formattedData.Add(headerRow);
+
             if (results == null)
             {
-                return null;
+                return formattedData;
             }
-
-            formattedData.Add(headerRow);
 
             // The results data format is Dictionary< "ETL File name" , Dictionary< "measure set name" , Dictionary< "metric name" , "metric value" >>>
             foreach (var etl in results)

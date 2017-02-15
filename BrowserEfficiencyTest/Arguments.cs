@@ -57,6 +57,7 @@ namespace BrowserEfficiencyTest
         public bool OverrideTimeout { get; private set;  }
         public bool DoPostProcessing { get; private set; }
         public string CredentialPath { get; private set; }
+        public bool MeasureResponsiveness { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -103,11 +104,12 @@ namespace BrowserEfficiencyTest
             DoWarmup = false;
             Iterations = 1;
             UsingTraceController = false;
-            EtlPath = "";
+            EtlPath = Directory.GetCurrentDirectory();
             MaxAttempts = 3;
             OverrideTimeout = false;
             DoPostProcessing = true;
             CredentialPath = "credentials.json";
+            MeasureResponsiveness = false;
 
             CreatePossibleScenarios();
             ProcessWorkloads();
@@ -120,7 +122,7 @@ namespace BrowserEfficiencyTest
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-tracecontrolled|-tc <etlpath> -measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>]");
+            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -207,9 +209,8 @@ namespace BrowserEfficiencyTest
                         }
 
                         break;
-                    case "-tracecontrolled":
-                    case "-tc":
-                        UsingTraceController = true;
+                    case "-resultspath":
+                    case "-rp":
                         argNum++;
                         string etlPath = args[argNum];
 
@@ -232,6 +233,8 @@ namespace BrowserEfficiencyTest
                             {
                                 throw new Exception($"Unexpected measure set '{measureSet}'");
                             }
+
+                            UsingTraceController = true;
 
                             _selectedMeasureSets.Add(_availableMeasureSets[measureSet]);
 
@@ -279,19 +282,13 @@ namespace BrowserEfficiencyTest
                         argNum++;
                         CredentialPath = args[argNum];
                         break;
+                    case "-responsiveness":
+                    case "-r":
+                        MeasureResponsiveness = true;
+                        break;
                     default:
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
-            }
-
-            // For perf processing, ensure that both the tracing controller option and measuresets have been selected
-            if (UsingTraceController && _selectedMeasureSets.Count == 0)
-            {
-                throw new Exception("A measure set must be specified when using a trace controller.");
-            }
-            else if (!UsingTraceController && _selectedMeasureSets.Count > 0)
-            {
-                throw new Exception("The tracing controller option must be specified when using measure sets.");
             }
         }
 
