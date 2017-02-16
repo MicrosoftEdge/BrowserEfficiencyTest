@@ -235,6 +235,13 @@ namespace BrowserEfficiencyTest
                 {
                     KeyValuePair<string, object> kvPair = (KeyValuePair<string, object>)partialResult;
                     Dictionary<string, object> kvPairContents = (Dictionary<string, object>)kvPair.Value;
+
+                    // We get a big object of measurements from the JS heap. Here, we iterate through them
+                    // and for each one, we add the pieces to _partialResults. This way, they'll be kept
+                    // after a page navigate, which will drop the JS object. Because it's valid to get
+                    // a start and an end from different pages, we allow any given page to extract one or
+                    // the other (or both of course)
+
                     if (kvPairContents.ContainsKey("start"))
                     {
                         AddPartialEntryTimestamp(kvPair.Key, "start", (long)kvPairContents["start"]);
@@ -250,18 +257,40 @@ namespace BrowserEfficiencyTest
 
         // Internal functions:
 
-        private void AddPartialEntryTimestamp(string key, string timepoint, long timestamp)
+        private void AddPartialEntryTimestamp(string key, string timepointName, long timestamp)
         {
             if (!_partialResults.ContainsKey(key))
             {
                 _partialResults.Add(key, new Dictionary<string, long>());
             }
-            _partialResults[key][timepoint] = timestamp;
+            if (!_partialResults[key].ContainsKey(timepointName))
+            {
+                _partialResults[key][timepointName] = timestamp;
+            }
         }
 
         private void RecordCompletedPartialResults()
         {
+            List<string> completedResults = new List<string>();
 
+            foreach (KeyValuePair<string, Dictionary<string,long>> measurement in _partialResults)
+            {
+                // For every set of measurements in _partialResults, if it has both a start and an end,
+                // then we have all the info we need to record a complete measurement in _results
+                if (measurement.Value.ContainsKey("start") && measurement.Value.ContainsKey("end"))
+                {
+                    long result = measurement.Value["end"] - measurement.Value["start"];
+                    makeRecord(measurement.Key, result.ToString());
+                    completedResults.Add(measurement.Key);
+                }
+            }
+
+            // Can't modify _partialResults while iterating through it above, so remove completed results
+            // here instead
+            foreach (string keyToRemove in completedResults)
+            {
+                _partialResults.Remove(keyToRemove);
+            }
         }
 
         /// <summary>
