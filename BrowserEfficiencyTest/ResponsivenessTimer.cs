@@ -41,7 +41,8 @@ namespace BrowserEfficiencyTest
     /// </summary>
     internal class ResponsivenessTimer
     {
-        private List<List<String>> _results;
+        private List<List<string>> _results;
+        private Dictionary<string, Dictionary<string, long>> _partialResults;
         private string _currentSceanrio;
         private int _iteration;
         private string _browser;
@@ -58,6 +59,7 @@ namespace BrowserEfficiencyTest
         {
             _results = new List<List<String>>();
             _enabled = false;
+            _partialResults = new Dictionary<string, Dictionary<string, long>>();
         }
 
         /// <summary>
@@ -157,7 +159,24 @@ namespace BrowserEfficiencyTest
             }
         }
 
-        public void MeasureToElementExists(string key, string domIdentifier)
+        public void StartMeasure(string key)
+        {
+            if (_enabled)
+            {
+                _driver.ExecuteScript(@"
+                if (!document.responsivenessResults) {
+                    document.responsivenessResults = {};
+                }
+                if (!document.responsivenessResults[""" + key + @"""]) {
+                    document.responsivenessResults[""" + key + @"""] = {};
+                }
+                document.responsivenessResults[""" + key + @"""][""start""] = (new Date()).getTime();
+                ");
+            }
+
+        }
+
+        public void EndMeasureWhenElementExists(string key, string domIdentifier)
         {
             if (_enabled)
             {
@@ -169,7 +188,7 @@ namespace BrowserEfficiencyTest
                     if (!document.responsivenessResults[""" + key + @"""]) {
                         document.responsivenessResults[""" + key + @"""] = {};
                     }
-                    document.responsivenessResults[""" + key + @"""][""end""] = new Date();
+                    document.responsivenessResults[""" + key + @"""][""end""] = (new Date()).getTime();
                 }
 
                 if (document.querySelectorAll(""" + domIdentifier + @""").length > 0) {
@@ -184,7 +203,8 @@ namespace BrowserEfficiencyTest
                                     return;
                                 }
                                 for (var i = 0; i < mutation.addedNodes.length; i++) {
-                                    if (mutation.addedNodes[i].matches(query)) {
+                                    console.log(mutation.addedNodes[i]);
+                                    if (mutation.addedNodes[i].matches(""" + domIdentifier + @""") || mutation.addedNodes[i].querySelectorAll(""" + domIdentifier + @""").length > 0) {
                                         recordResult();
                                         document.observer.disconnect();
                                     }
@@ -204,7 +224,45 @@ namespace BrowserEfficiencyTest
             }
         }
 
+        public void ExtractMeasures()
+        {
+            IJavaScriptExecutor javascriptEngine = _driver as IJavaScriptExecutor;
+            var resultsFromJS = javascriptEngine.ExecuteScript("return document.responsivenessResults;");
+            Dictionary<string, object> castedResultsFromJS = (Dictionary<string, object>)resultsFromJS;
+            if (castedResultsFromJS != null)
+            {
+                foreach (object partialResult in castedResultsFromJS)
+                {
+                    KeyValuePair<string, object> kvPair = (KeyValuePair<string, object>)partialResult;
+                    Dictionary<string, object> kvPairContents = (Dictionary<string, object>)kvPair.Value;
+                    if (kvPairContents.ContainsKey("start"))
+                    {
+                        AddPartialEntryTimestamp(kvPair.Key, "start", (long)kvPairContents["start"]);
+                    }
+                    if (kvPairContents.ContainsKey("end"))
+                    {
+                        AddPartialEntryTimestamp(kvPair.Key, "end", (long)kvPairContents["end"]);
+                    }
+                }
+            }
+            RecordCompletedPartialResults();
+        }
+
         // Internal functions:
+
+        private void AddPartialEntryTimestamp(string key, string timepoint, long timestamp)
+        {
+            if (!_partialResults.ContainsKey(key))
+            {
+                _partialResults.Add(key, new Dictionary<string, long>());
+            }
+            _partialResults[key][timepoint] = timestamp;
+        }
+
+        private void RecordCompletedPartialResults()
+        {
+
+        }
 
         /// <summary>
         /// Records a measurement. Fills in most fields automatically, and so it only needs the measure name and result

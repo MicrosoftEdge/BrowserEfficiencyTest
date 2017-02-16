@@ -49,6 +49,14 @@ namespace BrowserEfficiencyTest
             // Search for "Seattle" and hit enter
             driver.TypeIntoField(driver.FindElementByXPath("//*[@title='Search']"), "Seattle" + Keys.Enter);
 
+            // Measure how long it takes for results to appear
+            timer.StartMeasure("Search results visible");
+            timer.EndMeasureWhenElementExists("Search results visible", "#ires");
+
+            driver.Wait(5);
+
+            timer.ExtractMeasures();
+
             // Simply yield control back to the main thread and look at results
         }
     }

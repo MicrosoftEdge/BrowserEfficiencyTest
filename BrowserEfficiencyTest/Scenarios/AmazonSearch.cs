@@ -52,8 +52,6 @@ namespace BrowserEfficiencyTest
             driver.TypeIntoField(driver.FindElementById("twotabsearchtextbox"), "Game of Thrones" + Keys.Enter);
             driver.Wait(5);
 
-            timer.MeasureToElementExists("test", "#dv-sims");
-
             // Click into "Game of Thrones Season 1"
             driver.ClickElement(driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']"));
             driver.Wait(2);

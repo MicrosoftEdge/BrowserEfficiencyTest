@@ -68,10 +68,8 @@ namespace BrowserEfficiencyTest
                 }
             }
             driver.ClickElement(newsLink);
-
-            driver.Wait(5);
-
-            timer.MeasureToElementExists("NewsStreamVisible", "#YDC-Stream");
+            driver.WaitForPageLoad();
+            driver.Wait(2);
 
             // Add a link to a known article
             // This hack is a little unfortunate, as no real user is injecting javascript to create a link, but
