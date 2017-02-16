@@ -176,6 +176,29 @@ namespace BrowserEfficiencyTest
 
         }
 
+        public void StartMeasureOnEnterKeyPressed(string key)
+        {
+            if (_enabled)
+            {
+                _driver.ExecuteScript(@"
+                function recordResultOnEnter(e) {
+                    if (e.keyCode === 13) {
+                        if (!document.responsivenessResults) {
+                            document.responsivenessResults = {};
+                        }
+                        if (!document.responsivenessResults[""" + key + @"""]) {
+                            document.responsivenessResults[""" + key + @"""] = {};
+                        }
+                        document.responsivenessResults[""" + key + @"""][""start""] = (new Date()).getTime();
+                        document.removeEventListener(""keyup"", recordResultOnEnter);
+                    }
+                }
+
+                document.addEventListener(""keyup"", recordResultOnEnter);
+                ");
+            }
+        }
+
         public void EndMeasureWhenElementExists(string key, string domIdentifier)
         {
             if (_enabled)
