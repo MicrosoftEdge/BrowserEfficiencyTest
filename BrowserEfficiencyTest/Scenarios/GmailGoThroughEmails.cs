@@ -45,7 +45,7 @@ namespace BrowserEfficiencyTest
         {
             NavigateToGmail(driver);
             driver.Wait(2);
-            LogIn(driver, credentialManager);
+            LogIn(driver, credentialManager, timer);
             BrowseEmails(driver, 5);
         }
 
@@ -55,7 +55,7 @@ namespace BrowserEfficiencyTest
             driver.WaitForPageLoad();
         }
 
-        private void LogIn(RemoteWebDriver driver, CredentialManager credentialManager)
+        private void LogIn(RemoteWebDriver driver, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Get the relevant username and password
             UserInfo credentials = credentialManager.GetCredentials("gmail.com");
@@ -83,10 +83,18 @@ namespace BrowserEfficiencyTest
             // Tab down and hit submit button
             driver.Keyboard.SendKeys(Keys.Tab);
             driver.Wait(1);
-            driver.Keyboard.SendKeys(Keys.Enter);
 
-            // give the page some time to load
+            // Start measuring how long it takes the when we hit enter after entering the password
+            timer.StartMeasureOnEnterKeyPressed("Inbox visible");
+            driver.Wait(1);
+            driver.Keyboard.SendKeys(Keys.Enter);
+            driver.Wait(1);
+            timer.ExtractMeasures();
+
             driver.Wait(7);
+            timer.EndMeasureOnDomContentLoaded("Inbox visible");
+            driver.Wait(1);
+            timer.ExtractMeasures();
 
             // Check the url to make sure login was successful
             if(driver.Url != @"https://mail.google.com/mail/u/0/#inbox" && driver.Url != @"https://mail.google.com/mail/#inbox")

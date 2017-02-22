@@ -50,6 +50,25 @@ namespace BrowserEfficiencyTest
         private RemoteWebDriver _driver;
         private bool _enabled;
 
+        // Code segments for debug. These can be added into the injected javascript below to visually verify when things happen:
+        //     When the bool below is marked true, an amber square will appear in the top left when we're waiting for a DOM element
+        //     to appear. It will turn green then disapear once we've found the element we're looking for.
+        private bool _useDebugIndicators = true;
+
+        private string _startIndicatorCode = @"
+        var statusElement = document.createElement(""div"");
+        statusElement.innerHTML = ""<div id='bet_statusElement' style='position:fixed;top:10px;left:10px;border:2px solid #111;width:25px;height:25px;opacity:.75;z-index:9999;background-color:#FF9202;'></div>"";
+        document.querySelector(""body"").appendChild(statusElement.querySelector(""#bet_statusElement""));
+        ";
+        private string _endIndicatorCode = @"
+        document.querySelector(""#bet_statusElement"").style.backgroundColor = ""#00B210"";
+        setTimeout(function() {
+            document.querySelector(""body"").removeChild(document.querySelector(""#bet_statusElement""));
+        }, 750);
+        ";
+        private string _startIndicatorCodeToExecute = "";
+        private string _endIndicatorCodeToExecute = "";
+
         // Functions for test harness:
 
         /// <summary>
@@ -60,6 +79,12 @@ namespace BrowserEfficiencyTest
             _results = new List<List<String>>();
             _enabled = false;
             _partialResults = new Dictionary<string, Dictionary<string, long>>();
+
+            if (_useDebugIndicators)
+            {
+                _startIndicatorCodeToExecute = _startIndicatorCode;
+                _endIndicatorCodeToExecute = _endIndicatorCode;
+            }
         }
 
         /// <summary>
@@ -140,8 +165,73 @@ namespace BrowserEfficiencyTest
 
         // Functions for scenarios to record responsiveness results:
 
+        public void StartMeasureNow(string key)
+        {
+            if (_enabled)
+            {
+                _driver.ExecuteScript(@"
+                if (!document.responsivenessResults) {
+                    document.responsivenessResults = {};
+                }
+                if (!document.responsivenessResults[""" + key + @"""]) {
+                    document.responsivenessResults[""" + key + @"""] = {};
+                }
+                document.responsivenessResults[""" + key + @"""][""start""] = (new Date()).getTime();
+                ");
+            }
+        }
+
+        public void EndMeasureNow(string key)
+        {
+            if (_enabled)
+            {
+                _driver.ExecuteScript(@"
+                if (!document.responsivenessResults) {
+                    document.responsivenessResults = {};
+                }
+                if (!document.responsivenessResults[""" + key + @"""]) {
+                    document.responsivenessResults[""" + key + @"""] = {};
+                }
+                document.responsivenessResults[""" + key + @"""][""end""] = (new Date()).getTime();
+                ");
+            }
+        }
+
+        public void StartMeasureFromNavigationStart(string key)
+        {
+            if (_enabled)
+            {
+                _driver.ExecuteScript(@"
+                if (!document.responsivenessResults) {
+                    document.responsivenessResults = {};
+                }
+                if (!document.responsivenessResults[""" + key + @"""]) {
+                    document.responsivenessResults[""" + key + @"""] = {};
+                }
+                document.responsivenessResults[""" + key + @"""][""start""] = performance.timing.navigationStart;
+                ");
+            }
+        }
+
+        public void EndMeasureOnDomContentLoaded(string key)
+        {
+            if (_enabled)
+            {
+                _driver.ExecuteScript(@"
+                if (!document.responsivenessResults) {
+                    document.responsivenessResults = {};
+                }
+                if (!document.responsivenessResults[""" + key + @"""]) {
+                    document.responsivenessResults[""" + key + @"""] = {};
+                }
+                document.responsivenessResults[""" + key + @"""][""end""] = performance.timing.domContentLoadedEventEnd;
+                ");
+            }
+        }
+
         /// <summary>
-        /// Records how long the current page took to load (from navigation start to the end of the DOMContentLoaded event).
+        /// Records how long the current page took to load (from navigation start to the end of the DOMContentLoaded event), adding that to results.
+        /// Equivalent to calling StartMeasureFromNavigationStart(key), EndMeasureOnDomContentLoaded(key), and ExtractMeasures()
         /// </summary>
         /// <param name="pageLoaded">The name (or other identifier) of the current page. Needed to distinguish multiple page loads in a single scenario.</param>
         public void ExtractPageLoadTime(string pageLoaded = null)
@@ -159,23 +249,6 @@ namespace BrowserEfficiencyTest
             }
         }
 
-        public void StartMeasure(string key)
-        {
-            if (_enabled)
-            {
-                _driver.ExecuteScript(@"
-                if (!document.responsivenessResults) {
-                    document.responsivenessResults = {};
-                }
-                if (!document.responsivenessResults[""" + key + @"""]) {
-                    document.responsivenessResults[""" + key + @"""] = {};
-                }
-                document.responsivenessResults[""" + key + @"""][""start""] = (new Date()).getTime();
-                ");
-            }
-
-        }
-
         public void StartMeasureOnEnterKeyPressed(string key)
         {
             if (_enabled)
@@ -183,6 +256,7 @@ namespace BrowserEfficiencyTest
                 _driver.ExecuteScript(@"
                 function recordResultOnEnter(e) {
                     if (e.keyCode === 13) {
+                        " + _endIndicatorCodeToExecute /* on debug, mark that we've seen enter happen */ + @"
                         if (!document.responsivenessResults) {
                             document.responsivenessResults = {};
                         }
@@ -193,7 +267,7 @@ namespace BrowserEfficiencyTest
                         document.removeEventListener(""keyup"", recordResultOnEnter);
                     }
                 }
-
+                " + _startIndicatorCodeToExecute /* on debug, mark that we've started listening for enter */ + @"
                 document.addEventListener(""keyup"", recordResultOnEnter);
                 ");
             }
@@ -205,6 +279,7 @@ namespace BrowserEfficiencyTest
             {
                 _driver.ExecuteScript(@"
                 function recordResult() {
+                    " + _endIndicatorCodeToExecute + /* If debugging, change indicator, signifying that that we found it... */ @"
                     if (!document.responsivenessResults) {
                         document.responsivenessResults = {};
                     }
@@ -214,6 +289,7 @@ namespace BrowserEfficiencyTest
                     document.responsivenessResults[""" + key + @"""][""end""] = (new Date()).getTime();
                 }
 
+                " + _startIndicatorCodeToExecute + /* If debugging, show an indicator that we've started looking... */ @"
                 if (document.querySelectorAll(""" + domIdentifier + @""").length > 0) {
                     recordResult();
                 } else {
@@ -226,7 +302,6 @@ namespace BrowserEfficiencyTest
                                     return;
                                 }
                                 for (var i = 0; i < mutation.addedNodes.length; i++) {
-                                    console.log(mutation.addedNodes[i]);
                                     if (mutation.addedNodes[i].matches(""" + domIdentifier + @""") || mutation.addedNodes[i].querySelectorAll(""" + domIdentifier + @""").length > 0) {
                                         recordResult();
                                         document.observer.disconnect();
@@ -303,7 +378,7 @@ namespace BrowserEfficiencyTest
                 if (measurement.Value.ContainsKey("start") && measurement.Value.ContainsKey("end"))
                 {
                     long result = measurement.Value["end"] - measurement.Value["start"];
-                    makeRecord(measurement.Key, result.ToString());
+                    MakeRecord(measurement.Key, result.ToString());
                     completedResults.Add(measurement.Key);
                 }
             }
