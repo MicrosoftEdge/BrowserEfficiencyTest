@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Arguments.cs" />
     <Compile Include="CredentialManager.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="ResponsivenessTimer.cs" />
     <Compile Include="Scenarios\AboutBlank.cs" />
     <Compile Include="Scenarios\AzureDashboard.cs" />

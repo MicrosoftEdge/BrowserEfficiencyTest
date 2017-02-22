@@ -26,29 +26,44 @@
 //--------------------------------------------------------------
 
 using System.Linq;
+using System;
 
 namespace BrowserEfficiencyTest
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static int Main(string[] args)
         {
-            Arguments arguments = new Arguments(args);
-            ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
+            int returnValue = 0;
 
-            // Run the automation. This will write traces to the current or provided directory if the user requested it
-            if (arguments.Browsers.Count > 0 && arguments.Scenarios.Count > 0)
+            try
             {
-                scenarioRunner.Run();
+                Arguments arguments = new Arguments(args);
+                ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
+
+                // Run the automation. This will write traces to the current or provided directory if the user requested it
+                if (arguments.Browsers.Count > 0 && arguments.Scenarios.Count > 0)
+                {
+                    scenarioRunner.Run();
+                }
+
+                // If traces have been written, process them into a csv of results
+                // Only necessary if we're tracing and/or measuring responsiveness
+                if ((arguments.UsingTraceController && arguments.DoPostProcessing) || arguments.MeasureResponsiveness)
+                {
+                    PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
+                    perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.GetResponsivenessResults());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                returnValue = 1;
+                Logger.LogWriteLine("!!!---TEST BREAKING EXCEPTION caught! ---------------------------");
+                Logger.LogWriteLine("Exception: " + ex.ToString());
             }
 
-            // If traces have been written, process them into a csv of results
-            // Only necessary if we're tracing and/or measuring responsiveness
-            if ((arguments.UsingTraceController && arguments.DoPostProcessing) || arguments.MeasureResponsiveness)
-            {
-                PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
-                perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.GetResponsivenessResults());
-            }
+            return returnValue;
         }
     }
 }
