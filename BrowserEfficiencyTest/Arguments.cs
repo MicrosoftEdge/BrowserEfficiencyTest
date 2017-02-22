@@ -99,6 +99,7 @@ namespace BrowserEfficiencyTest
             _availableMeasureSets = PerfProcessor.AvailableMeasureSets.ToDictionary(k => k.Key, v => v.Value);
             _selectedMeasureSets = new List<MeasureSet>();
             _workloads = new List<Workload>();
+
             ScenarioName = "";
             BrowserProfilePath = "";
             DoWarmup = false;
@@ -122,7 +123,7 @@ namespace BrowserEfficiencyTest
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r]");
+            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -147,6 +148,7 @@ namespace BrowserEfficiencyTest
                             string browser = args[argNum].ToLowerInvariant();
                             if (!s_SupportedBrowsers.Contains(browser))
                             {
+                                Logger.LogWriteLine(string.Format("Unsupported browser: {0}",browser));
                                 throw new Exception($"Unsupported browser '{browser}'");
                             }
 
@@ -185,6 +187,7 @@ namespace BrowserEfficiencyTest
 
                             if (!_possibleScenarios.ContainsKey(scenario))
                             {
+                                Logger.LogWriteLine(string.Format("Unsupported scenario: {0}", scenario));
                                 throw new Exception($"Unexpected scenario '{scenario}'");
                             }
 
@@ -231,6 +234,7 @@ namespace BrowserEfficiencyTest
                             var measureSet = args[argNum];
                             if (!_availableMeasureSets.ContainsKey(measureSet))
                             {
+                                Logger.LogWriteLine(string.Format("Unsupported measureSet: {0}", measureSet));
                                 throw new Exception($"Unexpected measure set '{measureSet}'");
                             }
 
@@ -267,6 +271,7 @@ namespace BrowserEfficiencyTest
                         BrowserProfilePath = args[argNum];
                         if (!Directory.Exists(BrowserProfilePath))
                         {
+                            Logger.LogWriteLine(string.Format("The profile path does not exist!  {0}", BrowserProfilePath));
                             throw new DirectoryNotFoundException("The profile path does not exist!");
                         }
                         break;
@@ -286,7 +291,19 @@ namespace BrowserEfficiencyTest
                     case "-r":
                         MeasureResponsiveness = true;
                         break;
+                    case "-filelogging":
+                    case "-fl":
+                        argNum++;
+                        string _logPath = Directory.GetCurrentDirectory();
+                        if ((argNum < args.Length) && (!args[argNum].StartsWith("-")))
+                        {
+                            _logPath = args[argNum];
+                        }
+                        Logger.SetupFileLogging(_logPath);
+                        Logger.LogWriteLine("Arguments: " + string.Join(" ", args));
+                        break;
                     default:
+                        Logger.LogWriteLine(string.Format("Unexpected argument encountered '{0}'", args[argNum]));
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
             }

@@ -110,7 +110,7 @@ The items in this section are not required, but they are useful recommendations 
 
 To ensure your configuration and build is correct, here's a good test to run. It will run through two browsers twice each, using two quick scenarios in two different tabs, and record how much CPU was used for them:
 
-You'll have to provide a path to place the resulting traces after the `-tc` command. Remember that this also assumes Elevator is already running and waiting for a client connection.
+You can optionally provide a path to place the resulting traces using the '-rp' command. Remember that this also assumes Elevator is already running and waiting for a client connection.
 
 ```
 > BrowserEfficiencyTest.exe -b edge chrome -i 2 -rp C:\Some\Path\TestTraces -ms cpuUsage -s FastScenario WikipediaUnitedStates

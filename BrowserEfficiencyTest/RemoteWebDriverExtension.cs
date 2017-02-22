@@ -166,7 +166,8 @@ namespace BrowserEfficiencyTest
                 {
                     attempt++;
 
-                    Console.WriteLine("Failed attempt " + attempt + " to click element " + element.ToString());
+                    Logger.LogWriteLine("Failed attempt " + attempt + " to click element " + element.ToString());
+
                     Thread.Sleep(1000);
 
                     if (attempt >= maxAttemptsToMake)
