@@ -57,7 +57,7 @@ namespace BrowserEfficiencyTest
         public bool DoPostProcessing { get; private set; }
         public string CredentialPath { get; private set; }
         public bool MeasureResponsiveness { get; private set; }
-
+        public bool ArgumentsAreValid { get; private set; }
         /// <summary>
         /// List of all scenarios to be run.
         /// </summary>
@@ -111,18 +111,21 @@ namespace BrowserEfficiencyTest
             MeasureResponsiveness = false;
 
             CreatePossibleScenarios();
-            ProcessWorkloads();
-            ProcessArgs(args);
+            LoadWorkloads();
+            ArgumentsAreValid = ProcessArgs(args);
         }
 
         /// <summary>
-        /// Go through the list of passed in commandline 
+        /// Go through the list of passed in commandline.
+        /// If any of the arguments are invalid, this method returns false.
         /// </summary>
-        private void ProcessArgs(string[] args)
+        private bool ProcessArgs(string[] args)
         {
+            bool argumentsAreValid = true;
+
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
             Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]");
-            for (int argNum = 0; argNum < args.Length; argNum++)
+            for (int argNum = 0; (argNum < args.Length) && argumentsAreValid; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
                 switch (arg)
@@ -164,16 +167,43 @@ namespace BrowserEfficiencyTest
                     case "-workload":
                     case "-w":
                         argNum++;
-                        AddScenariosInWorkload(args[argNum]);
 
-                        if (string.IsNullOrEmpty(ScenarioName))
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
                         {
-                            ScenarioName = args[argNum];
+                            Workload selectedWorkload = _workloads.FirstOrDefault(wl => wl.Name.ToLowerInvariant() == args[argNum].ToLowerInvariant());
+
+                            if (selectedWorkload == null)
+                            {
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine(string.Format("The specified workload '{0}' was not found!", args[argNum]), false);
+                            }
+                            else
+                            {
+                                bool successfullyAddedScenarios = AddScenariosInWorkload(selectedWorkload);
+                                if (!successfullyAddedScenarios)
+                                {
+                                    argumentsAreValid = false;
+                                    Logger.LogWriteLine(string.Format("Invalid scenario specified in workload '{0}'!", selectedWorkload.Name), false);
+                                }
+                                else
+                                {
+                                    if (string.IsNullOrEmpty(ScenarioName))
+                                    {
+                                        ScenarioName = selectedWorkload.Name;
+                                    }
+                                    else
+                                    {
+                                        ScenarioName = ScenarioName + "-" + selectedWorkload.Name;
+                                    }
+                                }
+                            }
                         }
                         else
                         {
-                            ScenarioName = ScenarioName + "-" + args[argNum];
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine(string.Format("No valid workload was specified!"), false);
                         }
+
                         break;
                     case "-scenario":
                     case "-s":
@@ -313,6 +343,8 @@ namespace BrowserEfficiencyTest
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
             }
+
+            return argumentsAreValid;
         }
 
         /// <summary>
@@ -358,30 +390,40 @@ namespace BrowserEfficiencyTest
             _possibleScenarios.Add(scenario.Name.ToLowerInvariant(), new WorkloadScenario(scenario.Name.ToLowerInvariant(), "new", scenario.DefaultDuration, scenario));
         }
 
-        private void ProcessWorkloads()
+        // Load in the Workloads and their list of ScenarioWorkloads from workloads.json
+        private void LoadWorkloads()
         {
             string jsonText = File.ReadAllText("workloads.json");
             _workloads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Workload>>(jsonText);
         }
 
-        private void AddScenariosInWorkload(string workloadName)
+        // Add the ScenarioWorkloads from the passed in workload to the list of ScenarioWorkloads to be executed
+        // returns false if an invalid scenario was found in the workload        
+        private bool AddScenariosInWorkload(Workload workload)
         {
-            foreach (Workload workload in _workloads)
+            bool allScenariosAdded = true;
+
+            foreach (var workloadScenario in workload.Scenarios)
             {
-                if (workload.Name == workloadName)
+                string currentScenarioName = workloadScenario.ScenarioName.ToLowerInvariant();
+                if (_possibleScenarios.ContainsKey(currentScenarioName))
                 {
-                    foreach (WorkloadScenario scenario in workload.Scenarios)
+                    if (!(workloadScenario.Duration > 0))
                     {
-                        int runtimeDuration = _possibleScenarios[scenario.ScenarioName].Duration;
-                        if (scenario.Duration > 0)
-                        {
-                            runtimeDuration = scenario.Duration;
-                        }
-                        _scenarios.Add(new WorkloadScenario(scenario.ScenarioName, scenario.Tab, runtimeDuration, _possibleScenarios[scenario.ScenarioName].Scenario));
+                        // The workloadScenario does not have a valid duration so use the scenario's default
+                        workloadScenario.Duration = _possibleScenarios[currentScenarioName].Duration;
                     }
-                    break;
+
+                    workloadScenario.Scenario = _possibleScenarios[currentScenarioName].Scenario;
+                    _scenarios.Add(workloadScenario);
+                }
+                else
+                {
+                    return false;
                 }
             }
+
+            return allScenariosAdded;
         }
     }
 }
