@@ -148,7 +148,7 @@ namespace BrowserEfficiencyTest
                             string browser = args[argNum].ToLowerInvariant();
                             if (!s_SupportedBrowsers.Contains(browser))
                             {
-                                Logger.LogWriteLine(string.Format("Unsupported browser: {0}",browser));
+                                Logger.LogWriteLine(string.Format("Unsupported browser: {0}",browser), false);
                                 throw new Exception($"Unsupported browser '{browser}'");
                             }
 
@@ -187,7 +187,7 @@ namespace BrowserEfficiencyTest
 
                             if (!_possibleScenarios.ContainsKey(scenario))
                             {
-                                Logger.LogWriteLine(string.Format("Unsupported scenario: {0}", scenario));
+                                Logger.LogWriteLine(string.Format("Unsupported scenario: {0}", scenario), false);
                                 throw new Exception($"Unexpected scenario '{scenario}'");
                             }
 
@@ -234,7 +234,7 @@ namespace BrowserEfficiencyTest
                             var measureSet = args[argNum];
                             if (!_availableMeasureSets.ContainsKey(measureSet))
                             {
-                                Logger.LogWriteLine(string.Format("Unsupported measureSet: {0}", measureSet));
+                                Logger.LogWriteLine(string.Format("Unsupported measureSet: {0}", measureSet), false);
                                 throw new Exception($"Unexpected measure set '{measureSet}'");
                             }
 
@@ -271,7 +271,7 @@ namespace BrowserEfficiencyTest
                         BrowserProfilePath = args[argNum];
                         if (!Directory.Exists(BrowserProfilePath))
                         {
-                            Logger.LogWriteLine(string.Format("The profile path does not exist!  {0}", BrowserProfilePath));
+                            Logger.LogWriteLine(string.Format("The profile path does not exist!  {0}", BrowserProfilePath), false);
                             throw new DirectoryNotFoundException("The profile path does not exist!");
                         }
                         break;
@@ -293,17 +293,28 @@ namespace BrowserEfficiencyTest
                         break;
                     case "-filelogging":
                     case "-fl":
-                        argNum++;
-                        string _logPath = Directory.GetCurrentDirectory();
-                        if ((argNum < args.Length) && (!args[argNum].StartsWith("-")))
+                        // Enable file logging. If a path is specified after the -fl|-filelogging option, then place the file log
+                        // in the specified path.
+                        string logPath = Directory.GetCurrentDirectory();
+
+                        if (((argNum + 1) < args.Length) && !(args[argNum + 1].StartsWith("-")))
                         {
-                            _logPath = args[argNum];
+                            argNum++;
+                            logPath = args[argNum];
+
+                            if (!Directory.Exists(logPath))
+                            {
+                                Directory.CreateDirectory(logPath);
+                            }
+
+                            logPath = Path.GetFullPath(logPath);
                         }
-                        Logger.SetupFileLogging(_logPath);
-                        Logger.LogWriteLine("Arguments: " + string.Join(" ", args));
+
+                        Logger.SetupFileLogging(logPath);
+                        Logger.LogWriteLine("Arguments: " + string.Join(" ", args), false);
                         break;
                     default:
-                        Logger.LogWriteLine(string.Format("Unexpected argument encountered '{0}'", args[argNum]));
+                        Logger.LogWriteLine(string.Format("Unexpected argument encountered '{0}'", args[argNum]), false);
                         throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
                 }
             }
