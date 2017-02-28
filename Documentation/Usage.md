@@ -10,7 +10,7 @@ BrowserEfficiencyTest is best run from the command line, and requires an instanc
 Usage:
 
 ```
-BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]
+BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]
 ```
 
 *   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
@@ -80,8 +80,6 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
     * `networkUsage` will measure the network activity during the test pass.
 
     * `refSet` is a measure of the memory used during the test pass.
-
-*   **-warmup|-w** Runs each of the scenarios on each browser once before starting measured iterations, to populate the cache
 
 *   **-profile|-p** Enables the Chrome driver to use the passed in profile. Requires passing in the path to the Chrome profile.
 

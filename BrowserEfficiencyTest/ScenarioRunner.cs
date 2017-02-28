@@ -43,7 +43,6 @@ namespace BrowserEfficiencyTest
     {
         private ResponsivenessTimer _timer;
         private bool _useTimer;
-        private bool _doWarmup;
         private int _iterations;
         private int _maxAttempts;
         private string _browserProfilePath;
@@ -66,7 +65,6 @@ namespace BrowserEfficiencyTest
         public ScenarioRunner(Arguments args)
         {
             _e3RefreshDelaySeconds = 12;
-            _doWarmup = args.DoWarmup;
             _iterations = args.Iterations;
             _browserProfilePath = args.BrowserProfilePath;
             _usingTraceController = args.UsingTraceController;
@@ -119,64 +117,28 @@ namespace BrowserEfficiencyTest
             return measureSetInfo;
         }
 
-        /// <summary>
-        /// Runs the test passes specified by the arguments passed in when the ScenarioRunner object was instantiated.
-        /// </summary>
-        public void Run()
-        {
-            if (_doWarmup)
-            {
-                RunWarmupPass();
-            }
-
-            if (_useTimer)
-            {
-                _timer.Enable();
-            }
-
-            RunMainLoop();
-        }
-
         public List<string> GetResponsivenessResults()
         {
             return _timer.GetResults();
-        }
-
-        private void RunWarmupPass()
-        {
-            // A warmup pass is one run thru the selected scenarios and browsers.
-            // It allows the browsers to cache some content which helps reduce variability from run to run.
-            Logger.LogWriteLine("- Starting warmup pass -");
-
-            foreach (string browser in _browsers)
-            {
-                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath))
-                {
-                    foreach (var scenario in _scenarios)
-                    {
-                        Logger.LogWriteLine(string.Format("Warmup - Browser: {0}  Scenario: {1}", browser, scenario.Scenario.Name));
-                        scenario.Scenario.Run(driver, browser, _logins, _timer);
-
-                        Thread.Sleep(1 * 1000);
-                    }
-                    driver.Quit();
-                }
-            }
-            Logger.LogWriteLine("- Completed warmup pass -");
         }
 
         /// <summary>
         /// The main loop of the class. This method will run through the specified number of iterations on all the
         /// specified browsers across all the specified scenarios.
         /// </summary>
-        private void RunMainLoop()
+        public void Run()
         {
+            if (_useTimer)
+            {
+                _timer.Enable();
+            }
+
             if (_usingTraceController)
             {
                 Logger.LogWriteLine("Pausing before starting first tracing session to reduce interference.");
 
                 // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
-                // that the browser energy data reported by E3 going forward is from this test run and not from warmup or before running the test pass.
+                // that the browser energy data reported by E3 going forward is from this test run and not from before running the test pass.
                 Thread.Sleep(_e3RefreshDelaySeconds * 1000);
             }
 

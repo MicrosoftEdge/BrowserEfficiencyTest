@@ -49,7 +49,6 @@ namespace BrowserEfficiencyTest
 
         public string ScenarioName { get; private set; }
         public string BrowserProfilePath { get; private set; }
-        public bool DoWarmup { get; private set; }
         public int Iterations { get; private set; }
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
@@ -102,7 +101,6 @@ namespace BrowserEfficiencyTest
 
             ScenarioName = "";
             BrowserProfilePath = "";
-            DoWarmup = false;
             Iterations = 1;
             UsingTraceController = false;
             EtlPath = Directory.GetCurrentDirectory();
@@ -123,7 +121,7 @@ namespace BrowserEfficiencyTest
         private void ProcessArgs(string[] args)
         {
             // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]");
+            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]");
             for (int argNum = 0; argNum < args.Length; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
@@ -251,9 +249,6 @@ namespace BrowserEfficiencyTest
                             argNum++;
                         }
 
-                        break;
-                    case "-warmup":
-                        DoWarmup = true;
                         break;
                     case "-iterations":
                     case "-i":
