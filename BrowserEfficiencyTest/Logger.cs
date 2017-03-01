@@ -74,15 +74,23 @@ namespace BrowserEfficiencyTest
         /// If file logging is enabled, the log messages are also saved to the log file.
         /// </summary>
         /// <param name="logString">The log message to write to the log.</param>
-        public static void LogWriteLine(string logString)
-        {            
+        /// <param name="includeDateTimeStamp">Set to true to include the current date-time stamp.q</param>
+        public static void LogWriteLine(string logString, bool includeDateTimeStamp = true)
+        {
+            string dateTimeStamp = "";
+
             if (string.IsNullOrEmpty(logString))
             {
                 return;
             }
 
-            // prefix all log messages with the current date-time stamp
-            string logEntry = string.Format("[{0}]: {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), logString);
+            if (includeDateTimeStamp)
+            {
+                // prefix log message with the current date-time stamp
+                dateTimeStamp = string.Format("[{0}] ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+
+            string logEntry = dateTimeStamp + logString;
 
             // always output log messages to the console window.
             Console.WriteLine(logEntry);

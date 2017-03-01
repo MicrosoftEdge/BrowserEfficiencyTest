@@ -26,7 +26,6 @@
 //--------------------------------------------------------------
 
 using System.Linq;
-using System;
 
 namespace BrowserEfficiencyTest
 {
@@ -36,9 +35,9 @@ namespace BrowserEfficiencyTest
         {
             int returnValue = 0;
 
-            try
+            Arguments arguments = new Arguments(args);
+            if (arguments.ArgumentsAreValid)
             {
-                Arguments arguments = new Arguments(args);
                 ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
 
                 // Run the automation. This will write traces to the current or provided directory if the user requested it
@@ -54,15 +53,11 @@ namespace BrowserEfficiencyTest
                     PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
                     perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.GetResponsivenessResults());
                 }
-
             }
-            catch (Exception ex)
+            else
             {
                 returnValue = 1;
-                Logger.LogWriteLine("!!!---TEST BREAKING EXCEPTION caught! ---------------------------");
-                Logger.LogWriteLine("Exception: " + ex.ToString());
             }
-
             return returnValue;
         }
     }

@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace BrowserEfficiencyTest
 {
@@ -49,7 +50,6 @@ namespace BrowserEfficiencyTest
 
         public string ScenarioName { get; private set; }
         public string BrowserProfilePath { get; private set; }
-        public bool DoWarmup { get; private set; }
         public int Iterations { get; private set; }
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
@@ -58,6 +58,8 @@ namespace BrowserEfficiencyTest
         public bool DoPostProcessing { get; private set; }
         public string CredentialPath { get; private set; }
         public bool MeasureResponsiveness { get; private set; }
+        public bool ArgumentsAreValid { get; private set; }
+        public string BrowserEfficiencyTestVersion { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -102,7 +104,6 @@ namespace BrowserEfficiencyTest
 
             ScenarioName = "";
             BrowserProfilePath = "";
-            DoWarmup = false;
             Iterations = 1;
             UsingTraceController = false;
             EtlPath = Directory.GetCurrentDirectory();
@@ -111,169 +112,262 @@ namespace BrowserEfficiencyTest
             DoPostProcessing = true;
             CredentialPath = "credentials.json";
             MeasureResponsiveness = false;
+            BrowserEfficiencyTestVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             CreatePossibleScenarios();
-            ProcessWorkloads();
-            ProcessArgs(args);
+            LoadWorkloads();
+            ArgumentsAreValid = ProcessArgs(args);
         }
 
         /// <summary>
-        /// Go through the list of passed in commandline 
+        /// Go through and process the list of passed in commandline arguments.
+        /// Here we'll decide which browser, scenarios, and number of loops to run.
+        /// If any of the arguments are invalid, this method returns false.
         /// </summary>
-        private void ProcessArgs(string[] args)
+        private bool ProcessArgs(string[] args)
         {
-            // Processes the arguments. Here we'll decide which browser, scenarios, and number of loops to run
-            Console.WriteLine("Usage: BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-warmup] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np][-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]");
-            for (int argNum = 0; argNum < args.Length; argNum++)
+            bool argumentsAreValid = true;
+
+            for (int argNum = 0; (argNum < args.Length) && argumentsAreValid; argNum++)
             {
                 var arg = args[argNum].ToLowerInvariant();
                 switch (arg)
                 {
                     case "-browser":
                     case "-b":
-                        argNum++;
-
-                        if (args[argNum].ToLowerInvariant() == "all")
+                        // One or more browsers can be specified after the -b|-browser option.
+                        while (argumentsAreValid && ((argNum + 1) < args.Length) && !(args[argNum + 1].StartsWith("-")))
                         {
-                            foreach (string browser in s_SupportedBrowsers)
-                            {
-                                _browsers.Add(browser);
-                            }
+                            argNum++;
 
-                            break;
-                        }
-
-                        while (argNum < args.Length)
-                        {
-                            string browser = args[argNum].ToLowerInvariant();
-                            if (!s_SupportedBrowsers.Contains(browser))
+                            if (args[argNum].ToLowerInvariant() == "all")
                             {
-                                Logger.LogWriteLine(string.Format("Unsupported browser: {0}",browser));
-                                throw new Exception($"Unsupported browser '{browser}'");
-                            }
-
-                            _browsers.Add(browser);
-                            int nextArgNum = argNum + 1;
-                            if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
-                            {
+                                _browsers = s_SupportedBrowsers;
                                 break;
                             }
+                            else if (s_SupportedBrowsers.Contains(args[argNum].ToLowerInvariant()))
+                            {
+                                _browsers.Add(args[argNum].ToLowerInvariant());
+                            }
+                            else
+                            {
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine("Invalid or unsupported browser specified!", false);
+                            }
+                        }
 
-                            argNum++;
+                        if (_browsers.Count == 0)
+                        {
+                            // no browsers were specified.
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("No valid browsers were specified!", false);
                         }
 
                         break;
                     case "-workload":
                     case "-w":
-                        argNum++;
-                        AddScenariosInWorkload(args[argNum]);
-
-                        if (string.IsNullOrEmpty(ScenarioName))
-                        {
-                            ScenarioName = args[argNum];
-                        }
-                        else
-                        {
-                            ScenarioName = ScenarioName + "-" + args[argNum];
-                        }
-                        break;
-                    case "-scenario":
-                    case "-s":
+                        // One workload must be specified after the -w|-workload option.
+                        // If no workload is specified after the -w|-workload option then display a list of available workloads
+                        // and the scenarios in them.
                         argNum++;
 
-                        while (argNum < args.Length)
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
                         {
-                            var scenario = args[argNum].ToLowerInvariant();
+                            Workload selectedWorkload = _workloads.FirstOrDefault(wl => wl.Name.ToLowerInvariant() == args[argNum].ToLowerInvariant());
 
-                            if (!_possibleScenarios.ContainsKey(scenario))
+                            if (selectedWorkload == null)
                             {
-                                Logger.LogWriteLine(string.Format("Unsupported scenario: {0}", scenario));
-                                throw new Exception($"Unexpected scenario '{scenario}'");
-                            }
-
-                            _scenarios.Add(_possibleScenarios[scenario]);
-
-                            if (string.IsNullOrEmpty(ScenarioName))
-                            {
-                                ScenarioName = scenario;
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine(string.Format("The specified workload '{0}' was not found!", args[argNum]), false);
                             }
                             else
                             {
-                                ScenarioName = ScenarioName + "-" + scenario;
+                                bool successfullyAddedScenarios = AddScenariosInWorkload(selectedWorkload);
+                                if (!successfullyAddedScenarios)
+                                {
+                                    argumentsAreValid = false;
+                                    Logger.LogWriteLine(string.Format("Invalid scenario specified in workload '{0}'!", selectedWorkload.Name), false);
+                                }
+                                else
+                                {
+                                    // add the workload name to the ScenarioName string which is used elsewhere such as part of naming ETL files.
+                                    if (string.IsNullOrEmpty(ScenarioName))
+                                    {
+                                        ScenarioName = selectedWorkload.Name;
+                                    }
+                                    else
+                                    {
+                                        ScenarioName = ScenarioName + "-" + selectedWorkload.Name;
+                                    }
+                                }
                             }
+                        }
+                        else
+                        {
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("No valid workload was specified!", false);
+                            DisplayAvailableWorkloads();
+                        }
 
-                            int nextArgNum = argNum + 1;
-                            if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
-                            {
-                                break;
-                            }
-
+                        break;
+                    case "-scenario":
+                    case "-s":
+                        // One or more scenarios must be specified after the -s|-scenario option.
+                        // If no scenario name is passed after the -s|-scenario option or an invalid scenario is
+                        // specified, display a list of all available scenarios to the console window.
+                        while (argumentsAreValid && ((argNum + 1) < args.Length) && !(args[argNum + 1].StartsWith("-")))
+                        {
                             argNum++;
+                            string selectedScenario = args[argNum].ToLowerInvariant();
+
+                            if (_possibleScenarios.ContainsKey(selectedScenario))
+                            {
+                                _scenarios.Add(_possibleScenarios[selectedScenario]);
+
+                                // add each of the specified scenario names to the ScenarioName string which is used elsewhere such as part of naming ETL files.
+                                if (string.IsNullOrEmpty(ScenarioName))
+                                {
+                                    ScenarioName = selectedScenario;
+                                }
+                                else
+                                {
+                                    ScenarioName = ScenarioName + "-" + selectedScenario;
+                                }
+                            }
+                            else
+                            {
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine(string.Format("The specified scenario '{0}' does not exist!", selectedScenario), false);
+                            }
+                        }
+
+                        if (_scenarios.Count == 0)
+                        {
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("No valid scenario specified!", false);
+                            DisplayAvailableScenarios();
                         }
 
                         break;
                     case "-resultspath":
                     case "-rp":
+                        // A valid path must be specified after the -rp|-resultspath option.
+                        // If the path does not exist, create it.
                         argNum++;
-                        string etlPath = args[argNum];
 
-                        if (!Directory.Exists(etlPath))
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
                         {
-                            Directory.CreateDirectory(etlPath);
-                        }
+                            string etlPath = args[argNum];
 
-                        EtlPath = Path.GetFullPath(etlPath);
+                            if (!Directory.Exists(etlPath))
+                            {
+                                Directory.CreateDirectory(etlPath);
+                            }
+
+                            EtlPath = Path.GetFullPath(etlPath);
+                        }
+                        else
+                        {
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("Invalid results path!", false);
+                        }
 
                         break;
                     case "-measureset":
                     case "-ms":
-                        argNum++;
-
-                        while (argNum < args.Length)
+                        // One or more measuresets must be specified after the -ms|-measureset option.
+                        // If no measureset is specified after the -ms|-measureset option or an invalid measureset is
+                        // specified, display a list of available measuresets.
+                        while (argumentsAreValid && ((argNum + 1) < args.Length) && !(args[argNum + 1].StartsWith("-")))
                         {
-                            var measureSet = args[argNum];
-                            if (!_availableMeasureSets.ContainsKey(measureSet))
-                            {
-                                Logger.LogWriteLine(string.Format("Unsupported measureSet: {0}", measureSet));
-                                throw new Exception($"Unexpected measure set '{measureSet}'");
-                            }
-
-                            UsingTraceController = true;
-
-                            _selectedMeasureSets.Add(_availableMeasureSets[measureSet]);
-
-                            int nextArgNum = argNum + 1;
-                            if (nextArgNum < args.Length && args[argNum + 1].StartsWith("-"))
-                            {
-                                break;
-                            }
-
                             argNum++;
+                            string measureSet = args[argNum].ToLowerInvariant();
+
+                            if (_availableMeasureSets.ContainsKey(measureSet))
+                            {
+                                UsingTraceController = true;
+                                _selectedMeasureSets.Add(_availableMeasureSets[measureSet]);
+                            }
+                            else
+                            {
+                                // The specified measureset is invalid.
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine(string.Format("The specified measureset '{0}' does not exist!", measureSet), false);
+                            }
                         }
 
-                        break;
-                    case "-warmup":
-                        DoWarmup = true;
+                        if (_selectedMeasureSets.Count == 0)
+                        {
+                            // No measuresets or no valid measuresets were specified.
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("A valid measureset must be specified after the -ms|measureset option.", false);
+                            DisplayAvailableMeasureSets();
+                        }
+
                         break;
                     case "-iterations":
                     case "-i":
+                        // An integer value greater than 0 must be specified after the -i|-iterations option.
                         argNum++;
-                        Iterations = int.Parse(args[argNum]);
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                        {
+                            int iterations = 0;
+                            argumentsAreValid = int.TryParse(args[argNum], out iterations);
+                            Iterations = iterations;
+                        }
+                        else
+                        {
+                            // No iteration value was specified after the -i|-iterations option.
+                            argumentsAreValid = false;
+                        }
+
+                        if (!argumentsAreValid || Iterations < 1)
+                        {
+                            Logger.LogWriteLine("Invalid value for iterations. Must be an integer greater than 0.", false);
+                        }
+
                         break;
                     case "-attempts":
                     case "-a":
+                        // An integer value greater than 0 must be specified after the -a|-attempts option.
                         argNum++;
-                        MaxAttempts = int.Parse(args[argNum]);
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                        {
+                            int attempts = 0;
+                            argumentsAreValid = int.TryParse(args[argNum], out attempts);
+                            MaxAttempts = attempts;
+                        }
+                        else
+                        {
+                            // No attempts value was specified after the -a|-attemps option.
+                            argumentsAreValid = false;
+                        }
+
+                        if (!argumentsAreValid || MaxAttempts < 1)
+                        {
+                            Logger.LogWriteLine("Invalid value for attempts. Must be an integer greater than 0.", false);
+                        }
+
                         break;
                     case "-profile":
                     case "-p":
+                        // An existing folder path must be specified after the -p|-profile option.
                         argNum++;
-                        BrowserProfilePath = args[argNum];
-                        if (!Directory.Exists(BrowserProfilePath))
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
                         {
-                            Logger.LogWriteLine(string.Format("The profile path does not exist!  {0}", BrowserProfilePath));
-                            throw new DirectoryNotFoundException("The profile path does not exist!");
+                            BrowserProfilePath = args[argNum];
+                            if (!Directory.Exists(BrowserProfilePath))
+                            {
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine(string.Format("The profile path: {0} does not exist!", BrowserProfilePath), false);
+                            }
                         }
+                        else
+                        {
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("A valid profile path must be specified after the -p|-profile option!", false);
+                        }
+
                         break;
                     case "-notimeout":
                         OverrideTimeout = true;
@@ -284,8 +378,23 @@ namespace BrowserEfficiencyTest
                         break;
                     case "-credentialpath":
                     case "-cp":
+                        // An existing credential file must be passed after the -cp|-credentialpath option.
                         argNum++;
-                        CredentialPath = args[argNum];
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                        {
+                            CredentialPath = args[argNum];
+                            if (!File.Exists(CredentialPath))
+                            {
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine(string.Format("The credential file: {0} does not exist!", CredentialPath), false);
+                            }
+                        }
+                        else
+                        {
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("A valid credential file must be specified after the -cp|-credentialpath option!", false);
+                        }
+
                         break;
                     case "-responsiveness":
                     case "-r":
@@ -293,19 +402,105 @@ namespace BrowserEfficiencyTest
                         break;
                     case "-filelogging":
                     case "-fl":
-                        argNum++;
-                        string _logPath = Directory.GetCurrentDirectory();
-                        if ((argNum < args.Length) && (!args[argNum].StartsWith("-")))
+                        // Enable file logging. If a path is specified after the -fl|-filelogging option, then place the file log
+                        // in the specified path.
+                        string logPath = Directory.GetCurrentDirectory();
+
+                        if (((argNum + 1) < args.Length) && !(args[argNum + 1].StartsWith("-")))
                         {
-                            _logPath = args[argNum];
+                            argNum++;
+                            logPath = args[argNum];
+
+                            if (!Directory.Exists(logPath))
+                            {
+                                Directory.CreateDirectory(logPath);
+                            }
+
+                            logPath = Path.GetFullPath(logPath);
                         }
-                        Logger.SetupFileLogging(_logPath);
-                        Logger.LogWriteLine("Arguments: " + string.Join(" ", args));
+
+                        Logger.SetupFileLogging(logPath);
+                        Logger.LogWriteLine("Arguments: " + string.Join(" ", args), false);
                         break;
                     default:
-                        Logger.LogWriteLine(string.Format("Unexpected argument encountered '{0}'", args[argNum]));
-                        throw new Exception($"Unexpected argument encountered '{args[argNum]}'");
+                        argumentsAreValid = false;
+                        Logger.LogWriteLine(string.Format("Invalid argument encountered '{0}'", args[argNum]), false);
+                        DisplayUsage();
+
+                        break;
                 }
+            }
+
+            // For running the test, both a valid browser and scenario must be specified. If only one of either is set then that's an error condition.
+            if (argumentsAreValid && (_scenarios.Count == 0 ^ _browsers.Count == 0))
+            {
+                argumentsAreValid = false;
+                if (_scenarios.Count > 0)
+                {
+                    Logger.LogWriteLine(" No valid browser was specified for the specified scenario(s) or workload!", false);
+                }
+                else
+                {
+                    Logger.LogWriteLine(" No valid scenario or workload was specified for the specified browser(s)!", false);
+                }
+                Logger.LogWriteLine("Both a browser and a scenario or workload must be specified to run the test!", false);
+                Logger.LogWriteLine("If you wish to only run the performance processor then omit the browser and scenario/workload arguments and specify a measureset.", false);
+            }
+
+            Logger.LogWriteLine(string.Format("BrowserEfficiencyTest Version: {0}", BrowserEfficiencyTestVersion), false);
+
+            if (args.Length == 0)
+            {
+                // No options were specified so display the usage, available scenarios, available workloads and available measuresets.
+                DisplayUsage();
+                DisplayAvailableScenarios();
+                DisplayAvailableWorkloads();
+                DisplayAvailableMeasureSets();
+            }
+
+            return argumentsAreValid;
+        }
+
+        // Output the command line options.
+        private void DisplayUsage()
+        {
+            Logger.LogWriteLine("Usage:", false);
+            Logger.LogWriteLine("BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]", false);
+        }
+
+        // Output all the available scenarios.
+        private void DisplayAvailableScenarios()
+        {
+            Logger.LogWriteLine("Available scenarios:", false);
+            foreach (var scenario in _possibleScenarios)
+            {
+                Logger.LogWriteLine(scenario.Key, false);
+            }
+        }
+
+        // Output all the available workloads and the scenarios specified in those workloads.
+        private void DisplayAvailableWorkloads()
+        {
+            Logger.LogWriteLine("Available workloads and scenarios:", false);
+            foreach (var workload in _workloads)
+            {
+                Logger.LogWriteLine(string.Format("Workload: {0}", workload.Name), false);
+                Logger.LogWriteLine("  Scenarios:", false);
+
+                foreach (var scenario in workload.Scenarios)
+                {
+                    Logger.LogWriteLine(string.Format("    {0}", scenario.ScenarioName), false);
+                }
+            }
+        }
+
+        // Output all the available measuresets.
+        private void DisplayAvailableMeasureSets()
+        {
+            Logger.LogWriteLine("Available measuresets:", false);
+            foreach (var measureSet in _availableMeasureSets)
+            {
+                Logger.LogWriteLine(measureSet.Key.ToString(), false);
             }
         }
 
@@ -352,30 +547,40 @@ namespace BrowserEfficiencyTest
             _possibleScenarios.Add(scenario.Name.ToLowerInvariant(), new WorkloadScenario(scenario.Name.ToLowerInvariant(), "new", scenario.DefaultDuration, scenario));
         }
 
-        private void ProcessWorkloads()
+        // Load in the Workloads and their list of ScenarioWorkloads from workloads.json
+        private void LoadWorkloads()
         {
             string jsonText = File.ReadAllText("workloads.json");
             _workloads = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Workload>>(jsonText);
         }
 
-        private void AddScenariosInWorkload(string workloadName)
+        // Add the ScenarioWorkloads from the passed in workload to the list of ScenarioWorkloads to be executed
+        // returns false if an invalid scenario was found in the workload        
+        private bool AddScenariosInWorkload(Workload workload)
         {
-            foreach (Workload workload in _workloads)
+            bool allScenariosAdded = true;
+
+            foreach (var workloadScenario in workload.Scenarios)
             {
-                if (workload.Name == workloadName)
+                string currentScenarioName = workloadScenario.ScenarioName.ToLowerInvariant();
+                if (_possibleScenarios.ContainsKey(currentScenarioName))
                 {
-                    foreach (WorkloadScenario scenario in workload.Scenarios)
+                    if (!(workloadScenario.Duration > 0))
                     {
-                        int runtimeDuration = _possibleScenarios[scenario.ScenarioName].Duration;
-                        if (scenario.Duration > 0)
-                        {
-                            runtimeDuration = scenario.Duration;
-                        }
-                        _scenarios.Add(new WorkloadScenario(scenario.ScenarioName, scenario.Tab, runtimeDuration, _possibleScenarios[scenario.ScenarioName].Scenario));
+                        // The workloadScenario does not have a valid duration so use the scenario's default
+                        workloadScenario.Duration = _possibleScenarios[currentScenarioName].Duration;
                     }
-                    break;
+
+                    workloadScenario.Scenario = _possibleScenarios[currentScenarioName].Scenario;
+                    _scenarios.Add(workloadScenario);
+                }
+                else
+                {
+                    return false;
                 }
             }
+
+            return allScenariosAdded;
         }
     }
 }

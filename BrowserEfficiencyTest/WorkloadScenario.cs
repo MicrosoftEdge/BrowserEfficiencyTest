@@ -29,6 +29,11 @@ using Newtonsoft.Json;
 
 namespace BrowserEfficiencyTest
 {
+    /// <summary>
+    /// This is a wrapper class for Workloads to specify Scenarios.
+    /// This class allows a scenario to be specified in a workload and can
+    /// be read in through a JSON deserializer.
+    /// </summary>
     internal class WorkloadScenario
     {
         [JsonProperty("ScenarioName")]
@@ -40,7 +45,8 @@ namespace BrowserEfficiencyTest
         [JsonProperty("Duration")]
         public int Duration { get; set; }
 
-        public Scenario Scenario { get; private set; }
+        // Holds a reference to the actual scenario.
+        public Scenario Scenario { get; set; }
 
         public WorkloadScenario(string scenarioName, string tab, int duration, Scenario scenario)
         {
