@@ -98,7 +98,7 @@ namespace BrowserEfficiencyTest
             _possibleScenarios = new Dictionary<string, WorkloadScenario>();
             _scenarios = new List<WorkloadScenario>();
             _browsers = new List<string>();
-            _availableMeasureSets = PerfProcessor.AvailableMeasureSets.ToDictionary(k => k.Key, v => v.Value);
+            _availableMeasureSets = PerfProcessor.AvailableMeasureSets.ToDictionary(k => k.Key.ToLowerInvariant(), v => v.Value);
             _selectedMeasureSets = new List<MeasureSet>();
             _workloads = new List<Workload>();
 
