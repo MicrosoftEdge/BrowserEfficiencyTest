@@ -543,6 +543,7 @@ namespace BrowserEfficiencyTest
             AddScenario(new GooglePrimeFactorization());
             AddScenario(new YoutubeTrigonometry());
             AddScenario(new IxlEighthGradeScience());
+            AddScenario(new ScholasticHarryPotter());
         }
 
         private void AddScenario(Scenario scenario)

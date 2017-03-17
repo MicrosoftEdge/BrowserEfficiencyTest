@@ -30,50 +30,32 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class IxlEighthGradeScience : Scenario
+    internal class ScholasticHarryPotter : Scenario
     {
-        public IxlEighthGradeScience()
+        public ScholasticHarryPotter()
         {
-            Name = "IxlEighthGradeScience";
+            Name = "ScholasticHarryPotter";
             DefaultDuration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            driver.Navigate().GoToUrl("http://www.ixl.com");
+            driver.Navigate().GoToUrl("http://www.scholastic.com");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
-            driver.ScrollPage(2);
+            // The drop down nav does not play well with webdriver, so navigate to Harry Potter directly
+            driver.Navigate().GoToUrl("http://harrypotter.scholastic.com/?esp=CORPHP/ib/////NAV/Kids/QLinks/STACKSHarryPotter////");
+            driver.WaitForPageLoad();
+            driver.Wait(10);
 
-            // Go to 8th grade science
-            driver.ClickElement(driver.FindElementByClassName("itr9").FindElement(By.ClassName("science")).FindElement(By.ClassName("lk-skills")));
-
+            // Go to the first book
+            driver.ClickElement(driver.FindElementById("home_nonflash").FindElement(By.XPath("//*[@href='/sorcerers_stone/']")));
+            driver.WaitForPageLoad();
             driver.Wait(5);
 
-            // Go to test on density, mass, and volume
-            driver.ClickElement(driver.FindElementByXPath("//*[@href='/science/grade-8/calculate-density-mass-and-volume']"));
-
-            driver.Wait(3);
-
-            // Start the test
-            driver.ClickElement(driver.FindElementByClassName("yui3-challenge-content").FindElement(By.XPath("//*[contains(text(), 'Start')]")));
-
-            driver.Wait(3);
-
-            // Try three questions
-            for (int i = 0; i < 3; i++)
-            {
-                // Supply an incorrect answer (unless we get really lucky and 1234 is correct)
-                driver.TypeIntoField(driver.FindElementByClassName("fillIn"), "1234" + Keys.Enter);
-
-                driver.Wait(3);
-                driver.ScrollPage(2);
-
-                // After looking at explanation, click "got it"
-                driver.ClickElement(driver.FindElementByClassName("got-it-bottom"));
-                driver.Wait(3);
-            }
+            // Then scroll down
+            driver.ScrollPage(2);
         }
     }
 }
