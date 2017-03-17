@@ -85,11 +85,10 @@ namespace BrowserEfficiencyTest
             driver.Wait(1);
 
             // Start measuring how long it takes the when we hit enter after entering the password
-            timer.StartMeasureOnEnterKeyPressed("Inbox visible");
             driver.Wait(1);
-            driver.Keyboard.SendKeys(Keys.Enter);
-            driver.Wait(1);
+            timer.StartMeasureNow("Inbox visible");
             timer.ExtractMeasures();
+            driver.Keyboard.SendKeys(Keys.Enter);
 
             driver.Wait(7);
             timer.EndMeasureOnDomContentLoaded("Inbox visible");

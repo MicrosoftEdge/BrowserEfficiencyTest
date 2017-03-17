@@ -49,8 +49,10 @@ namespace BrowserEfficiencyTest
             driver.Wait(10);
 
             // Scroll through the infinite list
+            timer.StartMeasuringFPS("ESPN scrolling");
             driver.ScrollPage(20);
-
+            timer.StopMeasuringFPS("ESPN scrolling");
+            timer.ExtractMeasures();
             timer.ExtractPageLoadTime("ESPN homepage");
         }
     }

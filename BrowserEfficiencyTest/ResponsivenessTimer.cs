@@ -322,6 +322,40 @@ namespace BrowserEfficiencyTest
             }
         }
 
+        public void StartMeasuringFPS(string key)
+        {
+            IJavaScriptExecutor javascriptEngine = _driver as IJavaScriptExecutor;
+            javascriptEngine.ExecuteScript(_startIndicatorCodeToExecute + @"
+            if (!document.responsivenessResults) {
+                document.responsivenessResults = {};
+            }
+            document.responsivenessResults[""" + key + @"""] = {};
+            document.responsivenessResults[""" + key + @"""][""raw""] = [];
+            document.responsivenessResults[""" + key + @"""][""recording""] = true;
+            function recordFrame() {
+                document.responsivenessResults[""" + key + @"""][""raw""].push((new Date()).getTime());
+                if (document.responsivenessResults[""" + key + @"""][""recording""]) {
+                    requestAnimationFrame(recordFrame);
+                }
+            }
+            requestAnimationFrame(recordFrame);
+            ");
+        }
+
+        public void StopMeasuringFPS(string key)
+        {
+            IJavaScriptExecutor javascriptEngine = _driver as IJavaScriptExecutor;
+            javascriptEngine.ExecuteScript(_endIndicatorCodeToExecute + @"
+            document.responsivenessResults[""" + key + @"""][""recording""] = false;
+            var raw = document.responsivenessResults[""" + key + @"""][""raw""];
+            var sum = 0;
+            for (var i = 1; i < raw.length; i++) {
+                sum += (raw[i] - raw[i - 1]);
+            }
+            document.responsivenessResults[""" + key + @"""][""fps""] = 1000 / (sum / raw.length);
+            ");
+        }
+
         public void ExtractMeasures()
         {
             IJavaScriptExecutor javascriptEngine = _driver as IJavaScriptExecutor;
@@ -347,6 +381,10 @@ namespace BrowserEfficiencyTest
                     if (kvPairContents.ContainsKey("end"))
                     {
                         AddPartialEntryTimestamp(kvPair.Key, "end", (long)kvPairContents["end"]);
+                    }
+                    if (kvPairContents.ContainsKey("fps"))
+                    {
+                        AddPartialEntryTimestamp(kvPair.Key, "fps", (long) Math.Round((double)kvPairContents["fps"]));
                     }
                 }
             }
@@ -380,6 +418,10 @@ namespace BrowserEfficiencyTest
                     long result = measurement.Value["end"] - measurement.Value["start"];
                     MakeRecord(measurement.Key, result.ToString());
                     completedResults.Add(measurement.Key);
+                }
+                else if (measurement.Value.ContainsKey("fps"))
+                {
+                    MakeRecord("FPS: " + measurement.Key, measurement.Value["fps"].ToString());
                 }
             }
 
