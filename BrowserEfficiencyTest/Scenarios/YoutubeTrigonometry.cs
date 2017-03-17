@@ -35,23 +35,25 @@ namespace BrowserEfficiencyTest
         public YoutubeTrigonometry()
         {
             Name = "YoutubeTrigonometry";
-            // Default time
+            DefaultDuration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
+            // Go to Youtube
             driver.Navigate().GoToUrl("http://www.youtube.com");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Search for Trigonometry
             driver.TypeIntoField(driver.FindElementById("masthead-search-term"), "trigonometry" + Keys.Enter);
+            driver.Wait(5);
 
-            driver.Wait(3);
-
+            // Click on the video result
             driver.ClickElement(driver.FindElementByXPath("//*[@href='/watch?v=F21S9Wpi0y8']"));
 
+            // Watch for 30s, then pause
             driver.Wait(30);
-
             driver.ClickElement(driver.FindElementsByClassName("ytp-play-button")[0]);
         }
     }

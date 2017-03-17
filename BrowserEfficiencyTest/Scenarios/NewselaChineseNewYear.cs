@@ -40,22 +40,27 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
+            // Go to Newsela
             driver.Navigate().GoToUrl("http://www.newsela.com");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Navigate to the library
             driver.ClickElement(driver.FindElement(By.XPath("//*[@href='/articles/#/rule/latest-library']")));
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Search for "Chinese New Year"
             driver.TypeIntoField(driver.FindElementById("inset-search").FindElement(By.TagName("input")), "chinese new year" + Keys.Enter);
             driver.WaitForPageLoad();
             driver.Wait(2);
 
+            // Go to the article
             driver.ClickElement(driver.FindElementByXPath("//*[@href='/articles/lib-history-chinese-new-year/id/25129/']"));
             driver.WaitForPageLoad();
             driver.Wait(2);
 
+            // Sadly, we can't scroll far since we're not logged in
             driver.ScrollPage(1);
         }
     }

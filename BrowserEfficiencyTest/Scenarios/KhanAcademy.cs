@@ -40,24 +40,26 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
+            // Go to Khan Academy
             driver.Navigate().GoToUrl("http://www.khanacademy.org");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
             driver.ScrollPage(1);
 
+            // Go to 8th grade math
             driver.Navigate().GoToUrl("https://www.khanacademy.org/math/cc-eighth-grade-math");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Click on the section on repeating decimals
             driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Repeating decimals')]")));
-
             driver.Wait(5);
 
             // Get the element with the text "Converting a fraction...", but click on its grandparent, because the grandparent
             // is the anchor
             driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Converting a fraction to a repeating decimal')]"))
-                .FindElement(By.XPath(".."))
+                .FindElement(By.XPath(".."))    // ...These two lines each go up to the parent element
                 .FindElement(By.XPath("..")));
 
             // Watch the movie for 30s, then go back.

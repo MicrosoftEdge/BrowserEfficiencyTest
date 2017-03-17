@@ -40,26 +40,31 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
+            // Go to History.com
             driver.Navigate().GoToUrl("http://www.history.com/topics");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Go to Topics
             driver.ClickElement(driver.FindElementByClassName("global-header")
                 .FindElement(By.XPath("//*[@href='/topics']")));
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Scroll to the bottom of the page
             driver.ScrollPage(6);
 
+            // Click on WWII to expand its sections
             driver.ClickElement(driver.FindElementById("topicsAccordion")
                 .FindElement(By.XPath("//*[contains(text(), 'World War II')]")));
-
             driver.Wait(3);
 
+            // Go to the article on American Women in WWII
             driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'American Women in World War II')]")));
             driver.WaitForPageLoad();
             driver.Wait(3);
 
+            // And scroll through it
             driver.ScrollPage(3);
         }
     }

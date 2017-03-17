@@ -46,11 +46,12 @@ namespace BrowserEfficiencyTest
 
             // Search for "prime factorization" and hit enter
             driver.TypeIntoField(driver.FindElementByXPath("//*[@title='Search']"), "prime factorization" + Keys.Enter);
+            driver.Wait(5);
 
-            driver.Wait(2);
-
+            // Click on the Prime Factorization box that comes up
             driver.ClickElement(driver.FindElementByXPath("//*[contains(text(), 'Prime Factorization - Math is Fun')]"));
 
+            // Read through it
             for (int i = 0; i < 3; i++)
             {
                 driver.Wait(2);

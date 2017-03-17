@@ -35,25 +35,28 @@ namespace BrowserEfficiencyTest
         public ColoradoStatesOfMatter()
         {
             Name = "ColoradoStatesOfMatter";
+            DefaultDuration = 60;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
+            // Go to Colorado.edu
             driver.Navigate().GoToUrl("http://phet.colorado.edu");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Click on the big button
             driver.ClickElement(driver.FindElementByClassName("play-with-sims-button"));
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Go to the States of Matter sim
             driver.ClickElement(driver.FindElementByXPath("//*[@href='/en/simulation/states-of-matter']"));
             driver.WaitForPageLoad();
             driver.Wait(5);
 
+            // Hit the play button
             driver.ClickElement(driver.FindElementByXPath("//*[@href='/sims/html/states-of-matter/latest/states-of-matter_en.html']"));
-            driver.WaitForPageLoad();
-            driver.Wait(5);
         }
     }
 }

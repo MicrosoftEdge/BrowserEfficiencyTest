@@ -40,11 +40,12 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
+            // Go to Scholastic
             driver.Navigate().GoToUrl("http://www.scholastic.com");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
-            // The drop down nav does not play well with webdriver, so navigate to Harry Potter directly
+            // The dropdown nav does not play well with webdriver, so navigate to Harry Potter directly
             driver.Navigate().GoToUrl("http://harrypotter.scholastic.com/?esp=CORPHP/ib/////NAV/Kids/QLinks/STACKSHarryPotter////");
             driver.WaitForPageLoad();
             driver.Wait(10);
