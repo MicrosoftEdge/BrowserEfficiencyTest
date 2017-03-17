@@ -544,6 +544,10 @@ namespace BrowserEfficiencyTest
             AddScenario(new YoutubeTrigonometry());
             AddScenario(new IxlEighthGradeScience());
             AddScenario(new ScholasticHarryPotter());
+            AddScenario(new KhanAcademy());
+            AddScenario(new HistoryWWI());
+            AddScenario(new NewselaChineseNewYear());
+            AddScenario(new ColoradoStatesOfMatter());
         }
 
         private void AddScenario(Scenario scenario)

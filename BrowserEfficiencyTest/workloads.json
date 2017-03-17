@@ -118,7 +118,7 @@
   {
     "Name": "education",
     "Scenarios": [
-      /*{
+      {
         "ScenarioName": "GooglePrimeFactorization",
         "Tab": "new"
       },
@@ -129,9 +129,25 @@
       {
         "ScenarioName": "IxlEighthGradeScience",
         "Tab": "new"
-      },*/
+      },
       {
         "ScenarioName": "ScholasticHarryPotter",
+        "Tab": "same"
+      },
+      {
+        "ScenarioName": "KhanAcademy",
+        "Tab": "same"
+      },
+      {
+        "ScenarioName": "HistoryWWI",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "NewselaChineseNewYear",
+        "Tab": "same"
+      },
+      {
+        "ScenarioName": "ColoradoStatesOfMatter",
         "Tab": "same"
       }
     ]
