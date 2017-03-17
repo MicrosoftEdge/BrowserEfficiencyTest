@@ -101,7 +101,7 @@
     ]
   },
 
-    {
+  {
     "Name": "simple",
     "Scenarios": [
       {
@@ -110,6 +110,24 @@
       },
       {
         "ScenarioName": "GoogleSearch",
+        "Tab": "new"
+      }
+    ]
+  },
+
+  {
+    "Name": "education",
+    "Scenarios": [
+      /*{
+        "ScenarioName": "GooglePrimeFactorization",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "YoutubeTrigonometry",
+        "Tab": "new"
+      },*/
+      {
+        "ScenarioName": "IxlEighthGradeScience",
         "Tab": "new"
       }
     ]

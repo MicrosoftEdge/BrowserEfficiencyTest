@@ -540,6 +540,9 @@ namespace BrowserEfficiencyTest
             AddScenario(new TumblrTrending());
             AddScenario(new InstagramNYPL());
             AddScenario(new PinterestExplore());
+            AddScenario(new GooglePrimeFactorization());
+            AddScenario(new YoutubeTrigonometry());
+            AddScenario(new IxlEighthGradeScience());
         }
 
         private void AddScenario(Scenario scenario)
