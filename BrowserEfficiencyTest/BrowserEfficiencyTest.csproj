@@ -70,13 +70,14 @@
     <Compile Include="ResponsivenessTimer.cs" />
     <Compile Include="Scenarios\AboutBlank.cs" />
     <Compile Include="Scenarios\AzureDashboard.cs" />
+    <Compile Include="Scenarios\BrainPopAvalanches.cs" />
     <Compile Include="Scenarios\ColoradoStatesOfMatter.cs" />
     <Compile Include="Scenarios\EspnHomepage.cs" />
     <Compile Include="Scenarios\FastScenario.cs" />
     <Compile Include="Scenarios\CnnOneStory.cs" />
     <Compile Include="Scenarios\BbcNews.cs" />
     <Compile Include="Scenarios\GooglePrimeFactorization.cs" />
-    <Compile Include="Scenarios\HistoryWWI.cs" />
+    <Compile Include="Scenarios\HistoryWWII.cs" />
     <Compile Include="Scenarios\InstagramNYPL.cs" />
     <Compile Include="Scenarios\IxlEighthGradeScience.cs" />
     <Compile Include="Scenarios\LinkedInSatya.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="Scenarios\PinterestExplore.cs" />
     <Compile Include="Scenarios\PowerBiBrowse.cs" />
     <Compile Include="Scenarios\ScholasticHarryPotter.cs" />
-    <Compile Include="Scenarios\KhanAcademy.cs" />
+    <Compile Include="Scenarios\KhanAcademyGrade8Math.cs" />
     <Compile Include="Scenarios\TumblrTrending.cs" />
     <Compile Include="Scenarios\TwitterPublic.cs" />
     <Compile Include="Scenarios\YahooNews.cs" />

@@ -30,40 +30,37 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class KhanAcademy : Scenario
+    internal class HistoryWWII : Scenario
     {
-        public KhanAcademy()
+        public HistoryWWII()
         {
-            Name = "KhanAcademy";
-            DefaultDuration = 90;
+            Name = "HistoryWWII";
+            DefaultDuration = 120;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            // Go to Khan Academy
-            driver.Navigate().GoToUrl("http://www.khanacademy.org");
+            // Go to History.com topics
+            driver.Navigate().GoToUrl("http://www.history.com/topics");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
-            driver.ScrollPage(1);
+            // Scroll to the bottom of the page
+            driver.ScrollPage(6);
 
-            // Go to 8th grade math
-            driver.Navigate().GoToUrl("https://www.khanacademy.org/math/cc-eighth-grade-math");
+            // Click on WWII to expand its sections
+            driver.ClickElement(driver.FindElementById("topicsAccordion")
+                .FindElement(By.XPath("//*[@href='#category_22']")));
+            driver.Wait(3);
+
+            // Go to the article on American Women in WWII
+            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'American Women in World War II')]")));
             driver.WaitForPageLoad();
+            driver.Wait(20);
+
+            // And scroll through it
+            driver.ScrollPage(3);
             driver.Wait(5);
-
-            // Click on the section on repeating decimals
-            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Repeating decimals')]")));
-            driver.Wait(5);
-
-            // Get the element with the text "Converting a fraction...", but click on its grandparent, because the grandparent
-            // is the anchor
-            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Converting a fraction to a repeating decimal')]"))
-                .FindElement(By.XPath(".."))    // ...These two lines each go up to the parent element
-                .FindElement(By.XPath("..")));
-
-            // Watch the movie for 30s, then go back.
-            driver.Wait(30);
             driver.Navigate().Back();
         }
     }

@@ -30,42 +30,41 @@ using OpenQA.Selenium;
 
 namespace BrowserEfficiencyTest
 {
-    internal class HistoryWWI : Scenario
+    internal class KhanAcademyGrade8Math : Scenario
     {
-        public HistoryWWI()
+        public KhanAcademyGrade8Math()
         {
-            Name = "HistoryWWI";
+            Name = "KhanAcademyGrade8Math";
             DefaultDuration = 90;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            // Go to History.com
-            driver.Navigate().GoToUrl("http://www.history.com/topics");
+            // Go to Khan Academy
+            driver.Navigate().GoToUrl("http://www.khanacademy.org");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
-            // Go to Topics
-            driver.ClickElement(driver.FindElementByClassName("global-header")
-                .FindElement(By.XPath("//*[@href='/topics']")));
+            driver.ScrollPage(1);
+
+            // Go to 8th grade math
+            driver.Navigate().GoToUrl("https://www.khanacademy.org/math/cc-eighth-grade-math");
             driver.WaitForPageLoad();
             driver.Wait(5);
 
-            // Scroll to the bottom of the page
-            driver.ScrollPage(6);
+            // Click on the section on repeating decimals
+            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Repeating decimals')]")));
+            driver.Wait(5);
 
-            // Click on WWII to expand its sections
-            driver.ClickElement(driver.FindElementById("topicsAccordion")
-                .FindElement(By.XPath("//*[contains(text(), 'World War II')]")));
-            driver.Wait(3);
+            // Get the element with the text "Converting a fraction...", but click on its grandparent, because the grandparent
+            // is the anchor
+            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Converting a fraction to a repeating decimal')]"))
+                .FindElement(By.XPath(".."))    // ...These two lines each go up to the parent element
+                .FindElement(By.XPath("..")));
 
-            // Go to the article on American Women in WWII
-            driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'American Women in World War II')]")));
-            driver.WaitForPageLoad();
-            driver.Wait(3);
-
-            // And scroll through it
-            driver.ScrollPage(3);
+            // Watch the movie for 30s, then go back.
+            driver.Wait(30);
+            driver.Navigate().Back();
         }
     }
 }
