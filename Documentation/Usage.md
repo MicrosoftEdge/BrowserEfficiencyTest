@@ -32,25 +32,33 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
     *   `AzureDashboard` will load an Azure dashboard for the provided credentials and navigate through several blades. It requires Azure credentials to be provided in `credentials.json`
     *   `BbcNews` will load BBC, click on the top story, and scroll down
         *   Responsiveness measures: Homepage load time, article load time
+    *   `BrainPopAvalanches` will navigate through Brainpop to the page on avalanches.
     *   `CnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
     *   `CnnTopStory` will load CNN, load the top story, and scroll down
+    *   `ColoradoStatesOfMatter` will navigate to and load a simulation on the states of matter.
     *   `EspnHomepage` will load ESPN and scroll through the infinite list on the homepage
         *   Responsiveness measures: ESPN homepage load time
     *   `FacebookNewsfeedScroll` will log into facebook with the provided credentials, and scroll through the news feed. Requires facebook credentials to be provided in the `credentials.json` file
     *   `FastScenario` will load google and quickly exit. This is designed to be fast, and is for testing BrowserEfficiencyTest
     *   `GmailGoThroughEmails` will load Gmail, and scroll through 5 emails in the inbox. Requires gmail credentials to be provided in the `credentials.json` file
+    *   `GooglePrimeFactorization` will load Google, search for "prime factorization", and then read an article on how to do prime factorization.
     *   `GoogleSearch` will navigate to google.com and then search for "Seattle". It sees the results of the search, but doesn't navigate to any of them
+    *   `HistoryWWII` will go to topics on History.com, then browse to "American Women in World War II" and watch the video / read the article.
     *   `InstagramNYPL` will load up the public feed for the NY public library, scroll down, click on "Load more", then scroll through the infinite list
         *   Responsiveness measures: Page load time
+    *   `IxlEighthGradeScience` will go to Ixl.com, navigate to 8th grade science, and attempt to answer questions in a quiz.
+    *   `KhanAcademyGrade8Math` will go to Khan academy, and then watch a video about repeating decimals
     *   `LinkedInSatya` will load the LinkedIn profile for Satya Nadella
     *   `Msn` will navigate to MSN
     *   `Msnbc` will navigate to MSNBC
+    *   `NewselaChineseNewYear` will go to Newsela, then search for the article on Chinese New Year.
     *   `OfficeLauncher` will navigate to Office.com and then log in. It requires credentials to be provided in `credentials.json`
     *   `OfficePowerpoint` will navigate to the office log in page, log in, open PowerPoint in a new tab, open the most recent book, then go to edit mode. It requires credentials to be provided in `credentials.json`
     *   `OutlookEmail` will navigate to outlook.com, log in, and scroll through 5 emails. It will then send a new email to another account. Requires outlook credentials to be provided in the `credentials.json` file
     *   `OutlookOffice` will navigate to the office log in page, log in, open Word in a new tab, open the most recent document, then go to edit mode. It requires credentials to be provided in `credentials.json`
     *   `PinterestExplore` will navigate to pinterest, log in, and scroll through pins. It requires credentials to be provided in `credentials.json`
     *   `PowerBiBrowse` will navigate to PowerBI, log in, click through two graphs and go back to the dashboard. It requires credentials to be provided in `credentials.json`
+    *   `ScholasticHarryPotter` will browse through the Harry Potter section of the Scholastic.com site.
     *   `TechRadarSurfacePro4Review` will navigate to techradar.com's review of the Surface Pro 4 and scroll through the page
     *   `TumblrTrending` will navigate to tumblr.com, click on "staff picks", then click on "trending", before scrolling through the trending posts
     *   `TwitterPublic` will navigate to twitter and scroll through the featured posts on the homepage
@@ -59,6 +67,7 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
     *   `YahooNews` will navigate to Yahoo.com, go to news, and navigate to a story (the story is injected by Javascript so it will always navigate to the same one). It will then scroll through it before going back to the listing of all news.
         *   Responsivenss measures: Homepage load time, article page load time
     *   `YelpSeattleDinner` will navigate to Yelp, search for a restaurant, and click into it
+    *   `YoutubeTrigonometry` will go to Youtube, search for "trigonometry", and then watch a video about it.
     *   `YoutubeWatchVideo` will play the video "Microsoft Design: Connecting Makers" on Youtube
     *   `ZillowSearch` will load a map of places for sale, expand the map view, then load the top listing
 

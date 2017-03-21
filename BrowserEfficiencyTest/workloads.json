@@ -101,7 +101,7 @@
     ]
   },
 
-    {
+  {
     "Name": "simple",
     "Scenarios": [
       {
@@ -111,6 +111,52 @@
       {
         "ScenarioName": "GoogleSearch",
         "Tab": "new"
+      }
+    ]
+  },
+
+  {
+    "Name": "education",
+    "Scenarios": [
+      {
+        "ScenarioName": "GooglePrimeFactorization",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "YoutubeTrigonometry",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "GmailGoThroughEmails",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "IxlEighthGradeScience",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "ScholasticHarryPotter",
+        "Tab": "same"
+      },
+      {
+        "ScenarioName": "KhanAcademyGrade8Math",
+        "Tab": "same"
+      },
+      {
+        "ScenarioName": "HistoryWWII",
+        "Tab": "new"
+      },
+      {
+        "ScenarioName": "NewselaChineseNewYear",
+        "Tab": "same"
+      },
+      {
+        "ScenarioName": "ColoradoStatesOfMatter",
+        "Tab": "same"
+      },
+      {
+        "ScenarioName": "BrainPopAvalanches",
+        "Tab":  "same"
       }
     ]
   }

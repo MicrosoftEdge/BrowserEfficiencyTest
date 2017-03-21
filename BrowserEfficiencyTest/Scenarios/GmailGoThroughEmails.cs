@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         public GmailGoThroughEmails()
         {
             Name = "GmailGoThroughEmails";
-            DefaultDuration = 80;
+            DefaultDuration = 90;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
@@ -86,7 +86,7 @@ namespace BrowserEfficiencyTest
             driver.Keyboard.SendKeys(Keys.Enter);
 
             // give the page some time to load
-            driver.Wait(7);
+            driver.Wait(14);
 
             // Check the url to make sure login was successful
             if(driver.Url != @"https://mail.google.com/mail/u/0/#inbox" && driver.Url != @"https://mail.google.com/mail/#inbox")

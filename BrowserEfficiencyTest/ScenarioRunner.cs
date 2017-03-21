@@ -252,7 +252,7 @@ namespace BrowserEfficiencyTest
                                         Logger.LogWriteLine(string.Format("    Browser:     {0}", browser));
                                         Logger.LogWriteLine(string.Format("    Attempt:     {0}", attemptNumber));
                                         Logger.LogWriteLine(string.Format("    Scenario:    {0}", currentScenario));
-                                        Logger.LogWriteLine(string.Format("    Exception:   " + ex.ToString()));
+                                        Logger.LogWriteLine("    Exception:   " + ex.ToString());
 
                                         if (_usingTraceController)
                                         {

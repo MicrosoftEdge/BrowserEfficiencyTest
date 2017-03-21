@@ -25,37 +25,38 @@
 //
 //--------------------------------------------------------------
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("PerfProcessor")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PerfProcessor")]
-[assembly: AssemblyCopyright("Copyright \u00A9 2017")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+namespace BrowserEfficiencyTest
+{
+    internal class ScholasticHarryPotter : Scenario
+    {
+        public ScholasticHarryPotter()
+        {
+            Name = "ScholasticHarryPotter";
+            DefaultDuration = 60;
+        }
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
+        public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
+        {
+            // Go to Scholastic
+            driver.Navigate().GoToUrl("http://www.scholastic.com");
+            driver.WaitForPageLoad();
+            driver.Wait(5);
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8f9d79cd-9e21-464f-80d6-4b502aa51845")]
+            // The dropdown nav does not play well with webdriver, so navigate to Harry Potter directly
+            driver.Navigate().GoToUrl("http://harrypotter.scholastic.com/?esp=CORPHP/ib/////NAV/Kids/QLinks/STACKSHarryPotter////");
+            driver.WaitForPageLoad();
+            driver.Wait(10);
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("8.1")]
+            // Go to the first book
+            driver.ClickElement(driver.FindElementById("home_nonflash").FindElement(By.XPath("//*[@href='/sorcerers_stone/']")));
+            driver.WaitForPageLoad();
+            driver.Wait(5);
+
+            // Then scroll down
+            driver.ScrollPage(2);
+        }
+    }
+}
