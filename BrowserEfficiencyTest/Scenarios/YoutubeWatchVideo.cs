@@ -48,17 +48,6 @@ namespace BrowserEfficiencyTest
                 driver.WaitForPageLoad();
                 Thread.Sleep(2000);
             }
-
-            string movieId = "movie_player";
-            var player = driver.FindElementById(movieId);
-
-            // Play if it's paused
-            if (player.GetAttribute("class").Contains("paused-mode"))
-            {
-                player.Click();
-            }
-
-            Thread.Sleep(2000);
         }
     }
 }
