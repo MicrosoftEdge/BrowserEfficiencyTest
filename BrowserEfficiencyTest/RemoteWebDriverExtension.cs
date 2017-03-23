@@ -50,11 +50,22 @@ namespace BrowserEfficiencyTest
         /// </summary>
         public static void CreateNewTab(this RemoteWebDriver remoteWebDriver)
         {
+            int originalTabCount = remoteWebDriver.WindowHandles.Count;
+            int endingTabCount = 0;
+
             // Use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
             // You actually have to in Opera too, but that's provided in a flag below
             remoteWebDriver.ExecuteScript("window.open();");
             // Go to that tab
             remoteWebDriver.SwitchTo().Window(remoteWebDriver.WindowHandles[remoteWebDriver.WindowHandles.Count - 1]);
+
+            endingTabCount = remoteWebDriver.WindowHandles.Count;
+
+            // sanity check to make sure we in fact did get a new tab opened.
+            if (endingTabCount != (originalTabCount + 1))
+            {
+                throw new Exception("New tab was not created as expected!");
+            }
 
             // Give the browser more than enough time to open the tab and get to it so the next commands from the
             // scenario don't get lost
