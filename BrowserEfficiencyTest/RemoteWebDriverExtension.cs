@@ -102,8 +102,38 @@ namespace BrowserEfficiencyTest
             // Use the page down key.
             for (int i = 0; i < timesToScroll; i++)
             {
-                remoteWebDriver.Keyboard.SendKeys(Keys.PageDown);
+                if (remoteWebDriver.ToString().ToLower().Contains("firefoxdriver"))
+                {
+                    // Send the commands to the body element for Firefox.
+                    IWebElement body = remoteWebDriver.FindElementByTagName("body");
+                    body.SendKeys(Keys.PageDown);
+                }
+                else
+                {
+                    remoteWebDriver.Keyboard.SendKeys(Keys.PageDown);
+                }
+
                 Thread.Sleep(1000);
+            }
+        }
+
+        /// <summary>
+        /// Sends keystrokes to the browser. Not to a specific element.
+        /// Wrapper for driver.Keyboard.SendKeys(...)
+        /// </summary>
+        /// <param name="keys">Keystrokes to send to the browser.</param>
+        public static void SendKeys(this RemoteWebDriver remoteWebDriver, string keys)
+        {
+            // Firefox driver does not currently support sending keystrokes to the browser.
+            // So instead, get the body element and send the keystrokes to that element.
+            if (remoteWebDriver.ToString().ToLower().Contains("firefoxdriver"))
+            {
+                IWebElement body = remoteWebDriver.FindElementByTagName("body");
+                body.SendKeys(keys);
+            }
+            else
+            {
+                remoteWebDriver.Keyboard.SendKeys(keys);
             }
         }
 

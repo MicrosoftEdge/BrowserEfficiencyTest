@@ -47,12 +47,6 @@ namespace BrowserEfficiencyTest
             driver.WaitForPageLoad();
             driver.Wait(5);
 
-            if (browser == "firefox")
-            {
-                // With Firefox, we had to get focus onto the page, or else PgDn scrolled through the address bar
-                driver.FindElementById("firstHeading").SendKeys(string.Empty);
-            }
-
             // Scroll a bit
             driver.ScrollPage(12);
 

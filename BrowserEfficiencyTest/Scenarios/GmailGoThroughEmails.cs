@@ -63,27 +63,17 @@ namespace BrowserEfficiencyTest
             try
             {
                 // Enter username
-                driver.TypeIntoField(driver.FindElementById("Email"), credentials.Username);
-                driver.Wait(1);
-
-                // Tab down and hit next button
-                driver.Keyboard.SendKeys(Keys.Tab);
-                driver.Keyboard.SendKeys(Keys.Enter);
-
+                driver.TypeIntoField(driver.FindElementById("Email"), credentials.Username + Keys.Enter);
                 driver.Wait(1);
             }
-            catch (ElementNotVisibleException)
+            catch (ElementNotVisibleException) { }
+            catch (InvalidOperationException)
             {
                 // If using profiles, the Email element will not be found and user will be able to enter the password
             }
 
             // Enter password
-            driver.TypeIntoField(driver.FindElementById("Passwd"), credentials.Password);
-
-            // Tab down and hit submit button
-            driver.Keyboard.SendKeys(Keys.Tab);
-            driver.Wait(1);
-            driver.Keyboard.SendKeys(Keys.Enter);
+            driver.TypeIntoField(driver.FindElementById("Passwd"), credentials.Password + Keys.Enter);
 
             // give the page some time to load
             driver.Wait(14);
@@ -93,7 +83,6 @@ namespace BrowserEfficiencyTest
             {
                 throw new Exception("Login to Gmail failed!");
             }
-
         }
 
         private void BrowseEmails(RemoteWebDriver driver, int numOfEmailsToBrowse)
@@ -103,15 +92,15 @@ namespace BrowserEfficiencyTest
             {
                 // Simply using the shortcut keys worked pretty well.
                 // Note that they have to be enabled in the account you're using (gmail settings)
-                driver.Keyboard.SendKeys("o");
+                driver.SendKeys("o");
                 driver.Wait(4);
 
                 // Go back to inbox
-                driver.Keyboard.SendKeys("u");
+                driver.SendKeys("u");
                 driver.Wait(2);
                 
                 // Select next email with the "cursor". Do this with the j key in gmail
-                driver.Keyboard.SendKeys("j");
+                driver.SendKeys("j");
                 driver.Wait(2);
             }
         }
