@@ -46,26 +46,15 @@ namespace BrowserEfficiencyTest
     public static class RemoteWebDriverExtension
     {
         /// <summary>
-        /// Creates a new tab in the browser specified by the browser parameter.
+        /// Creates a new tab in the browser.
         /// </summary>
-        /// <param name="browser">Name of the browser to create the new tab in.</param>
-        public static void CreateNewTab(this RemoteWebDriver remoteWebDriver, string browser)
+        public static void CreateNewTab(this RemoteWebDriver remoteWebDriver)
         {
-            // Sadly, we had to special case this a bit by browser because no mechanism behaved correctly for everyone
-            if (browser == "firefox")
-            {
-                // Use ctrl+t for Firefox. Send them to the body or else there can be focus problems.
-                IWebElement body = remoteWebDriver.FindElementByTagName("body");
-                body.SendKeys(Keys.Control + 't');
-            }
-            else
-            {
-                // For other browsers, use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
-                // You actually have to in Opera too, but that's provided in a flag below
-                remoteWebDriver.ExecuteScript("window.open();");
-                // Go to that tab
-                remoteWebDriver.SwitchTo().Window(remoteWebDriver.WindowHandles[remoteWebDriver.WindowHandles.Count - 1]);
-            }
+            // Use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
+            // You actually have to in Opera too, but that's provided in a flag below
+            remoteWebDriver.ExecuteScript("window.open();");
+            // Go to that tab
+            remoteWebDriver.SwitchTo().Window(remoteWebDriver.WindowHandles[remoteWebDriver.WindowHandles.Count - 1]);
 
             // Give the browser more than enough time to open the tab and get to it so the next commands from the
             // scenario don't get lost
