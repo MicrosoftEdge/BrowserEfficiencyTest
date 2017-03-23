@@ -46,25 +46,25 @@ namespace BrowserEfficiencyTest
     public static class RemoteWebDriverExtension
     {
         /// <summary>
-        /// Creates a new tab in the browser specified by the browser parameter.
+        /// Creates a new tab in the browser.
         /// </summary>
-        /// <param name="browser">Name of the browser to create the new tab in.</param>
-        public static void CreateNewTab(this RemoteWebDriver remoteWebDriver, string browser)
+        public static void CreateNewTab(this RemoteWebDriver remoteWebDriver)
         {
-            // Sadly, we had to special case this a bit by browser because no mechanism behaved correctly for everyone
-            if (browser == "firefox")
+            int originalTabCount = remoteWebDriver.WindowHandles.Count;
+            int endingTabCount = 0;
+
+            // Use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
+            // You actually have to in Opera too, but that's provided in a flag below
+            remoteWebDriver.ExecuteScript("window.open();");
+            // Go to that tab
+            remoteWebDriver.SwitchTo().Window(remoteWebDriver.WindowHandles[remoteWebDriver.WindowHandles.Count - 1]);
+
+            endingTabCount = remoteWebDriver.WindowHandles.Count;
+
+            // sanity check to make sure we in fact did get a new tab opened.
+            if (endingTabCount != (originalTabCount + 1))
             {
-                // Use ctrl+t for Firefox. Send them to the body or else there can be focus problems.
-                IWebElement body = remoteWebDriver.FindElementByTagName("body");
-                body.SendKeys(Keys.Control + 't');
-            }
-            else
-            {
-                // For other browsers, use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
-                // You actually have to in Opera too, but that's provided in a flag below
-                remoteWebDriver.ExecuteScript("window.open();");
-                // Go to that tab
-                remoteWebDriver.SwitchTo().Window(remoteWebDriver.WindowHandles[remoteWebDriver.WindowHandles.Count - 1]);
+                throw new Exception("New tab was not created as expected!");
             }
 
             // Give the browser more than enough time to open the tab and get to it so the next commands from the
@@ -102,8 +102,38 @@ namespace BrowserEfficiencyTest
             // Use the page down key.
             for (int i = 0; i < timesToScroll; i++)
             {
-                remoteWebDriver.Keyboard.SendKeys(Keys.PageDown);
+                if (remoteWebDriver.ToString().ToLower().Contains("firefoxdriver"))
+                {
+                    // Send the commands to the body element for Firefox.
+                    IWebElement body = remoteWebDriver.FindElementByTagName("body");
+                    body.SendKeys(Keys.PageDown);
+                }
+                else
+                {
+                    remoteWebDriver.Keyboard.SendKeys(Keys.PageDown);
+                }
+
                 Thread.Sleep(1000);
+            }
+        }
+
+        /// <summary>
+        /// Sends keystrokes to the browser. Not to a specific element.
+        /// Wrapper for driver.Keyboard.SendKeys(...)
+        /// </summary>
+        /// <param name="keys">Keystrokes to send to the browser.</param>
+        public static void SendKeys(this RemoteWebDriver remoteWebDriver, string keys)
+        {
+            // Firefox driver does not currently support sending keystrokes to the browser.
+            // So instead, get the body element and send the keystrokes to that element.
+            if (remoteWebDriver.ToString().ToLower().Contains("firefoxdriver"))
+            {
+                IWebElement body = remoteWebDriver.FindElementByTagName("body");
+                body.SendKeys(keys);
+            }
+            else
+            {
+                remoteWebDriver.Keyboard.SendKeys(keys);
             }
         }
 

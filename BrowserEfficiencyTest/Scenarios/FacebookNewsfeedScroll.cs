@@ -61,14 +61,8 @@ namespace BrowserEfficiencyTest
 
             password.Clear();
             driver.Wait(3);
-            driver.TypeIntoField(password, credentials.Password);
+            driver.TypeIntoField(password, credentials.Password + Keys.Enter);
             driver.Wait(1);
-
-            // Avoding applying click to button because of ObscureElement bug in Microsfot Edge with high DPI
-            // Instead use tab and enter. Seemed to be pretty reliable across browsers
-            driver.Keyboard.SendKeys(Keys.Tab);
-            driver.Keyboard.SendKeys(Keys.Enter);
-            driver.Wait(2);
 
             // Check to makes sure the login was successful
             if(driver.Title == "Log into Facebook | Facebook")

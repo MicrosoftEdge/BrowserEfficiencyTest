@@ -204,7 +204,7 @@ namespace BrowserEfficiencyTest
                                             // After that, scenarios open in their own tabs
                                             if (!isFirstScenario && scenario.Tab == "new")
                                             {
-                                                driver.CreateNewTab(browser);
+                                                driver.CreateNewTab();
                                             }
                                             else
                                             {
