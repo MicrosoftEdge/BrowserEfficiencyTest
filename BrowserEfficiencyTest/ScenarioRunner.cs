@@ -246,18 +246,25 @@ namespace BrowserEfficiencyTest
                                         // and put everything back into a state where we can start the next iteration.
                                         elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS);
 
-                                        // Save a screenshot
-                                        OpenQA.Selenium.Screenshot screenshot = driver.GetScreenshot();
-                                        string imageFileName = string.Format("screenshot_{0}_{1}_{2}_{3}_{4}.png", browser, currentScenario, iteration, currentMeasureSet.Key, attemptNumber);
-                                        imageFileName = Path.Combine(_etlPath, imageFileName);
-                                        screenshot.SaveAsFile(imageFileName, OpenQA.Selenium.ScreenshotImageFormat.Png);
-
-                                        // Save the page source
-                                        string pageSourceFileName = string.Format("pageSource_{0}_{1}_{2}_{3}_{4}.html", browser, currentScenario, iteration, currentMeasureSet.Key, attemptNumber);
-                                        pageSourceFileName = Path.Combine(_etlPath, pageSourceFileName);
-                                        using (StreamWriter sw = new StreamWriter(pageSourceFileName, false))
+                                        try
                                         {
-                                            sw.WriteLine(driver.PageSource);
+                                            // Attempt to save the page source
+                                            string pageSourceFileName = string.Format("pageSource_{0}_{1}_{2}_{3}_{4}.html", browser, currentScenario, iteration, currentMeasureSet.Key, attemptNumber);
+                                            pageSourceFileName = Path.Combine(_etlPath, pageSourceFileName);
+                                            using (StreamWriter sw = new StreamWriter(pageSourceFileName, false))
+                                            {
+                                                sw.WriteLine(driver.PageSource);
+                                            }
+
+                                            // Attempt to save a screenshot
+                                            OpenQA.Selenium.Screenshot screenshot = driver.GetScreenshot();
+                                            string imageFileName = string.Format("screenshot_{0}_{1}_{2}_{3}_{4}.png", browser, currentScenario, iteration, currentMeasureSet.Key, attemptNumber);
+                                            imageFileName = Path.Combine(_etlPath, imageFileName);
+                                            screenshot.SaveAsFile(imageFileName, OpenQA.Selenium.ScreenshotImageFormat.Png);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            // ignore this exception as we were just trying to see if we could get a screenshot and pagesource for the original exception.
                                         }
 
                                         driver.CloseAllTabs(browser);
