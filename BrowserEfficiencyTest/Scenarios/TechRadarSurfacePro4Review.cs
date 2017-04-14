@@ -43,24 +43,10 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            driver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(30));
+            // Navigate to the Surface Pro 4 review on TechRadar.
+            driver.NavigateToUrl("http://www.techradar.com/us/reviews/pc-mac/tablets/microsoft-surface-pro-4-1290285/review");
 
-            // Occasionally TechRadar never completes loading or doesn't seem to report it has loaded. Here, we work around
-            // this issue by catching a webdriver timeout exception and respond with sending the ESC key which
-            // will stop the page from continuing to load
-            try
-            {
-                // Navigate to the Surface Pro 4 review on TechRadar.
-                driver.Navigate().GoToUrl("http://www.techradar.com/us/reviews/pc-mac/tablets/microsoft-surface-pro-4-1290285/review");
-            }
-            catch (WebDriverTimeoutException)
-            {
-                Thread.Sleep(3 * 1000);
-                driver.Keyboard.SendKeys(Keys.Escape);
-            }
-
-            // Give it more than enough time to load
-            Thread.Sleep(5 * 1000);
+            driver.Wait(5);
 
             // Scroll down multiple times
             driver.ScrollPage(10);

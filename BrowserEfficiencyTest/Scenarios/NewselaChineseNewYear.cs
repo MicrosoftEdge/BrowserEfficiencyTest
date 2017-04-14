@@ -41,8 +41,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Go to Newsela
-            driver.Navigate().GoToUrl("http://www.newsela.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.newsela.com");
             driver.Wait(5);
 
             // Navigate to the library

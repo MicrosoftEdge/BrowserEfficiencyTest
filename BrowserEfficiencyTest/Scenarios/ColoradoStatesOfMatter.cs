@@ -41,8 +41,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Go to Colorado.edu
-            driver.Navigate().GoToUrl("http://phet.colorado.edu");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://phet.colorado.edu");
             driver.Wait(5);
 
             // Click on the big button

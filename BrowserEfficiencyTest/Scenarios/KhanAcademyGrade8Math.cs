@@ -41,15 +41,13 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Go to Khan Academy
-            driver.Navigate().GoToUrl("http://www.khanacademy.org");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.khanacademy.org");
             driver.Wait(5);
 
             driver.ScrollPage(1);
 
             // Go to 8th grade math
-            driver.Navigate().GoToUrl("https://www.khanacademy.org/math/cc-eighth-grade-math");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("https://www.khanacademy.org/math/cc-eighth-grade-math");
             driver.Wait(5);
 
             // Click on the section on repeating decimals
@@ -64,7 +62,7 @@ namespace BrowserEfficiencyTest
 
             // Watch the movie for 30s, then go back.
             driver.Wait(30);
-            driver.Navigate().Back();
+            driver.NavigateBack();
         }
     }
 }

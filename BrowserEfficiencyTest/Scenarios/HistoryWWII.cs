@@ -41,8 +41,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Go to History.com topics
-            driver.Navigate().GoToUrl("http://www.history.com/topics");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.history.com/topics");
             driver.Wait(5);
 
             // Scroll to the bottom of the page
@@ -61,7 +60,7 @@ namespace BrowserEfficiencyTest
             // And scroll through it
             driver.ScrollPage(3);
             driver.Wait(5);
-            driver.Navigate().Back();
+            driver.NavigateBack();
         }
     }
 }
