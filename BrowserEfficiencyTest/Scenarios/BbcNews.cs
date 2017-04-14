@@ -45,8 +45,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Navigate
-            driver.Navigate().GoToUrl("http://www.bbc.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.bbc.com");
             driver.Wait(10);
 
             timer.ExtractPageLoadTime("BBC homepage");

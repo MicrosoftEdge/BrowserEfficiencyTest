@@ -44,8 +44,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Navigate
-            driver.Navigate().GoToUrl("https://www.amazon.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("https://www.amazon.com");
             driver.Wait(5);
 
             // Type "Game of Thrones" in the search box and hit enter

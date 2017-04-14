@@ -43,8 +43,7 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            driver.Navigate().GoToUrl("http://www.yahoo.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.yahoo.com");
             driver.Wait(5);
 
             timer.ExtractPageLoadTime("Yahoo homepage");
@@ -56,7 +55,8 @@ namespace BrowserEfficiencyTest
             {
                 newsLink = driver.FindElement(By.XPath("//a[@href='https://www.yahoo.com/news/']"));
             }
-            catch {
+            catch
+            {
                 try
                 {
                     newsLink = driver.FindElement(By.XPath("//a[@href='https://news.yahoo.com/']"));
@@ -100,7 +100,7 @@ namespace BrowserEfficiencyTest
             timer.ExtractPageLoadTime("Yahoo article");
 
             // Then go back to the news homepage
-            driver.Navigate().Back();
+            driver.NavigateBack();
         }
     }
 }
