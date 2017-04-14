@@ -68,8 +68,8 @@
     <Compile Include="CredentialManager.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="ResponsivenessTimer.cs" />
+    <Compile Include="ScenarioEventSourceProvider.cs" />
     <Compile Include="Scenarios\AboutBlank.cs" />
-    <Compile Include="Scenarios\AzureDashboard.cs" />
     <Compile Include="Scenarios\BrainPopAvalanches.cs" />
     <Compile Include="Scenarios\ColoradoStatesOfMatter.cs" />
     <Compile Include="Scenarios\EspnHomepage.cs" />
@@ -95,7 +95,6 @@
     <Compile Include="Scenarios\YahooNews.cs" />
     <Compile Include="RemoteWebDriverExtension.cs" />
     <Compile Include="ScenarioRunner.cs" />
-    <Compile Include="Scenarios\CnnTopStory.cs" />
     <Compile Include="Scenarios\FacebookNewsfeedScroll.cs" />
     <Compile Include="Scenarios\GmailGoThroughEmails.cs" />
     <Compile Include="Scenarios\Msn.cs" />

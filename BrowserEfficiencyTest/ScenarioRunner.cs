@@ -178,7 +178,7 @@ namespace BrowserEfficiencyTest
                                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {_scenarioName} WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
 
                                 Logger.LogWriteLine(string.Format(" Launching Browser Driver: '{0}'", browser));
-
+                                ScenarioEventSourceProvider.EventLog.WorkloadStart(_scenarioName, browser, currentMeasureSet.Value.Item1, iteration, attemptNumber);
                                 using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath))
                                 {
                                     string currentScenario = "";
@@ -212,9 +212,12 @@ namespace BrowserEfficiencyTest
                                             }
 
                                             Logger.LogWriteLine(string.Format("  Executing - Scenario: {0}  Iteration: {1}  Attempt: {2}  Browser: {3}  MeasureSet: {4}", scenario.Scenario.Name, iteration, attemptNumber, browser, currentMeasureSet.Key));
+                                            ScenarioEventSourceProvider.EventLog.ScenarioExecutionStart(browser, scenario.Scenario.Name);
 
                                             // Here, control is handed to the scenario to navigate, and do whatever it wants
                                             scenario.Scenario.Run(driver, browser, _logins, _timer);
+
+                                            ScenarioEventSourceProvider.EventLog.ScenarioExecutionStop(browser, scenario.Scenario.Name);
 
                                             // When we get control back, we sleep for the remaining time for the scenario. This ensures
                                             // the total time for a scenario is always the same
@@ -230,15 +233,16 @@ namespace BrowserEfficiencyTest
                                             else if (!_overrideTimeout)
                                             {
                                                 Logger.LogWriteLine(string.Format("    Scenario {0} returned in {1} seconds. Sleep for remaining {2} seconds.", scenario.Scenario.Name, runTime.TotalSeconds, timeLeft.TotalSeconds));
-                                                Thread.Sleep(timeLeft);
+                                                driver.Wait(timeLeft.TotalSeconds);
                                             }
 
                                             Logger.LogWriteLine(string.Format("  Completed - Scenario: {0}  Iteration: {1}  Attempt: {2}  Browser: {3}  MeasureSet: {4}", scenario.Scenario.Name, iteration, attemptNumber, browser, currentMeasureSet.Key, runTime.TotalSeconds));
                                         }
 
-                                        driver.CloseAllTabs(browser);
+                                        driver.CloseBrowser(browser);
                                         passSucceeded = true;
                                         Logger.LogWriteLine(string.Format(" SUCCESS!  Completed Browser: {0}  Iteration: {1}  Attempt: {2}  MeasureSet: {3}", browser, iteration, attemptNumber, currentMeasureSet.Key));
+                                        ScenarioEventSourceProvider.EventLog.WorkloadStop(_scenarioName, browser, currentMeasureSet.Value.Item1, iteration, attemptNumber);
                                     }
                                     catch (Exception ex)
                                     {
@@ -267,7 +271,7 @@ namespace BrowserEfficiencyTest
                                             // ignore this exception as we were just trying to see if we could get a screenshot and pagesource for the original exception.
                                         }
 
-                                        driver.CloseAllTabs(browser);
+                                        driver.CloseBrowser(browser);
                                         Logger.LogWriteLine("------ EXCEPTION caught while trying to run scenario! ------------------------------------");
                                         Logger.LogWriteLine(string.Format("    Iteration:   {0}", iteration));
                                         Logger.LogWriteLine(string.Format("    Measure Set: {0}", currentMeasureSet.Key));
