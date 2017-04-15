@@ -54,6 +54,8 @@ namespace BrowserEfficiencyTest
         private CredentialManager _logins;
         private string _scenarioName;
         private int _e3RefreshDelaySeconds;
+        private bool _captureBaseline;
+        private int _baselineCaptureSeconds;
 
         // _measureSets format: Dictionary< "measure set name", Tuple < "WPR profile name", "tracing mode" >>
         private Dictionary<string, Tuple<string, string>> _measureSets;
@@ -77,6 +79,8 @@ namespace BrowserEfficiencyTest
             _measureSets = GetMeasureSetInfo(args.SelectedMeasureSets.ToList());
             _logins = new CredentialManager(args.CredentialPath);
             _timer = new ResponsivenessTimer();
+            _captureBaseline = args.CaptureBaseline;
+            _baselineCaptureSeconds = args.BaselineCaptureSeconds;
 
             if (args.MeasureResponsiveness)
             {
@@ -157,6 +161,29 @@ namespace BrowserEfficiencyTest
                     _timer.SetIteration(iteration);
                     foreach (var currentMeasureSet in _measureSets)
                     {
+                        if (_captureBaseline && _usingTraceController)
+                        {
+                            // capture a baseline of the system for this measureset
+                            // A baseline is where we capture measureset data of the system but without running the browser and test pass.
+                            // The idea is to get a baseline performance capture of the system without the browser and test pass so it
+                            // can be used as a comparison.
+
+                            Logger.LogWriteLine(string.Format(" Starting capture of system baseline for {0} seconds - measureset {1}  iteration {2}", _baselineCaptureSeconds, currentMeasureSet.Value.Item1, iteration));
+
+                            // Start the trace capture
+                            elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} BASE ITERATION {iteration} SCENARIO_NAME {_scenarioName} WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
+
+                            Thread.Sleep(_baselineCaptureSeconds * 1000);
+
+                            Logger.LogWriteLine(string.Format(" Finished capture of system baseline of measureset {0}  iteration {1}", currentMeasureSet.Value.Item1, iteration));
+                            elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} BASE").Wait();
+
+                            // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
+                            // that the browser energy data reported by E3 for this run is only for this run and does not bleed into any other runs.
+                            Logger.LogWriteLine("  Pausing between tracing sessions to reduce interference.");
+                            Thread.Sleep(_e3RefreshDelaySeconds * 1000);
+                        }
+
                         _timer.SetMeasureSet(currentMeasureSet.Key);
 
                         // Randomize the order the browsers each iteration to reduce systematic bias in the test
