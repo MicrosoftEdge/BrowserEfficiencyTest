@@ -44,8 +44,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Nagivate to espn
-            driver.Navigate().GoToUrl("http://www.espn.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.espn.com");
             driver.Wait(10);
 
             // Scroll through the infinite list

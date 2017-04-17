@@ -39,12 +39,38 @@ using System.Threading;
 namespace BrowserEfficiencyTest
 {
     /// <summary>
-    /// Extension class for the RemoteWebDriver class
+    /// Extension class for the RemoteWebDriver class.
     /// Additional WebDriver functionality can be added to this class and will extend the
     /// RemoteWebDriver class.
     /// </summary>
     public static class RemoteWebDriverExtension
     {
+        /// <summary>
+        /// Navigates to the url passed as a string
+        /// A wrapper for RemoteWebDriver.Navigate().GoToUrl(...) method but includes tracing events and pageloading waits
+        /// </summary>
+        /// <param name="url">Url to navigate to in string form.</param>
+        /// <param name="timeoutSec">Number of seconds to wait for the page to load before timing out.</param>
+        public static void NavigateToUrl(this RemoteWebDriver remoteWebDriver, string url, int timeoutSec = 30)
+        {
+            ScenarioEventSourceProvider.EventLog.NavigateToUrl(url);
+            remoteWebDriver.Navigate().GoToUrl(url);
+            remoteWebDriver.WaitForPageLoad();
+        }
+
+        /// <summary>
+        /// Navigates back one page.
+        /// A wrapper for RemoteWebDriver.Navigate().Back() method but includes tracing events and pageloading waits
+        /// </summary>
+        /// <param name="remoteWebDriver"></param>
+        /// <param name="timeoutSec">Number of seconds to wait for the page to load before timing out.</param>
+        public static void NavigateBack(this RemoteWebDriver remoteWebDriver, int timeoutSec = 30)
+        {
+            ScenarioEventSourceProvider.EventLog.NavigateBack();
+            remoteWebDriver.Navigate().Back();
+            remoteWebDriver.WaitForPageLoad();
+        }
+
         /// <summary>
         /// Creates a new tab in the browser.
         /// </summary>
@@ -53,11 +79,11 @@ namespace BrowserEfficiencyTest
             int originalTabCount = remoteWebDriver.WindowHandles.Count;
             int endingTabCount = 0;
 
+            ScenarioEventSourceProvider.EventLog.OpenNewTab(originalTabCount, originalTabCount + 1);
+
             // Use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
             // You actually have to in Opera too, but that's provided in a flag below
             remoteWebDriver.ExecuteScript("window.open();");
-            // Go to that tab
-            remoteWebDriver.SwitchTo().Window(remoteWebDriver.WindowHandles[remoteWebDriver.WindowHandles.Count - 1]);
 
             endingTabCount = remoteWebDriver.WindowHandles.Count;
 
@@ -67,15 +93,28 @@ namespace BrowserEfficiencyTest
                 throw new Exception("New tab was not created as expected!");
             }
 
+            // Go to that tab
+            remoteWebDriver.SwitchTab(remoteWebDriver.WindowHandles[remoteWebDriver.WindowHandles.Count - 1]);
+
             // Give the browser more than enough time to open the tab and get to it so the next commands from the
             // scenario don't get lost
             Thread.Sleep(2000);
         }
 
         /// <summary>
-        /// Closes all browser tabs.
+        /// Switches the browser tab to the tab referred to by tabHandle.
         /// </summary>
-        public static void CloseAllTabs(this RemoteWebDriver remoteWebDriver, string browser)
+        /// <param name="tabHandle">The webdriver tabHandle of the desired tab to switch to.</param>
+        public static void SwitchTab(this RemoteWebDriver remoteWebDriver, string tabHandle)
+        {
+            ScenarioEventSourceProvider.EventLog.SwitchTab(tabHandle);
+            remoteWebDriver.SwitchTo().Window(tabHandle);
+        }
+
+        /// <summary>
+        /// Closes the browser.
+        /// </summary>
+        public static void CloseBrowser(this RemoteWebDriver remoteWebDriver, string browser)
         {
             if (browser == "opera")
             {
@@ -87,6 +126,7 @@ namespace BrowserEfficiencyTest
             {
                 remoteWebDriver.Quit();
             }
+            ScenarioEventSourceProvider.EventLog.CloseBrowser(browser);
         }
 
         /// <summary>
@@ -102,6 +142,7 @@ namespace BrowserEfficiencyTest
             // Use the page down key.
             for (int i = 0; i < timesToScroll; i++)
             {
+                ScenarioEventSourceProvider.EventLog.ScrollEvent();
                 if (remoteWebDriver.ToString().ToLower().Contains("firefoxdriver"))
                 {
                     // Send the commands to the body element for Firefox.
@@ -124,6 +165,7 @@ namespace BrowserEfficiencyTest
         /// <param name="keys">Keystrokes to send to the browser.</param>
         public static void SendKeys(this RemoteWebDriver remoteWebDriver, string keys)
         {
+            ScenarioEventSourceProvider.EventLog.SendKeysStart(keys.Length);
             // Firefox driver does not currently support sending keystrokes to the browser.
             // So instead, get the body element and send the keystrokes to that element.
             if (remoteWebDriver.ToString().ToLower().Contains("firefoxdriver"))
@@ -135,6 +177,7 @@ namespace BrowserEfficiencyTest
             {
                 remoteWebDriver.Keyboard.SendKeys(keys);
             }
+            ScenarioEventSourceProvider.EventLog.SendKeysStop(keys.Length);
         }
 
         /// <summary>
@@ -143,7 +186,9 @@ namespace BrowserEfficiencyTest
         /// <param name="secondsToWait">The number of seconds to wait</param>
         public static void Wait(this RemoteWebDriver remoteWebDriver, double secondsToWait)
         {
+            ScenarioEventSourceProvider.EventLog.WaitStart(secondsToWait);
             Thread.Sleep((int)(secondsToWait * 1000));
+            ScenarioEventSourceProvider.EventLog.WaitStop(secondsToWait);
         }
 
         /// <summary>
@@ -153,11 +198,13 @@ namespace BrowserEfficiencyTest
         /// <param name="text">The text to type</param>
         public static void TypeIntoField(this RemoteWebDriver remoteWebdriver, IWebElement element, string text)
         {
+            ScenarioEventSourceProvider.EventLog.TypeIntoFieldStart(text.Length);
             foreach (char c in text)
             {
                 element.SendKeys(c.ToString());
                 Thread.Sleep(75);
             }
+            ScenarioEventSourceProvider.EventLog.TypeIntoFieldStop(text.Length);
         }
 
         /// <summary>
@@ -166,11 +213,13 @@ namespace BrowserEfficiencyTest
         /// <param name="text">The text to type</param>
         public static void TypeIntoField(this RemoteWebDriver remoteWebDriver, string text)
         {
+            ScenarioEventSourceProvider.EventLog.TypeIntoFieldStart(text.Length);
             foreach (char c in text)
             {
                 remoteWebDriver.Keyboard.SendKeys(c.ToString());
                 Thread.Sleep(75);
             }
+            ScenarioEventSourceProvider.EventLog.TypeIntoFieldStop(text.Length);
         }
 
         /// <summary>
@@ -186,6 +235,7 @@ namespace BrowserEfficiencyTest
             {
                 try
                 {
+                    ScenarioEventSourceProvider.EventLog.ClickElement(element.Text);
                     // Send the empty string to give focus, then enter. We do this instead of click() because
                     // click() has a bug on high DPI screen we're working around
                     element.SendKeys(string.Empty);
@@ -218,6 +268,7 @@ namespace BrowserEfficiencyTest
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
+            ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
             switch (browser)
             {
                 case "opera":
@@ -258,9 +309,8 @@ namespace BrowserEfficiencyTest
                     client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();
                     break;
             }
-
+            ScenarioEventSourceProvider.EventLog.MaximizeBrowser(browser);
             driver.Manage().Window.Maximize();
-
             Thread.Sleep(1000);
 
             return driver;
@@ -274,6 +324,7 @@ namespace BrowserEfficiencyTest
         {
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, timeoutSec));
             wait.Until(wd => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+            ScenarioEventSourceProvider.EventLog.PageReadyState();
         }
     }
 }

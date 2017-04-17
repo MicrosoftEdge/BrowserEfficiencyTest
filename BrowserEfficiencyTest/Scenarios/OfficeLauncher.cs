@@ -43,7 +43,7 @@ namespace BrowserEfficiencyTest
             UserInfo credentials = credentialManager.GetCredentials("office.com");
 
             // Navigate
-            driver.Navigate().GoToUrl("http://www.office.com");
+            driver.NavigateToUrl("http://www.office.com");
             driver.Wait(5);
 
             // Click on "Sign In" button

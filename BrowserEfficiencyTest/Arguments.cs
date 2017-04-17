@@ -519,13 +519,11 @@ namespace BrowserEfficiencyTest
             AddScenario(new YoutubeWatchVideo());
             AddScenario(new AmazonSearch());
             AddScenario(new GoogleSearch());
-            AddScenario(new CnnTopStory());
             AddScenario(new TechRadarSurfacePro4Review());
             AddScenario(new YahooNews());
             AddScenario(new BbcNews());
             AddScenario(new CnnOneStory());
             AddScenario(new FastScenario());
-            AddScenario(new AzureDashboard());
             AddScenario(new OutlookOffice());
             AddScenario(new OutlookEmail());
             AddScenario(new PowerBiBrowse());

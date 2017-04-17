@@ -44,8 +44,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Nagivate to the homepage for Twitter
-            driver.Navigate().GoToUrl("https://www.twitter.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("https://www.twitter.com");
             driver.Wait(5);
 
             // Scroll through the infinite list

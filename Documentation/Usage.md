@@ -29,12 +29,10 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
 
     *   `AboutBlank` will go to about:blank, loading no content for one minute
     *   `AmazonSearch` will load Amazon, do a search for "game of thrones", click on the first result, and then scroll down to the reviews
-    *   `AzureDashboard` will load an Azure dashboard for the provided credentials and navigate through several blades. It requires Azure credentials to be provided in `credentials.json`
     *   `BbcNews` will load BBC, click on the top story, and scroll down
         *   Responsiveness measures: Homepage load time, article load time
     *   `BrainPopAvalanches` will navigate through Brainpop to the page on avalanches.
     *   `CnnOneStory` will directly load a news story from CNN, but not interact with CNN besides the page load
-    *   `CnnTopStory` will load CNN, load the top story, and scroll down
     *   `ColoradoStatesOfMatter` will navigate to and load a simulation on the states of matter.
     *   `EspnHomepage` will load ESPN and scroll through the infinite list on the homepage
         *   Responsiveness measures: ESPN homepage load time

@@ -41,8 +41,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Go to IXL
-            driver.Navigate().GoToUrl("http://www.ixl.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.ixl.com");
             driver.Wait(5);
 
             driver.ScrollPage(2);

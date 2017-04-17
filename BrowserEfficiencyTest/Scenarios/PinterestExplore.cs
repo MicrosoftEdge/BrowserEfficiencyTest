@@ -46,7 +46,7 @@ namespace BrowserEfficiencyTest
             UserInfo credentials = credentialManager.GetCredentials("pinterest.com");
 
             // Nagivate to the Pintrest explore page
-            driver.Navigate().GoToUrl("https://www.pinterest.com/");
+            driver.NavigateToUrl("https://www.pinterest.com/");
             driver.Wait(5);
 
             // Log in

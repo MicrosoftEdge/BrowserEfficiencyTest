@@ -43,7 +43,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Nagivate to zillow, direct to a results page
-            driver.Navigate().GoToUrl("http://www.zillow.com/homes/98052_rb/?fromHomePage=true&shouldFireSellPageImplicitClaimGA=false");
+            driver.NavigateToUrl("http://www.zillow.com/homes/98052_rb/?fromHomePage=true&shouldFireSellPageImplicitClaimGA=false");
             driver.Wait(10);
 
             // Expand map

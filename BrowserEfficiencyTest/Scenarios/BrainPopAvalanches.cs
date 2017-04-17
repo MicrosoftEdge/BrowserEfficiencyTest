@@ -41,8 +41,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // Go to BrainPop
-            driver.Navigate().GoToUrl("http://www.brainpop.com");
-            driver.WaitForPageLoad();
+            driver.NavigateToUrl("http://www.brainpop.com");
             driver.Wait(5);
 
             // Click on Science
