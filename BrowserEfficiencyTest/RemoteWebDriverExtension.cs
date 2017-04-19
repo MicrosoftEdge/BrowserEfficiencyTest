@@ -34,6 +34,7 @@ using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -279,7 +280,7 @@ namespace BrowserEfficiencyTest
         /// <param name="browser">The browser to get instantiate the Web Driver for.</param>
         /// <param name="browserProfilePath">The folder path to the browser user profile to use with the browser.</param>
         /// <returns>The RemoteWebDriver of the browser passed in to the method.</returns>
-        public static RemoteWebDriver CreateDriverAndMaximize(string browser, string browserProfilePath = "")
+        public static RemoteWebDriver CreateDriverAndMaximize(string browser, string browserProfilePath = "", List<string> extensionPaths = null)
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
@@ -319,7 +320,19 @@ namespace BrowserEfficiencyTest
                     // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
                     EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
                     _port = svc.Port;
-                    driver = new EdgeDriver(svc);
+
+                    if (extensionPaths != null && extensionPaths.Count != 0)
+                    {
+                        var edgeOptions = new EdgeOptions();
+                        // Create the extensionPaths capability object
+                        edgeOptions.AddAdditionalCapability("extensionPaths", extensionPaths);
+                        Logger.LogWriteLine("Sideloading extension from " + extensionPaths[0]);
+                        driver = new EdgeDriver(svc, edgeOptions);
+                    }
+                    else
+                    {
+                        driver = new EdgeDriver(svc);
+                    }
 
                     FileVersionInfo edgeBrowserVersion = GetEdgeFileVersion();
                     Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge File Version: {0}", edgeBrowserVersion.FileVersion));

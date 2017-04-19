@@ -43,6 +43,9 @@ namespace BrowserEfficiencyTest
     /// </summary>
     internal class ScenarioRunner
     {
+        // Calculated path for staging extension files under Edge's local appdata folder.
+        public static readonly string ExtensionsStagingRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages\\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\\LocalState\\");
+
         private ResponsivenessTimer _timer;
         private bool _useTimer;
         private int _iterations;
@@ -50,6 +53,8 @@ namespace BrowserEfficiencyTest
         private string _browserProfilePath;
         private bool _usingTraceController;
         private string _etlPath;
+        private List<string> _extensionsPaths;
+        private string _extensionsStagingPath;
         private bool _overrideTimeout;
         private List<WorkloadScenario> _scenarios = new List<WorkloadScenario>();
         private List<string> _browsers = new List<string>();
@@ -73,6 +78,7 @@ namespace BrowserEfficiencyTest
             _browserProfilePath = args.BrowserProfilePath;
             _usingTraceController = args.UsingTraceController;
             _etlPath = args.EtlPath;
+            _extensionsStagingPath = "";
             _maxAttempts = args.MaxAttempts;
             _overrideTimeout = args.OverrideTimeout;
             _scenarios = args.Scenarios.ToList();
@@ -84,6 +90,15 @@ namespace BrowserEfficiencyTest
             _captureBaseline = args.CaptureBaseline;
             _baselineCaptureSeconds = args.BaselineCaptureSeconds;
 
+            if (!string.IsNullOrEmpty(args.ExtensionsPath))
+            {
+                _extensionsPaths = GetExtensionPaths(args.ExtensionsPath);
+            }
+            else
+            {
+                _extensionsPaths = null;
+            }
+
             if (args.MeasureResponsiveness)
             {
                 _useTimer = true;
@@ -91,6 +106,84 @@ namespace BrowserEfficiencyTest
             else
             {
                 _useTimer = false;
+            }
+        }
+
+        private List<string> GetExtensionPaths(string path)
+        {
+            var sideloadExtensionPaths = new List<string>();
+            var directoryName = path.Split('\\').Last();
+            var extensionPaths = Directory.GetDirectories(path);
+            var validExtensionPaths = GetValidExtensions(extensionPaths);
+
+            // Check if the extensions path provided contains atleast one extension
+            if (validExtensionPaths.Count > 0)
+            {
+                var stagingPath = Path.Combine(ExtensionsStagingRootPath, directoryName);
+                if (Directory.Exists(stagingPath))
+                {
+                    // Clean up existing directories
+                    Directory.Delete(stagingPath, /*recursive*/ true);
+                }
+
+                Directory.CreateDirectory(stagingPath);
+                _extensionsStagingPath = stagingPath;
+
+                foreach (var extensionPath in validExtensionPaths)
+                {
+                    var extensionFolderName = extensionPath.Split('\\').Last();
+                    var extensionStagingPath = Path.Combine(ExtensionsStagingRootPath, directoryName, extensionFolderName);
+                    Directory.CreateDirectory(extensionStagingPath);
+
+                    Logger.LogWriteLine("Staging extensions files: Source='" + extensionPath + "' Destination='" + extensionStagingPath + "'", false);
+
+                    try
+                    {
+                        var xcopy = Process.Start("CMD.exe", "/F /S /Y /I /C xcopy " + extensionPath + " " + extensionStagingPath + " /s");
+                        sideloadExtensionPaths.Add(Path.Combine(extensionStagingPath, "Extension"));
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogWriteLine("Copying of extension(s) failed with: \n" + ex.Message);
+                    }
+                }
+            }
+            else
+            {
+                Logger.LogWriteLine("No valid extensions found in given path " + path + 
+                    ". The folder structure should be as follows: \n" + 
+                    "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
+            }
+
+            return sideloadExtensionPaths;
+        }
+
+        private List<string> GetValidExtensions(string[] paths)
+        {
+            var validExtensions = new List<string>();
+
+            // Check for folders with manifest.json
+            foreach (var path in paths)
+            {
+                var extensionFilesPath = Path.Combine(path, "Extension");
+                if ((Directory.Exists(extensionFilesPath)) && (File.Exists(Path.Combine(extensionFilesPath, "manifest.json"))))
+                {
+                    validExtensions.Add(path);
+                }
+            }
+
+            return validExtensions;
+        }
+
+        private void CleanupExtensions()
+        {
+            if (!string.IsNullOrEmpty(_extensionsStagingPath))
+            {
+                if (Directory.EnumerateFileSystemEntries(_extensionsStagingPath).Any())
+                {
+                    // Clean up existing directories
+                    Directory.Delete(_extensionsStagingPath, /*recursive*/ true);
+                }
             }
         }
 
@@ -210,7 +303,7 @@ namespace BrowserEfficiencyTest
 
                                 Logger.LogWriteLine(string.Format(" Launching Browser Driver: '{0}'", browser));
                                 ScenarioEventSourceProvider.EventLog.WorkloadStart(_scenarioName, browser, currentMeasureSet.Value.Item1, iteration, attemptNumber);
-                                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath))
+                                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath, _extensionsPaths))
                                 {
                                     string currentScenario = "";
                                     try
@@ -270,6 +363,7 @@ namespace BrowserEfficiencyTest
                                             Logger.LogWriteLine(string.Format("  Completed - Scenario: {0}  Iteration: {1}  Attempt: {2}  Browser: {3}  MeasureSet: {4}", scenario.Scenario.Name, iteration, attemptNumber, browser, currentMeasureSet.Key, runTime.TotalSeconds));
                                         }
 
+                                        CleanupExtensions();
                                         driver.CloseBrowser(browser);
                                         passSucceeded = true;
                                         Logger.LogWriteLine(string.Format(" SUCCESS!  Completed Browser: {0}  Iteration: {1}  Attempt: {2}  MeasureSet: {3}", browser, iteration, attemptNumber, currentMeasureSet.Key));
@@ -302,6 +396,7 @@ namespace BrowserEfficiencyTest
                                             // ignore this exception as we were just trying to see if we could get a screenshot and pagesource for the original exception.
                                         }
 
+                                        CleanupExtensions();
                                         driver.CloseBrowser(browser);
                                         Logger.LogWriteLine("------ EXCEPTION caught while trying to run scenario! ------------------------------------");
                                         Logger.LogWriteLine(string.Format("    Iteration:   {0}", iteration));

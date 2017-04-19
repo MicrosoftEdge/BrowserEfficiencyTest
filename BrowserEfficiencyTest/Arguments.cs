@@ -53,6 +53,7 @@ namespace BrowserEfficiencyTest
         public int Iterations { get; private set; }
         public bool UsingTraceController { get; private set; }
         public string EtlPath { get; private set; }
+        public string ExtensionsPath { get; private set; }
         public int MaxAttempts { get; private set; }
         public bool OverrideTimeout { get; private set;  }
         public bool DoPostProcessing { get; private set; }
@@ -108,6 +109,7 @@ namespace BrowserEfficiencyTest
             Iterations = 1;
             UsingTraceController = false;
             EtlPath = Directory.GetCurrentDirectory();
+            ExtensionsPath = "";
             MaxAttempts = 3;
             OverrideTimeout = false;
             DoPostProcessing = true;
@@ -273,6 +275,41 @@ namespace BrowserEfficiencyTest
                         {
                             argumentsAreValid = false;
                             Logger.LogWriteLine("Invalid results path!", false);
+                        }
+
+                        break;
+                    case "-extensions":
+                    case "-e":
+                        foreach (var browser in _browsers)
+                        {
+                            if (browser.ToLower() != "edge")
+                            {
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine("Side loading of extensions is supported only in Edge", false);
+                            }
+                        }
+
+                        if (argumentsAreValid)
+                        {
+                            argNum++;
+                            // A valid path must be specified after the -e|-extensions option.
+                            if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                            {
+                                string extensionsPath = args[argNum];
+                                if (!Directory.Exists(extensionsPath))
+                                {
+                                    Logger.LogWriteLine("Invalid extensions path!" + extensionsPath, false);
+                                }
+                                else
+                                {
+                                    ExtensionsPath = Path.GetFullPath(extensionsPath);
+                                }
+                            }
+                            else
+                            {
+                                argumentsAreValid = false;
+                                Logger.LogWriteLine("Invalid extensions path!", false);
+                            }
                         }
 
                         break;
