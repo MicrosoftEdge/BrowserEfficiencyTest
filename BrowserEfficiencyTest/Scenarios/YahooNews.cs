@@ -31,6 +31,8 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium;
 using System.Threading;
 
+using System.Linq;
+
 namespace BrowserEfficiencyTest
 {
     internal class YahooNews : Scenario
@@ -53,20 +55,39 @@ namespace BrowserEfficiencyTest
             // There are a number of different layouts currently.  Trying each one in order of observed probability.
             try
             {
-                newsLink = driver.FindElement(By.XPath("//a[@href='https://www.yahoo.com/news/']"));
+                // This should cover most of the cases
+                newsLink = driver.FindElement(By.LinkText("News"));
             }
             catch
             {
                 try
                 {
-                    newsLink = driver.FindElement(By.XPath("//a[@href='https://news.yahoo.com/']"));
+                    newsLink = driver.FindElement(By.XPath("//a[@href='https://www.yahoo.com/news/']"));
                 }
                 catch
                 {
-                    // No reliable class or id for the news link, so get the news icon, then find its parent
-                    newsLink = driver.FindElementByClassName("IconNews").FindElement(By.XPath(".."));
+                    try
+                    {
+                        newsLink = driver.FindElement(By.XPath("//a[@href='https://news.yahoo.com/']"));
+                    }
+                    catch
+                    {
+                        // ok fine, let's try finding the news link element with a little more brute force
+                        // First get all the anchor elements
+                        var anchorElements = driver.FindElementsByXPath("//a");
+
+                        // Filter down the elements to the specific one(s) we are looking for.
+                        var newsLinkElements = from elem in anchorElements
+                                                let hrefx = elem.GetAttribute("href")
+                                                where hrefx.EndsWith("yahoo.com/news/") || hrefx.EndsWith("news.yahoo.com/")
+                                                select elem;
+
+                        // There should only be one or none.
+                        newsLink = newsLinkElements.FirstOrDefault();
+                    }
                 }
             }
+
             driver.ClickElement(newsLink);
 
             driver.Wait(5);
