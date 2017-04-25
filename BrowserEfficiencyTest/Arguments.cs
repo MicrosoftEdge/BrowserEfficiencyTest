@@ -60,7 +60,8 @@ namespace BrowserEfficiencyTest
         public bool MeasureResponsiveness { get; private set; }
         public bool ArgumentsAreValid { get; private set; }
         public string BrowserEfficiencyTestVersion { get; private set; }
-
+        public bool CaptureBaseline { get; private set; }
+        public int BaselineCaptureSeconds { get; private set; }
         /// <summary>
         /// List of all scenarios to be run.
         /// </summary>
@@ -113,6 +114,8 @@ namespace BrowserEfficiencyTest
             CredentialPath = "credentials.json";
             MeasureResponsiveness = false;
             BrowserEfficiencyTestVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            CaptureBaseline = false;
+            BaselineCaptureSeconds = 600; // 10 minutes as the default
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -421,6 +424,35 @@ namespace BrowserEfficiencyTest
 
                         Logger.SetupFileLogging(logPath);
                         Logger.LogWriteLine("Arguments: " + string.Join(" ", args), false);
+                        break;
+                    case "-capturebaseline":
+                    case "-cb":
+                        // Enable capturing an ETL of the system doing nothing as the system baseline.
+                        // The number specified is the number of seconds to capture file logging.
+                        // If no number is specified then just use the default
+                        // This parameter has no effect if the measureset option is not selected
+                        CaptureBaseline = true;
+
+                        if (((argNum + 1) < args.Length) && !(args[argNum + 1].StartsWith("-")))
+                        {
+                            argNum++;
+                            int seconds = 0;
+                            argumentsAreValid = int.TryParse(args[argNum], out seconds);
+
+                            if ((BaselineCaptureSeconds > 0) && (BaselineCaptureSeconds < 36000))
+                            {
+                                BaselineCaptureSeconds = seconds;
+                            }
+                            else
+                            {
+                                argumentsAreValid = false;
+                            }
+                        }
+
+                        if (!argumentsAreValid)
+                        {
+                            Logger.LogWriteLine("Invalid value for the baseline capture time in seconds. Must be an integer greater than 0 and less than 36000.", false);
+                        }
                         break;
                     default:
                         argumentsAreValid = false;
