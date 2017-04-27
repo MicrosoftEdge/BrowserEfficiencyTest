@@ -73,7 +73,7 @@ namespace BrowserEfficiencyTest
         /// <param name="etlFolderPath">Location of the ETL files to process the performance data from.</param>
         /// <param name="saveFolderPath">Location of where to save the results csv file.</param>
         /// <param name="resultsToAdd">Any already-measured results to include in the csv file</param>
-        public void Execute(string etlFolderPath = ".", string saveFolderPath = "", List<string> resultsToAdd = null)
+        public void Execute(string etlFolderPath = ".", string saveFolderPath = "", List<string> resultsToAdd = null, Dictionary<string, string> extensionsNameAndVersion = null)
         {
             Dictionary<string, Dictionary<string, Dictionary<string, string>>> results = null;
             List<string> formattedResults = null;
@@ -83,7 +83,7 @@ namespace BrowserEfficiencyTest
 
             results = ProcessEtls(etlFiles);
 
-            formattedResults = FormatResults(results);
+            formattedResults = FormatResults(results, extensionsNameAndVersion);
 
             if (resultsToAdd != null)
             {
@@ -138,7 +138,7 @@ namespace BrowserEfficiencyTest
         }
 
         // Format the results into a list of CSV strings.
-        private List<string> FormatResults(Dictionary<string, Dictionary<string, Dictionary<string, string>>> results)
+        private List<string> FormatResults(Dictionary<string, Dictionary<string, Dictionary<string, string>>> results, Dictionary<string, string> extensionsNameAndVersion = null)
         {
             string headerRow = "EtlFileName,Scenario,Iteration,Browser,DateStamp,TimeStamp,MeasureSet,Measure,Result";
             List<string> formattedData = new List<string>();
@@ -183,6 +183,14 @@ namespace BrowserEfficiencyTest
                     {
                         metricName = metric.Key;
                         metricValue = metric.Value;
+                        if (extensionsNameAndVersion != null && extensionsNameAndVersion.Count != 0)
+                        {
+                            foreach (var extension in extensionsNameAndVersion)
+                            {
+                                browser = browser + "|" + extension.Key + " " + extension.Value;
+                            }
+                        }
+
                         dataRow = etlName + "," + scenario + "," + iteration + "," + browser + "," + dateStamp + "," + timeStamp + "," + measureSetName + "," + metric.Key + "," + metric.Value;
                         formattedData.Add(dataRow);
                     }

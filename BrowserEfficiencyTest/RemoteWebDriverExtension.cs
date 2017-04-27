@@ -326,7 +326,11 @@ namespace BrowserEfficiencyTest
                         var edgeOptions = new EdgeOptions();
                         // Create the extensionPaths capability object
                         edgeOptions.AddAdditionalCapability("extensionPaths", extensionPaths);
-                        Logger.LogWriteLine("Sideloading extension from " + extensionPaths[0]);
+                        foreach (var path in extensionPaths)
+                        {
+                            Logger.LogWriteLine("Sideloading extension(s) from " + path);
+                        }
+
                         driver = new EdgeDriver(svc, edgeOptions);
                     }
                     else

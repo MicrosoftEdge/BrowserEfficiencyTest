@@ -285,7 +285,7 @@ namespace BrowserEfficiencyTest
                             if (browser.ToLower() != "edge")
                             {
                                 argumentsAreValid = false;
-                                Logger.LogWriteLine("Side loading of extensions is supported only in Edge", false);
+                                Logger.LogWriteLine("Side loading of extensions is supported only in Microsoft Edge", false);
                             }
                         }
 
@@ -298,7 +298,8 @@ namespace BrowserEfficiencyTest
                                 string extensionsPath = args[argNum];
                                 if (!Directory.Exists(extensionsPath))
                                 {
-                                    Logger.LogWriteLine("Invalid extensions path!" + extensionsPath, false);
+                                    argumentsAreValid = false;
+                                    Logger.LogWriteLine("Invalid extensions path: " + extensionsPath, false);
                                 }
                                 else
                                 {
