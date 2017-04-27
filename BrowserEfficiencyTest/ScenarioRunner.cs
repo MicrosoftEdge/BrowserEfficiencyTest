@@ -27,6 +27,7 @@
 
 using Elevator;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,6 +44,7 @@ namespace BrowserEfficiencyTest
     {
         // Calculated path for staging extension files under Edge's local appdata folder.
         public static readonly string ExtensionsStagingRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages\\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\\LocalState\\");
+        public static Dictionary<string, string> _extensionsNameAndVersion = new Dictionary<string, string>();
 
         private ResponsivenessTimer _timer;
         private bool _useTimer;
@@ -110,18 +112,18 @@ namespace BrowserEfficiencyTest
             var extensionPaths = Directory.GetDirectories(path);
             var validExtensionPaths = GetValidExtensions(extensionPaths);
 
-            // Check if the extensions path provided contains atleast one extension
+            // Check if the extensions path provided contains at least one extension
             if (validExtensionPaths.Count > 0)
             {
                 var stagingPath = Path.Combine(ExtensionsStagingRootPath, directoryName);
+                _extensionsStagingPath = stagingPath;
+
                 if (Directory.Exists(stagingPath))
                 {
-                    // Clean up existing directories
-                    Directory.Delete(stagingPath, /*recursive*/ true);
+                    CleanupExtensions();
                 }
 
                 Directory.CreateDirectory(stagingPath);
-                _extensionsStagingPath = stagingPath;
 
                 foreach (var extensionPath in validExtensionPaths)
                 {
@@ -135,6 +137,14 @@ namespace BrowserEfficiencyTest
                     {
                         var xcopy = Process.Start("CMD.exe", "/F /S /Y /I /C xcopy " + extensionPath + " " + extensionStagingPath + " /s");
                         sideloadExtensionPaths.Add(Path.Combine(extensionStagingPath, "Extension"));
+
+                        // Read the name and version of extension.
+                        var manifestPath = Path.Combine(extensionPath, "Extension", "manifest.json");
+                        string jsonText = File.ReadAllText(Path.GetFullPath(manifestPath));
+                        var data = (JObject)JsonConvert.DeserializeObject(jsonText);
+                        string name = data["name"].Value<string>();
+                        string version = data["version"].Value<string>();
+                        _extensionsNameAndVersion.Add(name, version);
                     }
                     catch (Exception ex)
                     {
@@ -173,7 +183,7 @@ namespace BrowserEfficiencyTest
         {
             if (!string.IsNullOrEmpty(_extensionsStagingPath))
             {
-                if (Directory.EnumerateFileSystemEntries(_extensionsStagingPath).Any())
+                if (Directory.Exists(_extensionsStagingPath))
                 {
                     // Clean up existing directories
                     Directory.Delete(_extensionsStagingPath, /*recursive*/ true);
@@ -239,7 +249,6 @@ namespace BrowserEfficiencyTest
             {
                 elevatorClient.ConnectAsync().Wait();
                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_PASS} {_etlPath}").Wait();
-
                 Logger.LogWriteLine("Starting Test Pass");
 
                 // Core Execution Loop
@@ -258,7 +267,7 @@ namespace BrowserEfficiencyTest
 
                         foreach (string browser in _browsers)
                         {
-                            _timer.SetBrowser(browser);
+                            _timer.SetBrowser(browser, _extensionsNameAndVersion);
 
                             bool passSucceeded = false;
                             for (int attemptNumber = 0; attemptNumber < _maxAttempts && !passSucceeded; attemptNumber++)
@@ -365,7 +374,6 @@ namespace BrowserEfficiencyTest
                                             // ignore this exception as we were just trying to see if we could get a screenshot and pagesource for the original exception.
                                         }
 
-                                        CleanupExtensions();
                                         driver.CloseBrowser(browser);
                                         Logger.LogWriteLine("------ EXCEPTION caught while trying to run scenario! ------------------------------------");
                                         Logger.LogWriteLine(string.Format("    Iteration:   {0}", iteration));
@@ -408,6 +416,8 @@ namespace BrowserEfficiencyTest
                         }
                     }
                 }
+
+                CleanupExtensions();
                 Logger.LogWriteLine("Completed Test Pass");
                 elevatorClient.SendControllerMessageAsync(Elevator.Commands.END_PASS).Wait();
             }
