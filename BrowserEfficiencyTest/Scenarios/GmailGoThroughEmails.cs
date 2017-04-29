@@ -57,7 +57,7 @@ namespace BrowserEfficiencyTest
             try
             {
                 // Enter username
-                driver.TypeIntoField(driver.FindElementById("Email"), credentials.Username + Keys.Enter);
+                driver.TypeIntoField(driver.FindElement(By.XPath("//input[@type='email']")), credentials.Username + Keys.Enter);
                 driver.Wait(1);
             }
             catch (ElementNotVisibleException) { }
@@ -67,7 +67,7 @@ namespace BrowserEfficiencyTest
             }
 
             // Enter password
-            driver.TypeIntoField(driver.FindElementById("Passwd"), credentials.Password + Keys.Enter);
+            driver.TypeIntoField(driver.FindElement(By.XPath("//input[@type='password']")), credentials.Password + Keys.Enter);
 
             // give the page some time to load
             driver.Wait(14);
