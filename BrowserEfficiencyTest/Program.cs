@@ -25,6 +25,7 @@
 //
 //--------------------------------------------------------------
 
+using System;
 using System.Linq;
 
 namespace BrowserEfficiencyTest
@@ -38,20 +39,27 @@ namespace BrowserEfficiencyTest
             Arguments arguments = new Arguments(args);
             if (arguments.ArgumentsAreValid)
             {
-                ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
-
-                // Run the automation. This will write traces to the current or provided directory if the user requested it
-                if (arguments.Browsers.Count > 0 && arguments.Scenarios.Count > 0)
+                try
                 {
-                    scenarioRunner.Run();
+                    ScenarioRunner scenarioRunner = new ScenarioRunner(arguments);
+
+                    // Run the automation. This will write traces to the current or provided directory if the user requested it
+                    if (arguments.Browsers.Count > 0 && arguments.Scenarios.Count > 0)
+                    {
+                        scenarioRunner.Run();
+                    }
+
+                    // If traces have been written, process them into a csv of results
+                    // Only necessary if we're tracing and/or measuring responsiveness
+                    if ((arguments.UsingTraceController && arguments.DoPostProcessing) || arguments.MeasureResponsiveness)
+                    {
+                        PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
+                        perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.GetResponsivenessResults(), ScenarioRunner._extensionsNameAndVersion);
+                    }
                 }
-
-                // If traces have been written, process them into a csv of results
-                // Only necessary if we're tracing and/or measuring responsiveness
-                if ((arguments.UsingTraceController && arguments.DoPostProcessing) || arguments.MeasureResponsiveness)
+                catch (Exception ex)
                 {
-                    PerfProcessor perfProcessor = new PerfProcessor((arguments.SelectedMeasureSets).ToList());
-                    perfProcessor.Execute(arguments.EtlPath, arguments.EtlPath, scenarioRunner.GetResponsivenessResults(), ScenarioRunner._extensionsNameAndVersion);
+                    returnValue = 1;
                 }
             }
             else

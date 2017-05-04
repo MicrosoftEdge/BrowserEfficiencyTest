@@ -149,12 +149,16 @@ namespace BrowserEfficiencyTest
                     catch (Exception ex)
                     {
                         Logger.LogWriteLine("Copying of extension(s) failed with: \n" + ex.Message);
+                        throw new Exception("Copying of extension(s) failed with: \n" + ex.Message);
                     }
                 }
             }
             else
             {
-                Logger.LogWriteLine("No valid extensions found in given path " + path + 
+                Logger.LogWriteLine("No valid extensions found in given path " + path +
+                    ". The folder structure should be as follows: \n" +
+                    "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
+                throw new Exception("No valid extensions found in given path " + path + 
                     ". The folder structure should be as follows: \n" + 
                     "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
             }
@@ -351,6 +355,7 @@ namespace BrowserEfficiencyTest
                                     {
                                         // If something goes wrong and we get an exception halfway through the scenario, we clean up
                                         // and put everything back into a state where we can start the next iteration.
+                                        CleanupExtensions();
                                         elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS);
 
                                         try
@@ -404,14 +409,22 @@ namespace BrowserEfficiencyTest
                                 }
                             }
 
-                            if (passSucceeded)
+                            try
                             {
-                                elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
+                                if (passSucceeded)
+                                {
+                                    elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
+                                }
+                                else
+                                {
+                                    Logger.LogWriteLine(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
+                                    throw new Exception(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
+                                }
                             }
-                            else
+                            catch (Exception)
                             {
-                                Logger.LogWriteLine(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
-                                throw new Exception(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
+                                CleanupExtensions();
+                                elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS).Wait();
                             }
                         }
                     }
