@@ -54,12 +54,9 @@ namespace BrowserEfficiencyTest
             var username = driver.FindElement(By.Id("email"));
             var password = driver.FindElement(By.Id("pass"));
 
-            username.Clear();
             driver.TypeIntoField(username, credentials.Username);
             driver.Wait(1);
 
-            password.Clear();
-            driver.Wait(3);
             driver.TypeIntoField(password, credentials.Password + Keys.Enter);
             driver.Wait(1);
 
