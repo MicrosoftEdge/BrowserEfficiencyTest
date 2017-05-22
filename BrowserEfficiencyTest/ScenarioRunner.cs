@@ -105,6 +105,8 @@ namespace BrowserEfficiencyTest
             }
         }
 
+        // Copies valid extensions in the given path to the appdata folder and returns the appdata paths. Reads the name and version 
+        // of each extension which can be used if we capture traces.
         private List<string> GetExtensionPaths(string path)
         {
             var sideloadExtensionPaths = new List<string>();
@@ -135,7 +137,7 @@ namespace BrowserEfficiencyTest
 
                     try
                     {
-                        var xcopy = Process.Start("CMD.exe", "/F /S /Y /I /C xcopy " + extensionPath + " " + extensionStagingPath + " /s");
+                        File.Copy(extensionPath, extensionStagingPath);
                         sideloadExtensionPaths.Add(Path.Combine(extensionStagingPath, "Extension"));
 
                         // Read the name and version of extension.
@@ -345,7 +347,6 @@ namespace BrowserEfficiencyTest
                                             Logger.LogWriteLine(string.Format("  Completed - Scenario: {0}  Iteration: {1}  Attempt: {2}  Browser: {3}  MeasureSet: {4}", scenario.Scenario.Name, iteration, attemptNumber, browser, currentMeasureSet.Key, runTime.TotalSeconds));
                                         }
 
-                                        CleanupExtensions();
                                         driver.CloseBrowser(browser);
                                         passSucceeded = true;
                                         Logger.LogWriteLine(string.Format(" SUCCESS!  Completed Browser: {0}  Iteration: {1}  Attempt: {2}  MeasureSet: {3}", browser, iteration, attemptNumber, currentMeasureSet.Key));
@@ -355,7 +356,6 @@ namespace BrowserEfficiencyTest
                                     {
                                         // If something goes wrong and we get an exception halfway through the scenario, we clean up
                                         // and put everything back into a state where we can start the next iteration.
-                                        CleanupExtensions();
                                         elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS);
 
                                         try
@@ -409,22 +409,15 @@ namespace BrowserEfficiencyTest
                                 }
                             }
 
-                            try
+                            if (passSucceeded)
                             {
-                                if (passSucceeded)
-                                {
-                                    elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
-                                }
-                                else
-                                {
-                                    Logger.LogWriteLine(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
-                                    throw new Exception(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
-                                }
+                                elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
                             }
-                            catch (Exception)
+                            else
                             {
                                 CleanupExtensions();
-                                elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS).Wait();
+                                Logger.LogWriteLine(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
+                                throw new Exception(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
                             }
                         }
                     }
