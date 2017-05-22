@@ -33,6 +33,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 
@@ -264,7 +265,7 @@ namespace BrowserEfficiencyTest
         /// <param name="browser">The browser to get instantiate the Web Driver for.</param>
         /// <param name="browserProfilePath">The folder path to the browser user profile to use with the browser.</param>
         /// <returns>The RemoteWebDriver of the browser passed in to the method.</returns>
-        public static RemoteWebDriver CreateDriverAndMaximize(string browser, string browserProfilePath = "")
+        public static RemoteWebDriver CreateDriverAndMaximize(string browser, string browserProfilePath = "", List<string> extensionPaths = null)
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
@@ -303,7 +304,23 @@ namespace BrowserEfficiencyTest
                 default:
                     // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
                     EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
-                    driver = new EdgeDriver(svc);
+                    if (extensionPaths != null && extensionPaths.Count != 0)
+                    {
+                        var edgeOptions = new EdgeOptions();
+                        // Create the extensionPaths capability object
+                        edgeOptions.AddAdditionalCapability("extensionPaths", extensionPaths);
+                        foreach (var path in extensionPaths)
+                        {
+                            Logger.LogWriteLine("Sideloading extension(s) from " + path);
+                        }
+
+                        driver = new EdgeDriver(svc, edgeOptions);
+                    }
+                    else
+                    {
+                        driver = new EdgeDriver(svc);
+                    }
+
                     Thread.Sleep(2000);
                     HttpClient client = new HttpClient();
                     client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();

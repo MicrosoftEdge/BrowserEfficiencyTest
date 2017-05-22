@@ -27,6 +27,7 @@
 
 using Elevator;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,6 +42,10 @@ namespace BrowserEfficiencyTest
     /// </summary>
     internal class ScenarioRunner
     {
+        // Calculated path for staging extension files under Edge's local appdata folder.
+        public static readonly string ExtensionsStagingRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Packages\\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\\LocalState\\");
+        public static Dictionary<string, string> _extensionsNameAndVersion = new Dictionary<string, string>();
+
         private ResponsivenessTimer _timer;
         private bool _useTimer;
         private int _iterations;
@@ -48,6 +53,8 @@ namespace BrowserEfficiencyTest
         private string _browserProfilePath;
         private bool _usingTraceController;
         private string _etlPath;
+        private List<string> _extensionsPaths;
+        private string _extensionsStagingPath;
         private bool _overrideTimeout;
         private List<WorkloadScenario> _scenarios = new List<WorkloadScenario>();
         private List<string> _browsers = new List<string>();
@@ -71,6 +78,7 @@ namespace BrowserEfficiencyTest
             _browserProfilePath = args.BrowserProfilePath;
             _usingTraceController = args.UsingTraceController;
             _etlPath = args.EtlPath;
+            _extensionsStagingPath = "";
             _maxAttempts = args.MaxAttempts;
             _overrideTimeout = args.OverrideTimeout;
             _scenarios = args.Scenarios.ToList();
@@ -82,6 +90,15 @@ namespace BrowserEfficiencyTest
             _captureBaseline = args.CaptureBaseline;
             _baselineCaptureSeconds = args.BaselineCaptureSeconds;
 
+            if (!string.IsNullOrEmpty(args.ExtensionsPath))
+            {
+                _extensionsPaths = GetExtensionPaths(args.ExtensionsPath);
+            }
+            else
+            {
+                _extensionsPaths = null;
+            }
+
             if (args.MeasureResponsiveness)
             {
                 _useTimer = true;
@@ -89,6 +106,98 @@ namespace BrowserEfficiencyTest
             else
             {
                 _useTimer = false;
+            }
+        }
+
+        // Copies valid extensions in the given path to the appdata folder and returns the appdata paths. Reads the name and version 
+        // of each extension which can be used if we capture traces.
+        private List<string> GetExtensionPaths(string path)
+        {
+            var sideloadExtensionPaths = new List<string>();
+            var directoryName = path.Split('\\').Last();
+            var extensionPaths = Directory.GetDirectories(path);
+            var validExtensionPaths = GetValidExtensions(extensionPaths);
+
+            // Check if the extensions path provided contains at least one extension
+            if (validExtensionPaths.Count > 0)
+            {
+                var stagingPath = Path.Combine(ExtensionsStagingRootPath, directoryName);
+                _extensionsStagingPath = stagingPath;
+
+                if (Directory.Exists(stagingPath))
+                {
+                    CleanupExtensions();
+                }
+
+                Directory.CreateDirectory(stagingPath);
+
+                foreach (var extensionPath in validExtensionPaths)
+                {
+                    var extensionFolderName = extensionPath.Split('\\').Last();
+                    var extensionStagingPath = Path.Combine(ExtensionsStagingRootPath, directoryName, extensionFolderName);
+                    Directory.CreateDirectory(extensionStagingPath);
+
+                    Logger.LogWriteLine("Staging extensions files: Source='" + extensionPath + "' Destination='" + extensionStagingPath + "'", false);
+
+                    try
+                    {
+                        File.Copy(extensionPath, extensionStagingPath);
+                        sideloadExtensionPaths.Add(Path.Combine(extensionStagingPath, "Extension"));
+
+                        // Read the name and version of extension.
+                        var manifestPath = Path.Combine(extensionPath, "Extension", "manifest.json");
+                        string jsonText = File.ReadAllText(Path.GetFullPath(manifestPath));
+                        var data = (JObject)JsonConvert.DeserializeObject(jsonText);
+                        string name = data["name"].Value<string>();
+                        string version = data["version"].Value<string>();
+                        _extensionsNameAndVersion.Add(name, version);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogWriteLine("Copying of extension(s) failed with: \n" + ex.Message);
+                        throw new Exception("Copying of extension(s) failed with: \n" + ex.Message);
+                    }
+                }
+            }
+            else
+            {
+                Logger.LogWriteLine("No valid extensions found in given path " + path +
+                    ". The folder structure should be as follows: \n" +
+                    "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
+                throw new Exception("No valid extensions found in given path " + path + 
+                    ". The folder structure should be as follows: \n" + 
+                    "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
+            }
+
+            return sideloadExtensionPaths;
+        }
+
+        private List<string> GetValidExtensions(string[] paths)
+        {
+            var validExtensions = new List<string>();
+
+            // Check for folders with manifest.json
+            foreach (var path in paths)
+            {
+                var extensionFilesPath = Path.Combine(path, "Extension");
+                if ((Directory.Exists(extensionFilesPath)) && (File.Exists(Path.Combine(extensionFilesPath, "manifest.json"))))
+                {
+                    validExtensions.Add(path);
+                }
+            }
+
+            return validExtensions;
+        }
+
+        private void CleanupExtensions()
+        {
+            if (!string.IsNullOrEmpty(_extensionsStagingPath))
+            {
+                if (Directory.Exists(_extensionsStagingPath))
+                {
+                    // Clean up existing directories
+                    Directory.Delete(_extensionsStagingPath, /*recursive*/ true);
+                }
             }
         }
 
@@ -150,7 +259,6 @@ namespace BrowserEfficiencyTest
             {
                 elevatorClient.ConnectAsync().Wait();
                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_PASS} {_etlPath}").Wait();
-
                 Logger.LogWriteLine("Starting Test Pass");
 
                 // Core Execution Loop
@@ -192,7 +300,7 @@ namespace BrowserEfficiencyTest
 
                         foreach (string browser in _browsers)
                         {
-                            _timer.SetBrowser(browser);
+                            _timer.SetBrowser(browser, _extensionsNameAndVersion);
 
                             bool passSucceeded = false;
                             for (int attemptNumber = 0; attemptNumber < _maxAttempts && !passSucceeded; attemptNumber++)
@@ -206,7 +314,7 @@ namespace BrowserEfficiencyTest
 
                                 Logger.LogWriteLine(string.Format(" Launching Browser Driver: '{0}'", browser));
                                 ScenarioEventSourceProvider.EventLog.WorkloadStart(_scenarioName, browser, currentMeasureSet.Value.Item1, iteration, attemptNumber);
-                                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath))
+                                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _browserProfilePath, _extensionsPaths))
                                 {
                                     string currentScenario = "";
                                     try
@@ -334,12 +442,15 @@ namespace BrowserEfficiencyTest
                             }
                             else
                             {
+                                CleanupExtensions();
                                 Logger.LogWriteLine(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
                                 throw new Exception(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
                             }
                         }
                     }
                 }
+
+                CleanupExtensions();
                 Logger.LogWriteLine("Completed Test Pass");
                 elevatorClient.SendControllerMessageAsync(Elevator.Commands.END_PASS).Wait();
             }

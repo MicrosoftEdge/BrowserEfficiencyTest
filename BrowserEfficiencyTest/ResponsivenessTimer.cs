@@ -2,6 +2,9 @@
 using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,9 +49,16 @@ namespace BrowserEfficiencyTest
         /// Sets the browser, which will be included when a measurement is recorded later.
         /// </summary>
         /// <param name="browser">The current browser</param>
-        public void SetBrowser(string browser)
+        public void SetBrowser(string browser, Dictionary<string, string> extensionsNameAndVersion = null)
         {
-            _browser = browser;
+             _browser = browser;
+            if (extensionsNameAndVersion != null && extensionsNameAndVersion.Count != 0)
+            {
+                foreach (var extension in extensionsNameAndVersion)
+                {
+                    _browser = _browser + "|" + extension.Key + " " + extension.Value;
+                }
+            }
         }
 
         /// <summary>
