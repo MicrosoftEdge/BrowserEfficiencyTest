@@ -204,9 +204,10 @@ If you wish to run BrowserEfficiencyTest with an extension that is available fro
 3. Run `cd C:\Program Files\WindowsApps`
 4. Run `dir | findstr /i <searchQuery>` (where `searchQuery` is part of the name of the extension you installed)
 5. Run `mkdir C:\unpackedExtensions`
-6. Run `xcopy /r /s C:\ProgramFiles\WindowsApps\FolderReturnedInStep2 C:\unpackedExtensions`
+5. Run `mkdir C:\unpackedExtensions\extension1`
+6. Run `xcopy /r /s C:\ProgramFiles\WindowsApps\FolderReturnedInStep2 C:\unpackedExtensions\extension1`
 
-This will copy the extension folder from the `WindowsApps` folder into `C:\unpackedExtensions`, mirroring the format shown above.
+This will copy the extension folder from the `WindowsApps` folder into `C:\unpackedExtensions\extension1`, mirroring the format shown above.
 
 #### Using the -e flag
 To load extensions in Microsoft Edge, run BrowserEfficiencyTest with the `-extensions|-e` flag as follows:
