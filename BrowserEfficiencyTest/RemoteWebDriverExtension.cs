@@ -33,8 +33,10 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Opera;
 using OpenQA.Selenium.Remote;
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BrowserEfficiencyTest
 {
@@ -45,6 +47,10 @@ namespace BrowserEfficiencyTest
     /// </summary>
     public static class RemoteWebDriverExtension
     {
+        private static int _port = -1;
+        private static int _edgeWebDriverFileVersionBuildPart = 0;
+        private static int _edgeBrowserFileVersionBuildPart = 0;
+
         /// <summary>
         /// Navigates to the url passed as a string
         /// A wrapper for RemoteWebDriver.Navigate().GoToUrl(...) method but includes tracing events and pageloading waits
@@ -81,16 +87,25 @@ namespace BrowserEfficiencyTest
 
             ScenarioEventSourceProvider.EventLog.OpenNewTab(originalTabCount, originalTabCount + 1);
 
-            // Use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
-            // You actually have to in Opera too, but that's provided in a flag below
-            remoteWebDriver.ExecuteScript("window.open();");
+            if (IsNewTabCommandSupported(remoteWebDriver))
+            {
+                Logger.LogWriteLine(" New Tab: Attempting to create a new tab using the Edge newTab webdriver command.");
+                CallEdgeNewTabCommand(remoteWebDriver).Wait();
+            }
+            else
+            {
+                // Use some JS. Note that this means you have to disable popup blocking in Microsoft Edge
+                // You actually have to in Opera too, but that's provided in a flag below
+                Logger.LogWriteLine(" New Tab: Attempting to create a new tab using the javascript method window.open()");
+                remoteWebDriver.ExecuteScript("window.open();");
+            }
 
             endingTabCount = remoteWebDriver.WindowHandles.Count;
 
             // sanity check to make sure we in fact did get a new tab opened.
             if (endingTabCount != (originalTabCount + 1))
             {
-                throw new Exception("New tab was not created as expected!");
+                throw new Exception(string.Format("New tab was not created as expected! Expected {0} tabs but found {1} tabs.", (originalTabCount + 1), endingTabCount));
             }
 
             // Go to that tab
@@ -303,12 +318,27 @@ namespace BrowserEfficiencyTest
                 default:
                     // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
                     EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
+                    _port = svc.Port;
                     driver = new EdgeDriver(svc);
+
+                    string systemRoot = Environment.GetEnvironmentVariable("SystemRoot");
+                    string edgeAppFullPath = System.IO.Path.Combine(systemRoot, @"SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe");
+
+                    FileVersionInfo _edgeWebDriverVersion = FileVersionInfo.GetVersionInfo("MicrosoftWebDriver.exe");
+                    FileVersionInfo _edgeBrowserVersion = FileVersionInfo.GetVersionInfo(edgeAppFullPath);
+
+                    _edgeWebDriverFileVersionBuildPart = _edgeWebDriverVersion.FileBuildPart;
+                    _edgeBrowserFileVersionBuildPart = _edgeBrowserVersion.FileBuildPart;
+
+                    Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge File Version: {0}", _edgeBrowserVersion.FileVersion));
+                    Logger.LogWriteLine(string.Format("   Driver Version - MicrosoftWebDriver File Version: {0}", _edgeWebDriverVersion.FileVersion));
+
                     Thread.Sleep(2000);
                     HttpClient client = new HttpClient();
                     client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();
                     break;
             }
+
             ScenarioEventSourceProvider.EventLog.MaximizeBrowser(browser);
             driver.Manage().Window.Maximize();
             Thread.Sleep(1000);
@@ -325,6 +355,48 @@ namespace BrowserEfficiencyTest
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, timeoutSec));
             wait.Until(wd => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
             ScenarioEventSourceProvider.EventLog.PageReadyState();
+        }
+
+        /// <summary>
+        /// For Edge only - Checks to see if the Edge browser and MicrosoftWebDriver.exe support the Edge specific 'NewTab' command.
+        /// </summary>
+        /// <param name="remoteWebDriver"></param>
+        /// <returns>True if the current Edge browser and MicrosoftWebDriver support the new</returns>
+        private static bool IsNewTabCommandSupported(this RemoteWebDriver remoteWebDriver)
+        {
+            bool isNewTabCommandSupported = false;
+
+            // First check if the webdriver being used is EdgeDriver
+            if (remoteWebDriver is OpenQA.Selenium.Edge.EdgeDriver)
+            {
+                if (_edgeBrowserFileVersionBuildPart > 16203 && _edgeWebDriverFileVersionBuildPart > 16203)
+                {
+                    isNewTabCommandSupported = true;
+                }
+            }
+
+            return isNewTabCommandSupported;
+        }
+
+        /// <summary>
+        /// For Edge only - executes the webdriver tab command which opens a new tab without using the javascript window.Open() command
+        /// </summary>
+        /// <param name="remoteWebDriver"></param>
+        /// <returns></returns>
+        private static async Task CallEdgeNewTabCommand(this RemoteWebDriver remoteWebDriver)
+        {
+            string response = "";
+            HttpContent content = new StringContent("");
+            HttpResponseMessage newTabResponse = null;
+
+            HttpClient client = new HttpClient();
+            newTabResponse = await client.PostAsync($"http://localhost:{_port}/session/{remoteWebDriver.SessionId}/ms/tab", content);
+            response = await newTabResponse.Content.ReadAsStringAsync();
+
+            if (response == "Unknown command received")
+            {
+                throw new Exception("New Tab command functionality is not implemented!!!");
+            }
         }
     }
 }

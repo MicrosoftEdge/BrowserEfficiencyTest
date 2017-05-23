@@ -34,6 +34,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
+using Microsoft.Win32;
+
 namespace BrowserEfficiencyTest
 {
     /// <summary>
@@ -132,6 +134,8 @@ namespace BrowserEfficiencyTest
         /// </summary>
         public void Run()
         {
+            LogOsVersion();
+
             if (_useTimer)
             {
                 _timer.Enable();
@@ -171,7 +175,7 @@ namespace BrowserEfficiencyTest
                             Logger.LogWriteLine(string.Format(" Starting capture of system baseline for {0} seconds - measureset {1}  iteration {2}", _baselineCaptureSeconds, currentMeasureSet.Value.Item1, iteration));
 
                             // Start the trace capture
-                            elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} BASE ITERATION {iteration} SCENARIO_NAME {_scenarioName} WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
+                            elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} BASE ITERATION {iteration} SCENARIO_NAME BaseLineCapture WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
 
                             Thread.Sleep(_baselineCaptureSeconds * 1000);
 
@@ -342,6 +346,19 @@ namespace BrowserEfficiencyTest
                 }
                 Logger.LogWriteLine("Completed Test Pass");
                 elevatorClient.SendControllerMessageAsync(Elevator.Commands.END_PASS).Wait();
+            }
+        }
+
+        // Log the OS version from the registry
+        private void LogOsVersion()
+        {
+            using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"software\microsoft\windows NT\currentVersion"))
+            {
+                Logger.LogWriteLine("--- OS Version ------");
+                Logger.LogWriteLine(string.Format("  BuildLabEx: {0}", (string)regKey.GetValue("BuildLabEx")));
+                Logger.LogWriteLine(string.Format("  EditionID: {0}", (string)regKey.GetValue("EditionID")));
+                Logger.LogWriteLine(string.Format("  ProductName: {0}", (string)regKey.GetValue("ProductName")));
+                Logger.LogWriteLine("---------------------");
             }
         }
     }
