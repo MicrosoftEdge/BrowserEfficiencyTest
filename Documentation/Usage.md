@@ -10,7 +10,7 @@ BrowserEfficiencyTest is best run from the command line, and requires an instanc
 Usage:
 
 ```
-BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]] [-capturebaseline|-cb <integer representing number of seconds>]
+BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]] [-capturebaseline|-cb <integer representing number of seconds>] [-extensions|-e <path to directory containing unpacked extension AppX(s)>]
 ```
 
 *   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
@@ -104,6 +104,8 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
 
 *   **-capturebaseline|-cb** Captures a trace for the specificed number of seconds without running any browser or test. Use this option to capture a baseline trace of the system where the system is not running any test or browser. Specify the length of time in seconds to capture the baseline trace for. Only available when using the '-measureset|-ms' option.
 
+*   **-extensions|-e** Allows unpacked extensions located in the specified folder to be side loaded in the browser when tests are run. Currently, this capability is only supported in Microsoft Edge.
+
 ## Examples
 
 ### Simple one tab, one browser, no measures
@@ -173,3 +175,42 @@ Then, with the resulting trace files, we can process the results separately with
 or
 
 ```BrowserEfficiencyTest.exe -rp C:\Some\Path\To\Store\Traces -ms cpuUsage```
+
+### Side Loading Extensions (only supported in Microsoft Edge)
+To side load extensions in Microsoft Edge while tests run, the first step is to prepare a directory (`C:\unpackedExtensions` was used for the purpose of this demo) that contains one or more unpacked extension AppXs:
+
+```
+C:\unpackedExtensions
+|---- extension1
+|----|---- Assets
+|----|---- AppXManifest.xml
+|----|---- Extension
+|----|----|---- manifest.json
+|----|----|---- <otherExtFiles>
+|---- extension2 (optional)
+|----|---- Assets
+|----|---- AppXManifest.xml
+|----|---- Extension
+|----|----|---- manifest.json
+|----|----|---- <otherExtFiles>
+```
+#### Testing your own extension
+If you wish prepare your own extension for testing, you can follow the first half of the Microsoft Edge Extension [ManifoldJS Packaging Guide](https://docs.microsoft.com/en-us/microsoft-edge/extensions/guides/packaging/using-manifoldjs-to-package-extensions) to generate an unpacked extension AppX. From there, you will need to copy the `manifest` folder that ManifoldJS generates into a folder (`C:\unpackedExtensions` for the purposes of this demo) to match the structure above. 
+
+#### Testing an extension from the Windows Store
+If you wish to run BrowserEfficiencyTest with an extension that is available from the Windows Store, you will need to perform the following steps:
+1. Install an extension from the Windows Store in Microsoft Edge
+2. Open an elevated command prompt
+3. Run `cd C:\Program Files\WindowsApps`
+4. Run `dir | findstr /i <searchQuery>` (where `searchQuery` is part of the name of the extension you installed)
+5. Run `mkdir C:\unpackedExtensions`
+6. Run `xcopy /r /s C:\ProgramFiles\WindowsApps\FolderReturnedInStep2 C:\unpackedExtensions`
+
+This will copy the extension folder from the `WindowsApps` folder into `C:\unpackedExtensions`, mirroring the format shown above.
+
+#### Using the -e flag
+To load extensions in Microsoft Edge, run BrowserEfficiencyTest with the `-extensions|-e` flag as follows:
+
+```BrowserEfficiencyTest.exe -browser edge -e C:\unpackedExtensions -workload representative``` 
+
+While the tests execute, you will see the extension(s) located in the `unpackedExtensions` directory loaded in Microsoft Edge. The name of the side loaded extensions will be included in the `browser` column of the results CSV.
