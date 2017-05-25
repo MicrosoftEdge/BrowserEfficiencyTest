@@ -143,7 +143,7 @@ namespace BrowserEfficiencyTest
 
                     try
                     {
-                        File.Copy(extensionPath, extensionStagingPath);
+                        DirectoryCopy(extensionPath, extensionStagingPath);
                         sideloadExtensionPaths.Add(Path.Combine(extensionStagingPath, "Extension"));
 
                         // Read the name and version of extension.
@@ -200,6 +200,41 @@ namespace BrowserEfficiencyTest
                     // Clean up existing directories
                     Directory.Delete(_extensionsStagingPath, /*recursive*/ true);
                 }
+            }
+        }
+
+        // Recursively copies all the files and subfolders of the source directory into the destination directory
+        // Copied from https://msdn.microsoft.com/en-us/library/bb762914(v=vs.110).aspx
+        private static void DirectoryCopy(string sourceDirectoryName, string destinationDirectoryName)
+        {
+            // Get the subdirectories for the specified source directory
+            DirectoryInfo sourceDirectory = new DirectoryInfo(sourceDirectoryName);
+
+            if (!sourceDirectory.Exists)
+            {
+                throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDirectoryName);
+            }
+
+            DirectoryInfo[] sourceSubDirectories = sourceDirectory.GetDirectories();
+            // If the destination directory doesn't exist, create it.
+            if (!Directory.Exists(destinationDirectoryName))
+            {
+                Directory.CreateDirectory(destinationDirectoryName);
+            }
+
+            // Get the files in the source directory and copy them to the new location
+            FileInfo[] files = sourceDirectory.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destinationDirectoryName, file.Name);
+                file.CopyTo(tempPath, false);
+            }
+
+            // Copy the each of the subdirectories
+            foreach (DirectoryInfo subDirectory in sourceSubDirectories)
+            {
+                string tempPath = Path.Combine(destinationDirectoryName, subDirectory.Name);
+                DirectoryCopy(subDirectory.FullName, tempPath);
             }
         }
 
