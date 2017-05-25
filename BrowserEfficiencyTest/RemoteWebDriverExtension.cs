@@ -321,18 +321,13 @@ namespace BrowserEfficiencyTest
                     _port = svc.Port;
                     driver = new EdgeDriver(svc);
 
-                    string systemRoot = Environment.GetEnvironmentVariable("SystemRoot");
-                    string edgeAppFullPath = System.IO.Path.Combine(systemRoot, @"SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe");
+                    FileVersionInfo edgeBrowserVersion = GetEdgeFileVersion();
+                    Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge File Version: {0}", edgeBrowserVersion.FileVersion));
+                    _edgeBrowserFileVersionBuildPart = edgeBrowserVersion.FileBuildPart;
 
-                    FileVersionInfo _edgeWebDriverVersion = FileVersionInfo.GetVersionInfo("MicrosoftWebDriver.exe");
-                    FileVersionInfo _edgeBrowserVersion = FileVersionInfo.GetVersionInfo(edgeAppFullPath);
-
-                    _edgeWebDriverFileVersionBuildPart = _edgeWebDriverVersion.FileBuildPart;
-                    _edgeBrowserFileVersionBuildPart = _edgeBrowserVersion.FileBuildPart;
-
-                    Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge File Version: {0}", _edgeBrowserVersion.FileVersion));
-                    Logger.LogWriteLine(string.Format("   Driver Version - MicrosoftWebDriver File Version: {0}", _edgeWebDriverVersion.FileVersion));
-
+                    string webDriverServerVersion = GetEdgeWebDriverVersion(driver);
+                    Logger.LogWriteLine(string.Format("   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {0}", webDriverServerVersion));
+                    _edgeWebDriverFileVersionBuildPart = Convert.ToInt32(webDriverServerVersion.Split('.')[2]);
                     Thread.Sleep(2000);
                     HttpClient client = new HttpClient();
                     client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();
@@ -344,6 +339,14 @@ namespace BrowserEfficiencyTest
             Thread.Sleep(1000);
 
             return driver;
+        }
+
+        // Gets the file version info of the MicrosoftEdge browser.
+        private static FileVersionInfo GetEdgeFileVersion()
+        {
+            string edgeAppFullPath = System.IO.Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), @"SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe");
+            FileVersionInfo edgeBrowserVersion = FileVersionInfo.GetVersionInfo(edgeAppFullPath);
+            return edgeBrowserVersion;
         }
 
         /// <summary>
@@ -397,6 +400,25 @@ namespace BrowserEfficiencyTest
             {
                 throw new Exception("New Tab command functionality is not implemented!!!");
             }
+        }
+
+        // Retrieves the WebDriver server version
+        private static string GetEdgeWebDriverVersion(this RemoteWebDriver remoteWebDriver)
+        {
+            var statusResponse = Newtonsoft.Json.Linq.JObject.Parse(CallStatusCommand(remoteWebDriver).Result);
+            string webDriverVersion = (string)statusResponse["value"]["build"]["version"];
+
+            return webDriverVersion;
+        }
+
+        // Calls the WebDriver status command
+        private static async Task<string> CallStatusCommand(this RemoteWebDriver remoteWebDriver)
+        {
+            HttpClient client = new HttpClient();
+            HttpResponseMessage statusResponse = await client.GetAsync($"http://localhost:{_port}/status");
+            string response = await statusResponse.Content.ReadAsStringAsync();
+
+            return response;
         }
     }
 }
