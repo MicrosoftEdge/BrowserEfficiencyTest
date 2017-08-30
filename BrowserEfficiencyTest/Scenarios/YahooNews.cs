@@ -112,7 +112,8 @@ namespace BrowserEfficiencyTest
             // Simulate reading it
             driver.Wait(6);
             // Give focus to some element on the page so that PG DN scrolls
-            driver.FindElement(By.Id("SideTop-0-CanvasTag-Proxy")).FindElement(By.TagName("a")).SendKeys("");
+            driver.FindElement(By.Id("app")).FindElement(By.TagName("a")).SendKeys("");
+
             driver.ScrollPage(2);
             driver.Wait(6);
             driver.ScrollPage(1);
