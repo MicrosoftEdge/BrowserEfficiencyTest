@@ -90,6 +90,7 @@
     <Compile Include="Scenarios\PinterestExplore.cs" />
     <Compile Include="Scenarios\PowerBiBrowse.cs" />
     <Compile Include="Scenarios\ScholasticHarryPotter.cs" />
+    <Compile Include="Scenarios\RedditSurfaceSearch.cs" />
     <Compile Include="Scenarios\KhanAcademyGrade8Math.cs" />
     <Compile Include="Scenarios\TumblrTrending.cs" />
     <Compile Include="Scenarios\TwitterPublic.cs" />
