@@ -617,6 +617,7 @@ namespace BrowserEfficiencyTest
             AddScenario(new NewselaChineseNewYear());
             AddScenario(new ColoradoStatesOfMatter());
             AddScenario(new BrainPopAvalanches());
+            AddScenario(new RedditSurfaceSearch());
         }
 
         private void AddScenario(Scenario scenario)
