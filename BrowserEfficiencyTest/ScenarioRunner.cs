@@ -111,7 +111,7 @@ namespace BrowserEfficiencyTest
             }
         }
 
-        // Copies valid extensions in the given path to the appdata folder and returns the appdata paths. Reads the name and version 
+        // Copies valid extensions in the given path to the appdata folder and returns the appdata paths. Reads the name and version
         // of each extension which can be used if we capture traces.
         private List<string> GetExtensionPaths(string path)
         {
@@ -166,8 +166,8 @@ namespace BrowserEfficiencyTest
                 Logger.LogWriteLine("No valid extensions found in given path " + path +
                     ". The folder structure should be as follows: \n" +
                     "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
-                throw new Exception("No valid extensions found in given path " + path + 
-                    ". The folder structure should be as follows: \n" + 
+                throw new Exception("No valid extensions found in given path " + path +
+                    ". The folder structure should be as follows: \n" +
                     "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
             }
 
