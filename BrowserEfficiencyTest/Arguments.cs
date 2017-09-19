@@ -63,6 +63,7 @@ namespace BrowserEfficiencyTest
         public string BrowserEfficiencyTestVersion { get; private set; }
         public bool CaptureBaseline { get; private set; }
         public int BaselineCaptureSeconds { get; private set; }
+        public bool ClearBrowserCache { get; private set; }
         /// <summary>
         /// List of all scenarios to be run.
         /// </summary>
@@ -118,6 +119,7 @@ namespace BrowserEfficiencyTest
             BrowserEfficiencyTestVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             CaptureBaseline = false;
             BaselineCaptureSeconds = 600; // 10 minutes as the default
+            ClearBrowserCache = false;
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -491,6 +493,10 @@ namespace BrowserEfficiencyTest
                         {
                             Logger.LogWriteLine("Invalid value for the baseline capture time in seconds. Must be an integer greater than 0 and less than 36000.", false);
                         }
+                        break;
+                    case "-clearbrowsercache":
+                    case "-cbc":
+                        ClearBrowserCache = true;
                         break;
                     default:
                         argumentsAreValid = false;

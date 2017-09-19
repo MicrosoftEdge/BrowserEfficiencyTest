@@ -51,31 +51,47 @@ namespace BrowserEfficiencyTest
 
         private void LogIn(RemoteWebDriver driver, CredentialManager credentialManager)
         {
-            // Get the relevant username and password
-            UserInfo credentials = credentialManager.GetCredentials("gmail.com");
+            string startingPageTitle = driver.Title;
 
-            try
+            // If an account is not already logged in, the page title will be simply 'Gmail'
+            if (startingPageTitle.Equals("Gmail", StringComparison.InvariantCultureIgnoreCase))
             {
-                // Enter username
-                driver.TypeIntoField(driver.FindElement(By.XPath("//input[@type='email']")), credentials.Username + Keys.Enter);
-                driver.Wait(1);
+                // Get the relevant username and password
+                UserInfo credentials = credentialManager.GetCredentials("gmail.com");
+
+                Logger.LogWriteLine("    Starting logging into Gmail...");
+
+                ScenarioEventSourceProvider.EventLog.AccoungLogInStart("Gmail");
+                try
+                {
+                    // Enter username
+                    driver.TypeIntoField(driver.FindElement(By.XPath("//input[@type='email']")), credentials.Username + Keys.Enter);
+                    driver.Wait(1);
+                }
+                catch (ElementNotVisibleException) { }
+                catch (InvalidOperationException)
+                {
+                    // If using profiles, the Email element will not be found and user will be able to enter the password
+                }
+
+                // Enter password
+                driver.TypeIntoField(driver.FindElement(By.XPath("//input[@type='password']")), credentials.Password + Keys.Enter);
+
+                // give the page some time to load
+                driver.Wait(14);
+
+                // Check the url to make sure login was successful
+                if (driver.Url != @"https://mail.google.com/mail/u/0/#inbox" && driver.Url != @"https://mail.google.com/mail/#inbox")
+                {
+                    throw new Exception("Login to Gmail failed!");
+                }
+
+                ScenarioEventSourceProvider.EventLog.AccoungLogInStop("Gmail");
+                Logger.LogWriteLine("    Completed logging into Gmail...");
             }
-            catch (ElementNotVisibleException) { }
-            catch (InvalidOperationException)
+            else
             {
-                // If using profiles, the Email element will not be found and user will be able to enter the password
-            }
-
-            // Enter password
-            driver.TypeIntoField(driver.FindElement(By.XPath("//input[@type='password']")), credentials.Password + Keys.Enter);
-
-            // give the page some time to load
-            driver.Wait(14);
-
-            // Check the url to make sure login was successful
-            if(driver.Url != @"https://mail.google.com/mail/u/0/#inbox" && driver.Url != @"https://mail.google.com/mail/#inbox")
-            {
-                throw new Exception("Login to Gmail failed!");
+                Logger.LogWriteLine("    Already logged into Gmail...");
             }
         }
 
