@@ -57,6 +57,6 @@ namespace BrowserEfficiencyTest
             // Then go back to the news homepage
             driver.NavigateBack();
 
-        }        
+        }
     }
 }
