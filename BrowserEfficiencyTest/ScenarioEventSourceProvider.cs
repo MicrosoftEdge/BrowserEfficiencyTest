@@ -50,6 +50,7 @@ namespace BrowserEfficiencyTest
             public const EventTask SendKeys = (EventTask)4;
             public const EventTask TypeIntoField = (EventTask)5;
             public const EventTask AccoungLogIn = (EventTask)6;
+            public const EventTask WarmupExecution = (EventTask)7;
         }
 
         [Event(1, Opcode = EventOpcode.Start, Task = Tasks.WorkloadExecution)]
@@ -117,5 +118,11 @@ namespace BrowserEfficiencyTest
 
         [Event(22, Opcode = EventOpcode.Stop, Task = Tasks.AccoungLogIn)]
         public void AccoungLogInStop(string WebsiteName) { WriteEvent(22, WebsiteName); }
+
+        [Event(23, Opcode = EventOpcode.Start, Task = Tasks.WarmupExecution)]
+        public void WarmupExecutionStart() { WriteEvent(23); }
+
+        [Event(24, Opcode = EventOpcode.Stop, Task = Tasks.WarmupExecution)]
+        public void WarmupExecutionStop() { WriteEvent(24); }
     }
 }
