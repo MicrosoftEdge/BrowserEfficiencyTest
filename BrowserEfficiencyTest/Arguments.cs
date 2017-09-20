@@ -547,7 +547,6 @@ namespace BrowserEfficiencyTest
         private void DisplayUsage()
         {
             Logger.LogWriteLine("Usage:", false);
-            //Logger.LogWriteLine("BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]] [-capturebaseline|-cb <integer representing number of seconds>] [-extensions|-e <path to directory containing unpacked extension AppX(s)>]", false);
             Logger.LogWriteLine("BrowserEfficiencyTest.exe "
                                 + "[-browser|-b [chrome|edge|firefox|opera|operabeta] "
                                 + "[-scenario|-s <scenario1> <scenario2>] "
