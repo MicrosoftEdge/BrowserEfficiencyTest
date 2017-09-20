@@ -63,6 +63,8 @@ namespace BrowserEfficiencyTest
         public string BrowserEfficiencyTestVersion { get; private set; }
         public bool CaptureBaseline { get; private set; }
         public int BaselineCaptureSeconds { get; private set; }
+        public bool ClearBrowserCache { get; private set; }
+        public bool DoWarmupRun { get; private set; }
         /// <summary>
         /// List of all scenarios to be run.
         /// </summary>
@@ -118,6 +120,8 @@ namespace BrowserEfficiencyTest
             BrowserEfficiencyTestVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             CaptureBaseline = false;
             BaselineCaptureSeconds = 600; // 10 minutes as the default
+            ClearBrowserCache = false;
+            DoWarmupRun = false;
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -492,6 +496,14 @@ namespace BrowserEfficiencyTest
                             Logger.LogWriteLine("Invalid value for the baseline capture time in seconds. Must be an integer greater than 0 and less than 36000.", false);
                         }
                         break;
+                    case "-clearbrowsercache":
+                    case "-cbc":
+                        ClearBrowserCache = true;
+                        break;
+                    case "-warmuprun":
+                    case "-wu":
+                        DoWarmupRun = true;
+                        break;
                     default:
                         argumentsAreValid = false;
                         Logger.LogWriteLine(string.Format("Invalid argument encountered '{0}'", args[argNum]), false);
@@ -535,7 +547,24 @@ namespace BrowserEfficiencyTest
         private void DisplayUsage()
         {
             Logger.LogWriteLine("Usage:", false);
-            Logger.LogWriteLine("BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] -scenario|-s <scenario1> <scenario2>] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-workload|-w <workload name>] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]]", false);
+            Logger.LogWriteLine("BrowserEfficiencyTest.exe "
+                                + "[-browser|-b [chrome|edge|firefox|opera|operabeta] "
+                                + "[-scenario|-s <scenario1> <scenario2>] "
+                                + "[-iterations|-i <iterationcount>] "
+                                + "[-resultspath|-rp <etlpath>] "
+                                + "[-measureset|-ms <measureset1> <measureset2>] "
+                                + "[-profile|-p <chrome profile path>] "
+                                + "[-attempts|-a <attempts to make per iteration>] "
+                                + "[-notimeout] "
+                                + "[-noprocessing|-np] "
+                                + "[-workload|-w <workload name>] "
+                                + "[-credentialpath|-cp <path to credentials json file>] "
+                                + "[-responsiveness|-r] "
+                                + "[-filelogging|-fl [<path for logfile>]] "
+                                + "[-capturebaseline|-cb <integer representing number of seconds>] "
+                                + "[-extensions|-e <path to directory containing unpacked extension AppX(s)>] "
+                                + "[-clearbrowsercache|-cbc] "
+                                + "[-warmuprun|-wu] ", false);
         }
 
         // Output all the available scenarios.

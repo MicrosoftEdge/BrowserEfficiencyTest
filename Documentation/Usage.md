@@ -10,7 +10,7 @@ BrowserEfficiencyTest is best run from the command line, and requires an instanc
 Usage:
 
 ```
-BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]] [-capturebaseline|-cb <integer representing number of seconds>] [-extensions|-e <path to directory containing unpacked extension AppX(s)>]
+BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]] [-capturebaseline|-cb <integer representing number of seconds>] [-extensions|-e <path to directory containing unpacked extension AppX(s)>] [-clearbrowsercache|-cbc] [-warmuprun|-wu]
 ```
 
 *   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
@@ -100,11 +100,15 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
 
 *   **-responsiveness|-r** Records all responsiveness measures specified by the scenarios (e.g. page load time). These will be included in the resulting CSV when the run is complete.
 
-*   **-filelogging|-fl** Enables recording of BrowserEfficiencyTest log messages to a file. The path of where to save the log file can be optionally passed as the first parameter after '-filelogging' or '-fl'
+*   **-filelogging|-fl** Enables recording of BrowserEfficiencyTest log messages to a file. The path of where to save the log file can be optionally passed as the first parameter after `-filelogging` or `-fl`
 
-*   **-capturebaseline|-cb** Captures a trace for the specificed number of seconds without running any browser or test. Use this option to capture a baseline trace of the system where the system is not running any test or browser. Specify the length of time in seconds to capture the baseline trace for. Only available when using the '-measureset|-ms' option.
+*   **-capturebaseline|-cb** Captures a trace for the specificed number of seconds without running any browser or test. Use this option to capture a baseline trace of the system where the system is not running any test or browser. Specify the length of time in seconds to capture the baseline trace for. Only available when using the `-measureset|-ms` option.
 
 *   **-extensions|-e** Allows unpacked extensions located in the specified folder to be side loaded in the browser when tests are run. Currently, this capability is only supported in Microsoft Edge.
+
+*   **-clearbrowsercache|-cbc** Clear Edge browser cache before each test run. By default, Edge browser does not clear its cache before each run.
+
+*   **-warmuprun|-wu** Executes an initial test run on all selected browsers without tracing before the main test run loop. Can be used to have browsers such as Edge cache webpage content before the main test run loop.
 
 ## Examples
 

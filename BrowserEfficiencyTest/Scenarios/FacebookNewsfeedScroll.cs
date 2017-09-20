@@ -47,21 +47,37 @@ namespace BrowserEfficiencyTest
 
             UserInfo credentials = credentialManager.GetCredentials("facebook.com");
 
-            // if not logged on, log on
-            var elems = driver.FindElements(By.CssSelector("H2"));
-            driver.Wait(2);
+            if (driver.Title == "Log into Facebook | Facebook" || driver.Title == "Facebook - Log In or Sign Up")
+            {
+                Logger.LogWriteLine("    Starting logging into Facebook...");
+                ScenarioEventSourceProvider.EventLog.AccoungLogInStart("Facebook");
 
-            var username = driver.FindElement(By.Id("email"));
-            var password = driver.FindElement(By.Id("pass"));
+                // if not logged on, log on
+                var elems = driver.FindElements(By.CssSelector("H2"));
+                driver.Wait(2);
 
-            driver.TypeIntoField(username, credentials.Username);
-            driver.Wait(1);
+                var username = driver.FindElement(By.Id("email"));
+                var password = driver.FindElement(By.Id("pass"));
 
-            driver.TypeIntoField(password, credentials.Password + Keys.Enter);
-            driver.Wait(1);
+                username.Clear();
+                username.Clear();
+
+                driver.TypeIntoField(username, credentials.Username);
+                driver.Wait(1);
+
+                driver.TypeIntoField(password, credentials.Password + Keys.Enter);
+                driver.Wait(1);
+
+                ScenarioEventSourceProvider.EventLog.AccoungLogInStop("Facebook");
+                Logger.LogWriteLine("    Completed logging into Facebook...");
+            }
+            else
+            {
+                Logger.LogWriteLine("    Already logged into Facebook...");
+            }
 
             // Check to makes sure the login was successful
-            if(driver.Title == "Log into Facebook | Facebook")
+            if (driver.Title == "Log into Facebook | Facebook" || driver.Title == "Facebook - Log In or Sign Up")
             {
                 throw new Exception("Login to Facebook failed!");
             }
