@@ -51,6 +51,7 @@ namespace BrowserEfficiencyTest
         private static int _port = -1;
         private static int _edgeWebDriverFileVersionBuildPart = 0;
         private static int _edgeBrowserFileVersionBuildPart = 0;
+        private static string _hostName = "localhost";
 
         /// <summary>
         /// Navigates to the url passed as a string
@@ -280,7 +281,7 @@ namespace BrowserEfficiencyTest
         /// <param name="browser">The browser to get instantiate the Web Driver for.</param>
         /// <param name="browserProfilePath">The folder path to the browser user profile to use with the browser.</param>
         /// <returns>The RemoteWebDriver of the browser passed in to the method.</returns>
-        public static RemoteWebDriver CreateDriverAndMaximize(string browser, bool clearBrowserCache, string browserProfilePath = "", List<string> extensionPaths = null)
+        public static RemoteWebDriver CreateDriverAndMaximize(string browser, bool clearBrowserCache, string browserProfilePath = "", List<string> extensionPaths = null, int port = 17556, string hostName = "localhost")
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
@@ -317,24 +318,49 @@ namespace BrowserEfficiencyTest
                     driver = new ChromeDriver(option);
                     break;
                 default:
-                    EdgeDriverService svc = EdgeDriverService.CreateDefaultService();
-                    _port = svc.Port;
+                    EdgeOptions edgeOptions = new EdgeOptions();
+                    edgeOptions.AddAdditionalCapability("browserName", "Microsoft Edge");
+
+                    EdgeDriverService svc = null;
 
                     if (extensionPaths != null && extensionPaths.Count != 0)
                     {
-                        var edgeOptions = new EdgeOptions();
                         // Create the extensionPaths capability object
                         edgeOptions.AddAdditionalCapability("extensionPaths", extensionPaths);
                         foreach (var path in extensionPaths)
                         {
                             Logger.LogWriteLine("Sideloading extension(s) from " + path);
                         }
+                    }
 
+                    if (hostName.Equals("localhost", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // Using localhost so create a local EdgeDriverService and instantiate an EdgeDriver object with it.
+                        // We have to use EdgeDriver here instead of RemoteWebDriver because we need a
+                        // DriverServiceCommandExecutor object which EdgeDriver creates when instantiated
+
+                        svc = EdgeDriverService.CreateDefaultService();
+
+                        _port = svc.Port;
+                        _hostName = hostName;
+
+                        Logger.LogWriteLine(string.Format("  Instantiating EdgeDriver object for local execution - Host: {0}  Port: {1}", _hostName, _port));
                         driver = new EdgeDriver(svc, edgeOptions);
                     }
                     else
                     {
-                        driver = new EdgeDriver(svc);
+                        // Using a different host name.
+                        // We will make the assumption that this host name is the host of a remote webdriver instance.
+                        // We have to use RemoteWebDriver here since it is capable of being instantiated without automatically
+                        // opening a local MicrosoftWebDriver.exe instance (EdgeDriver automatically launches a local process with
+                        // MicrosoftWebDriver.exe).
+
+                        _port = port;
+                        _hostName = hostName;
+                        var remoteUri = new Uri("http://" + _hostName + ":" + _port + "/");
+
+                        Logger.LogWriteLine(string.Format("  Instantiating RemoteWebDriver object for remote execution - Host: {0}  Port: {1}", _hostName, _port));
+                        driver = new RemoteWebDriver(remoteUri, edgeOptions.ToCapabilities());
                     }
 
                     FileVersionInfo edgeBrowserVersion = GetEdgeFileVersion();
@@ -351,7 +377,7 @@ namespace BrowserEfficiencyTest
                         Logger.LogWriteLine("   Clearing Edge browser cache...");
                         // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
                         HttpClient client = new HttpClient();
-                        client.DeleteAsync($"http://localhost:{svc.Port}/session/{driver.SessionId}/ms/history").Wait();
+                        client.DeleteAsync($"http://{_hostName}:{_port}/session/{driver.SessionId}/ms/history").Wait();
                     }
 
                     break;
@@ -438,7 +464,7 @@ namespace BrowserEfficiencyTest
         private static async Task<string> CallStatusCommand(this RemoteWebDriver remoteWebDriver)
         {
             HttpClient client = new HttpClient();
-            HttpResponseMessage statusResponse = await client.GetAsync($"http://localhost:{_port}/status");
+            HttpResponseMessage statusResponse = await client.GetAsync($"http://{_hostName}:{_port}/status");
             string response = await statusResponse.Content.ReadAsStringAsync();
 
             return response;

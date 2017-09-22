@@ -10,7 +10,7 @@ BrowserEfficiencyTest is best run from the command line, and requires an instanc
 Usage:
 
 ```
-BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]] [-capturebaseline|-cb <integer representing number of seconds>] [-extensions|-e <path to directory containing unpacked extension AppX(s)>] [-clearbrowsercache|-cbc] [-warmuprun|-wu]
+BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-workload|-w <workload name>]|[-scenario|-s <scenario1> <scenario2>]] [-iterations|-i <iterationcount>] [-resultspath|-rp <etlpath>] [-measureset|-ms <measureset1> <measureset2>] [-profile|-p <chrome profile path>] [-attempts|-a <attempts to make per iteration>] [-notimeout] [-noprocessing|-np] [-credentialpath|-cp <path to credentials json file>] [-responsiveness|-r] [-filelogging|-fl [<path for logfile>]] [-capturebaseline|-cb <integer representing number of seconds>] [-extensions|-e <path to directory containing unpacked extension AppX(s)>] [-clearbrowsercache|-cbc] [-warmuprun|-wu] [-host|-h <host name>] [-port <port number>]
 ```
 
 *   **-browser|-b** Selects the browser or browsers to run the scenarios with. This option must be provided. Multiple browsers can be selected by separating each browser with a space. E.g. `-b edge chrome`. The possible options are:
@@ -109,6 +109,10 @@ BrowserEfficiencyTest.exe [-browser|-b [chrome|edge|firefox|opera|operabeta] [-w
 *   **-clearbrowsercache|-cbc** Clear Edge browser cache before each test run. By default, Edge browser does not clear its cache before each run.
 
 *   **-warmuprun|-wu** Executes an initial test run on all selected browsers without tracing before the main test run loop. Can be used to have browsers such as Edge cache webpage content before the main test run loop.
+
+*   **-host|-h** Host name of a remote machine running an instance of MicrosoftWebDriver.exe. Currently, this capability is only supported in Microsoft Edge.
+
+*   **-port** Port number of the host to use when sending webdriver commands to a remote host. Currently, this capability is only supported in Microsoft Edge.
 
 ## Examples
 
