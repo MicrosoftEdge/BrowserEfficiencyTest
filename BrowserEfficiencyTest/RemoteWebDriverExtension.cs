@@ -38,6 +38,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BrowserEfficiencyTest
 {
@@ -49,9 +50,10 @@ namespace BrowserEfficiencyTest
     public static class RemoteWebDriverExtension
     {
         private static int _port = -1;
-        private static int _edgeWebDriverFileVersionBuildPart = 0;
-        private static int _edgeBrowserFileVersionBuildPart = 0;
+        private static int _edgeWebDriverBuildNumber = 0;
+        private static int _edgeBrowserBuildNumber = 0;
         private static string _hostName = "localhost";
+        private static string _browser = "";
 
         /// <summary>
         /// Navigates to the url passed as a string
@@ -285,6 +287,7 @@ namespace BrowserEfficiencyTest
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
+            _browser = browser.ToLowerInvariant();
             ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
             switch (browser)
             {
@@ -363,13 +366,12 @@ namespace BrowserEfficiencyTest
                         driver = new RemoteWebDriver(remoteUri, edgeOptions.ToCapabilities());
                     }
 
-                    FileVersionInfo edgeBrowserVersion = GetEdgeFileVersion();
-                    Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge File Version: {0}", edgeBrowserVersion.FileVersion));
-                    _edgeBrowserFileVersionBuildPart = edgeBrowserVersion.FileBuildPart;
+                    _edgeBrowserBuildNumber = GetEdgeBuildNumber(driver);
+                    Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge Build Version: {0}", _edgeBrowserBuildNumber));
 
                     string webDriverServerVersion = GetEdgeWebDriverVersion(driver);
                     Logger.LogWriteLine(string.Format("   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {0}", webDriverServerVersion));
-                    _edgeWebDriverFileVersionBuildPart = Convert.ToInt32(webDriverServerVersion.Split('.')[2]);
+                    _edgeWebDriverBuildNumber = Convert.ToInt32(webDriverServerVersion.Split('.')[2]);
                     Thread.Sleep(2000);
 
                     if (clearBrowserCache)
@@ -390,14 +392,35 @@ namespace BrowserEfficiencyTest
             return driver;
         }
 
-        // Gets the file version info of the MicrosoftEdge browser.
-        private static FileVersionInfo GetEdgeFileVersion()
+        // Gets the Edge build version number.
+        private static int GetEdgeBuildNumber(RemoteWebDriver remoteWebDriver)
         {
-            string edgeAppFullPath = System.IO.Path.Combine(Environment.GetEnvironmentVariable("SystemRoot"), @"SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe");
-            FileVersionInfo edgeBrowserVersion = FileVersionInfo.GetVersionInfo(edgeAppFullPath);
-            return edgeBrowserVersion;
-        }
+            int edgeBuildNumber = 0;
 
+            string response = (string)remoteWebDriver.ExecuteScript("return navigator.userAgent;");
+            string edgeVersionToken = response.Split(' ').ToList().FirstOrDefault(s => s.StartsWith("Edge"));
+
+            if (string.IsNullOrEmpty(edgeVersionToken))
+            {
+                Logger.LogWriteLine("   Unable to extract Edge build version!");
+            }
+            else
+            {
+                var edgeBuildTokens = edgeVersionToken.Split('.');
+                if (edgeBuildTokens.Length > 1)
+                {
+                    if (int.TryParse(edgeBuildTokens[1], out int returnedInt))
+                    {
+                        edgeBuildNumber = returnedInt;
+                    }
+                    else
+                    {
+                        Logger.LogWriteLine(string.Format("   Unable to extract Edge build version from {0}", edgeVersionToken));
+                    }
+                }
+            }
+            return edgeBuildNumber;
+        }
         /// <summary>
         /// Waits up to timeoutSec for the page load to complete
         /// </summary>
@@ -418,10 +441,9 @@ namespace BrowserEfficiencyTest
         {
             bool isNewTabCommandSupported = false;
 
-            // First check if the webdriver being used is EdgeDriver
-            if (remoteWebDriver is OpenQA.Selenium.Edge.EdgeDriver)
+            if (_browser.Equals("edge"))
             {
-                if (_edgeBrowserFileVersionBuildPart > 16203 && _edgeWebDriverFileVersionBuildPart > 16203)
+                if (_edgeBrowserBuildNumber > 16203 && _edgeWebDriverBuildNumber > 16203)
                 {
                     isNewTabCommandSupported = true;
                 }
@@ -442,7 +464,7 @@ namespace BrowserEfficiencyTest
             HttpResponseMessage newTabResponse = null;
 
             HttpClient client = new HttpClient();
-            newTabResponse = await client.PostAsync($"http://localhost:{_port}/session/{remoteWebDriver.SessionId}/ms/tab", content);
+            newTabResponse = await client.PostAsync($"http://{_hostName}:{_port}/session/{remoteWebDriver.SessionId}/ms/tab", content);
             response = await newTabResponse.Content.ReadAsStringAsync();
 
             if (response == "Unknown command received")
