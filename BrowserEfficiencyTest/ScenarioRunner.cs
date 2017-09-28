@@ -67,6 +67,8 @@ namespace BrowserEfficiencyTest
         private int _baselineCaptureSeconds;
         private bool _clearBrowserCache;
         private bool _executeWarmupRun;
+        private string _hostName;
+        private int _port;
 
         // _measureSets format: Dictionary< "measure set name", Tuple < "WPR profile name", "tracing mode" >>
         private Dictionary<string, Tuple<string, string>> _measureSets;
@@ -95,6 +97,8 @@ namespace BrowserEfficiencyTest
             _baselineCaptureSeconds = args.BaselineCaptureSeconds;
             _clearBrowserCache = args.ClearBrowserCache;
             _executeWarmupRun = args.DoWarmupRun;
+            _hostName = args.Host;
+            _port = args.Port;
 
             if (!string.IsNullOrEmpty(args.ExtensionsPath))
             {
@@ -394,7 +398,7 @@ namespace BrowserEfficiencyTest
                 Logger.LogWriteLine(string.Format(" Launching Browser Driver: '{0}'", browser));
                 ScenarioEventSourceProvider.EventLog.WorkloadStart(_scenarioName, browser, wprProfileName, iteration, attemptNumber);
 
-                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _clearBrowserCache, _browserProfilePath, _extensionsPaths))
+                using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _clearBrowserCache, _browserProfilePath, _extensionsPaths, _port, _hostName))
                 {
                     string currentScenario = "";
                     try

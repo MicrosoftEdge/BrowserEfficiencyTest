@@ -65,6 +65,9 @@ namespace BrowserEfficiencyTest
         public int BaselineCaptureSeconds { get; private set; }
         public bool ClearBrowserCache { get; private set; }
         public bool DoWarmupRun { get; private set; }
+        public string Host { get; private set; }
+        public int Port { get; private set; }
+
         /// <summary>
         /// List of all scenarios to be run.
         /// </summary>
@@ -122,6 +125,8 @@ namespace BrowserEfficiencyTest
             BaselineCaptureSeconds = 600; // 10 minutes as the default
             ClearBrowserCache = false;
             DoWarmupRun = false;
+            Host = "localhost";
+            Port = 17556; // 17556 is the default port value MicrosoftWebDriver.exe uses
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -504,6 +509,39 @@ namespace BrowserEfficiencyTest
                     case "-wu":
                         DoWarmupRun = true;
                         break;
+                    case "-host":
+                    case "-h":
+                        argNum++;
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                        {
+                            Host = args[argNum];
+                        }
+                        else
+                        {
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("A valid host must be specified after the -host|-h option!", false);
+                        }
+
+                        break;
+                    case "-port":
+                        argNum++;
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                        {
+                            int portNumber = 0;
+                            argumentsAreValid = int.TryParse(args[argNum], out portNumber);
+                            Port = portNumber;
+                        }
+                        else
+                        {
+                            argumentsAreValid = false;
+                        }
+
+                        if (!argumentsAreValid)
+                        {
+                            Logger.LogWriteLine("A valid port number must be specified after the -port option!", false);
+                        }
+
+                        break;
                     default:
                         argumentsAreValid = false;
                         Logger.LogWriteLine(string.Format("Invalid argument encountered '{0}'", args[argNum]), false);
@@ -564,7 +602,9 @@ namespace BrowserEfficiencyTest
                                 + "[-capturebaseline|-cb <integer representing number of seconds>] "
                                 + "[-extensions|-e <path to directory containing unpacked extension AppX(s)>] "
                                 + "[-clearbrowsercache|-cbc] "
-                                + "[-warmuprun|-wu] ", false);
+                                + "[-warmuprun|-wu] "
+                                + "[-host|-h <host name>] "
+                                + "[-port <port number>]", false);
         }
 
         // Output all the available scenarios.
