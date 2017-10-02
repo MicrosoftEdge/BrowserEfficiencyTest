@@ -687,6 +687,7 @@ namespace BrowserEfficiencyTest
             AddScenario(new ColoradoStatesOfMatter());
             AddScenario(new BrainPopAvalanches());
             AddScenario(new RedditSurfaceSearch());
+            AddScenario(new Idle());
         }
 
         private void AddScenario(Scenario scenario)
