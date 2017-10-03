@@ -70,6 +70,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="ResponsivenessTimer.cs" />
     <Compile Include="ScenarioEventSourceProvider.cs" />
+    <Compile Include="Scenarios\Idle.cs" />
     <Compile Include="Scenarios\AboutBlank.cs" />
     <Compile Include="Scenarios\BrainPopAvalanches.cs" />
     <Compile Include="Scenarios\ColoradoStatesOfMatter.cs" />
