@@ -205,9 +205,21 @@ namespace BrowserEfficiencyTest
         /// <param name="secondsToWait">The number of seconds to wait</param>
         public static void Wait(this RemoteWebDriver remoteWebDriver, double secondsToWait)
         {
-            ScenarioEventSourceProvider.EventLog.WaitStart(secondsToWait);
+            ScenarioEventSourceProvider.EventLog.WaitStart(secondsToWait, "");
             Thread.Sleep((int)(secondsToWait * 1000));
-            ScenarioEventSourceProvider.EventLog.WaitStop(secondsToWait);
+            ScenarioEventSourceProvider.EventLog.WaitStop(secondsToWait, "");
+        }
+
+        /// <summary>
+        /// Waits for the specified amount of time before executing the next command.
+        /// </summary>
+        /// <param name="secondsToWait">The number of seconds to wait</param>
+        /// <param name="waitEventTag">String to be inserted with the wait start and stop trace event</param>
+        public static void Wait(this RemoteWebDriver remoteWebDriver, double secondsToWait, string waitEventTag)
+        {
+            ScenarioEventSourceProvider.EventLog.WaitStart(secondsToWait, waitEventTag);
+            Thread.Sleep((int)(secondsToWait * 1000));
+            ScenarioEventSourceProvider.EventLog.WaitStop(secondsToWait, waitEventTag);
         }
 
         /// <summary>
@@ -366,21 +378,24 @@ namespace BrowserEfficiencyTest
                         driver = new RemoteWebDriver(remoteUri, edgeOptions.ToCapabilities());
                     }
 
+                    Thread.Sleep(2000);
+
+                    if (clearBrowserCache)
+                    {
+                        Logger.LogWriteLine("   Clearing Edge browser cache...");
+                        ScenarioEventSourceProvider.EventLog.ClearEdgeBrowserCacheStart();
+                        // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
+                        HttpClient client = new HttpClient();
+                        client.DeleteAsync($"http://{_hostName}:{_port}/session/{driver.SessionId}/ms/history").Wait();
+                        ScenarioEventSourceProvider.EventLog.ClearEdgeBrowserCacheStop();
+                    }
+
                     _edgeBrowserBuildNumber = GetEdgeBuildNumber(driver);
                     Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge Build Version: {0}", _edgeBrowserBuildNumber));
 
                     string webDriverServerVersion = GetEdgeWebDriverVersion(driver);
                     Logger.LogWriteLine(string.Format("   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {0}", webDriverServerVersion));
                     _edgeWebDriverBuildNumber = Convert.ToInt32(webDriverServerVersion.Split('.')[2]);
-                    Thread.Sleep(2000);
-
-                    if (clearBrowserCache)
-                    {
-                        Logger.LogWriteLine("   Clearing Edge browser cache...");
-                        // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
-                        HttpClient client = new HttpClient();
-                        client.DeleteAsync($"http://{_hostName}:{_port}/session/{driver.SessionId}/ms/history").Wait();
-                    }
 
                     break;
             }

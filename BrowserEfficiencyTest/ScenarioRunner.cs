@@ -345,12 +345,18 @@ namespace BrowserEfficiencyTest
 
                             Logger.LogWriteLine(string.Format(" Starting capture of system baseline for {0} seconds - measureset {1}  iteration {2}", _baselineCaptureSeconds, currentMeasureSet.Value.Item1, iteration));
 
-                            // Start the trace capture
+                            // Start the trace capture for baseline scenario
                             elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} BASE ITERATION {iteration} SCENARIO_NAME BaseLineCapture WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
+
+                            ScenarioEventSourceProvider.EventLog.MeasurementRegionStart("BaselineCapture");
 
                             Thread.Sleep(_baselineCaptureSeconds * 1000);
 
+                            ScenarioEventSourceProvider.EventLog.MeasurementRegionStop("BaselineCapture");
+
                             Logger.LogWriteLine(string.Format(" Finished capture of system baseline of measureset {0}  iteration {1}", currentMeasureSet.Value.Item1, iteration));
+
+                            // End the trace capture for baseline scenario
                             elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} BASE").Wait();
 
                             // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
@@ -393,7 +399,17 @@ namespace BrowserEfficiencyTest
                     Logger.LogWriteLine("  Attempting again...");
                 }
 
+                // Start tracing
                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {_scenarioName} WPRPROFILE {wprProfileName} MODE {tracingMode}").Wait();
+
+                if (usingTraceController)
+                {
+                    Logger.LogWriteLine(string.Format("  Pausing {0} seconds after starting the trace session to reduce interference.", _e3RefreshDelaySeconds));
+
+                    // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
+                    // that the browser energy data reported by E3 for this run is only for this run and does not bleed into any other runs.
+                    Thread.Sleep(_e3RefreshDelaySeconds * 1000);
+                }
 
                 Logger.LogWriteLine(string.Format(" Launching Browser Driver: '{0}'", browser));
                 ScenarioEventSourceProvider.EventLog.WorkloadStart(_scenarioName, browser, wprProfileName, iteration, attemptNumber);
@@ -453,7 +469,7 @@ namespace BrowserEfficiencyTest
                             else if (!overrideTimeout)
                             {
                                 Logger.LogWriteLine(string.Format("    Scenario {0} returned in {1} seconds. Sleep for remaining {2} seconds.", scenario.Scenario.Name, runTime.TotalSeconds, timeLeft.TotalSeconds));
-                                driver.Wait(timeLeft.TotalSeconds);
+                                driver.Wait(timeLeft.TotalSeconds,"ScenarioWait");
                             }
 
                             Logger.LogWriteLine(string.Format("  Completed - Scenario: {0}  Iteration: {1}  Attempt: {2}  Browser: {3}  MeasureSet: {4}", scenario.Scenario.Name, iteration, attemptNumber, browser, measureSetName, runTime.TotalSeconds));
@@ -501,7 +517,6 @@ namespace BrowserEfficiencyTest
                         Logger.LogWriteLine(string.Format("    Scenario:    {0}", currentScenario));
                         Logger.LogWriteLine("    Exception:   " + ex.ToString());
 
-                        //if (_usingTraceController)
                         if (usingTraceController)
                         {
                             Logger.LogWriteLine("   Trace has been discarded");
@@ -511,10 +526,9 @@ namespace BrowserEfficiencyTest
                     }
                     finally
                     {
-                        //if (_usingTraceController)
                         if (usingTraceController)
                         {
-                            Logger.LogWriteLine("  Pausing between tracing sessions to reduce interference.");
+                            Logger.LogWriteLine(string.Format("  Pausing {0} seconds before stopping the trace session to reduce interference.", _e3RefreshDelaySeconds));
 
                             // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
                             // that the browser energy data reported by E3 for this run is only for this run and does not bleed into any other runs.
@@ -526,6 +540,7 @@ namespace BrowserEfficiencyTest
 
             if (passSucceeded)
             {
+                // Stop tracing
                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
             }
             else

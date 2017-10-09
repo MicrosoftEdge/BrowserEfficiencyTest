@@ -34,12 +34,17 @@ namespace BrowserEfficiencyTest
         public Idle()
         {
             Name = "Idle";
-            DefaultDuration = 300;
+            DefaultDuration = 330;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             // This scenario simply does nothing but sit and wait on the current page (blank page) for five minutes.
+            driver.Wait(11,"BeforeIdleMeasurement"); // assuming a 10s E3 interval. Waiting to ensure any E3 events that might contain energy for launching the scenario have already fired.
+            ScenarioEventSourceProvider.EventLog.MeasurementRegionStart("Idle");
+            driver.Wait(300, "Idle");
+            ScenarioEventSourceProvider.EventLog.MeasurementRegionStop("Idle");
+            driver.Wait(11, "AfterIdleMeasurement");
         }
     }
 }
