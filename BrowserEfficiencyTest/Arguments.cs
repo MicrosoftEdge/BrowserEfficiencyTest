@@ -67,6 +67,7 @@ namespace BrowserEfficiencyTest
         public bool DoWarmupRun { get; private set; }
         public string Host { get; private set; }
         public int Port { get; private set; }
+        public string RegionOfInterest { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -127,6 +128,7 @@ namespace BrowserEfficiencyTest
             DoWarmupRun = false;
             Host = "localhost";
             Port = 17556; // 17556 is the default port value MicrosoftWebDriver.exe uses
+            RegionOfInterest = "";
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -542,6 +544,22 @@ namespace BrowserEfficiencyTest
                         }
 
                         break;
+                    case "-region":
+                        // The name of the region must be specified after the -region option.
+                        // The region must be defined in the ActiveRegion.xml
+                        // See https://docs.microsoft.com/en-us/windows-hardware/test/wpt/regions-of-interest for more information
+                        // on Regions of Interest.
+                        argNum++;
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                        {
+                            RegionOfInterest = args[argNum];
+                        }
+                        else
+                        {
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("A valid region of interest name must be specified after the -region option!", false);
+                        }
+                        break;
                     default:
                         argumentsAreValid = false;
                         Logger.LogWriteLine(string.Format("Invalid argument encountered '{0}'", args[argNum]), false);
@@ -565,6 +583,15 @@ namespace BrowserEfficiencyTest
                 }
                 Logger.LogWriteLine("Both a browser and a scenario or workload must be specified to run the test!", false);
                 Logger.LogWriteLine("If you wish to only run the performance processor then omit the browser and scenario/workload arguments and specify a measureset.", false);
+            }
+
+            // If a user specifies a region of interest and a measureset then assign that region of interest to each selected measureset
+            if (argumentsAreValid && RegionOfInterest != "" && UsingTraceController)
+            {
+                foreach (var measureSet in _selectedMeasureSets)
+                {
+                    measureSet.WpaRegionName = RegionOfInterest;
+                }
             }
 
             Logger.LogWriteLine(string.Format("BrowserEfficiencyTest Version: {0}", BrowserEfficiencyTestVersion), false);
