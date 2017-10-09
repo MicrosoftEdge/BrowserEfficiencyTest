@@ -68,6 +68,7 @@ namespace BrowserEfficiencyTest
         public string Host { get; private set; }
         public int Port { get; private set; }
         public string RegionOfInterest { get; private set; }
+        public bool EnableVerboseWebDriverLogging { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -129,6 +130,7 @@ namespace BrowserEfficiencyTest
             Host = "localhost";
             Port = 17556; // 17556 is the default port value MicrosoftWebDriver.exe uses
             RegionOfInterest = "";
+            EnableVerboseWebDriverLogging = false;
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -559,6 +561,9 @@ namespace BrowserEfficiencyTest
                             argumentsAreValid = false;
                             Logger.LogWriteLine("A valid region of interest name must be specified after the -region option!", false);
                         }
+                        break;
+                    case "-verbose":
+                        EnableVerboseWebDriverLogging = true;
                         break;
                     default:
                         argumentsAreValid = false;

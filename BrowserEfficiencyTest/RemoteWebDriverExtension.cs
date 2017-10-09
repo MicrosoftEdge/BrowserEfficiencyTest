@@ -295,7 +295,7 @@ namespace BrowserEfficiencyTest
         /// <param name="browser">The browser to get instantiate the Web Driver for.</param>
         /// <param name="browserProfilePath">The folder path to the browser user profile to use with the browser.</param>
         /// <returns>The RemoteWebDriver of the browser passed in to the method.</returns>
-        public static RemoteWebDriver CreateDriverAndMaximize(string browser, bool clearBrowserCache, string browserProfilePath = "", List<string> extensionPaths = null, int port = 17556, string hostName = "localhost")
+        public static RemoteWebDriver CreateDriverAndMaximize(string browser, bool clearBrowserCache, bool enableVerboseLogging = false, string browserProfilePath = "", List<string> extensionPaths = null, int port = 17556, string hostName = "localhost")
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
@@ -324,19 +324,24 @@ namespace BrowserEfficiencyTest
                 case "chrome":
                     ChromeOptions option = new ChromeOptions();
                     option.AddUserProfilePreference("profile.default_content_setting_values.notifications", 1);
+                    ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
+                    if (enableVerboseLogging)
+                    {
+                        chromeDriverService.EnableVerboseLogging = true;
+                    }
 
                     if (!string.IsNullOrEmpty(browserProfilePath))
                     {
                         option.AddArgument("--user-data-dir=" + browserProfilePath);
                     }
 
-                    driver = new ChromeDriver(option);
+                    driver = new ChromeDriver(chromeDriverService, option);
                     break;
                 default:
                     EdgeOptions edgeOptions = new EdgeOptions();
                     edgeOptions.AddAdditionalCapability("browserName", "Microsoft Edge");
 
-                    EdgeDriverService svc = null;
+                    EdgeDriverService edgeDriverService = null;
 
                     if (extensionPaths != null && extensionPaths.Count != 0)
                     {
@@ -354,13 +359,17 @@ namespace BrowserEfficiencyTest
                         // We have to use EdgeDriver here instead of RemoteWebDriver because we need a
                         // DriverServiceCommandExecutor object which EdgeDriver creates when instantiated
 
-                        svc = EdgeDriverService.CreateDefaultService();
+                        edgeDriverService = EdgeDriverService.CreateDefaultService();
+                        if(enableVerboseLogging)
+                        {
+                            edgeDriverService.UseVerboseLogging = true;
+                        }
 
-                        _port = svc.Port;
+                        _port = edgeDriverService.Port;
                         _hostName = hostName;
 
                         Logger.LogWriteLine(string.Format("  Instantiating EdgeDriver object for local execution - Host: {0}  Port: {1}", _hostName, _port));
-                        driver = new EdgeDriver(svc, edgeOptions);
+                        driver = new EdgeDriver(edgeDriverService, edgeOptions);
                     }
                     else
                     {
