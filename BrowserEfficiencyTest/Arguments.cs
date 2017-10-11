@@ -69,6 +69,7 @@ namespace BrowserEfficiencyTest
         public int Port { get; private set; }
         public string RegionOfInterest { get; private set; }
         public bool EnableVerboseWebDriverLogging { get; private set; }
+        public bool EnableScenarioTracing { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -131,6 +132,7 @@ namespace BrowserEfficiencyTest
             Port = 17556; // 17556 is the default port value MicrosoftWebDriver.exe uses
             RegionOfInterest = "";
             EnableVerboseWebDriverLogging = false;
+            EnableScenarioTracing = false;
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -564,6 +566,9 @@ namespace BrowserEfficiencyTest
                         break;
                     case "-verbose":
                         EnableVerboseWebDriverLogging = true;
+                        break;
+                    case "-enablescenariotracing":
+                        EnableScenarioTracing = true;
                         break;
                     default:
                         argumentsAreValid = false;
