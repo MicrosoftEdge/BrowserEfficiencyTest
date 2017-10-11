@@ -205,9 +205,21 @@ namespace BrowserEfficiencyTest
         /// <param name="secondsToWait">The number of seconds to wait</param>
         public static void Wait(this RemoteWebDriver remoteWebDriver, double secondsToWait)
         {
-            ScenarioEventSourceProvider.EventLog.WaitStart(secondsToWait);
+            ScenarioEventSourceProvider.EventLog.WaitStart(secondsToWait, "");
             Thread.Sleep((int)(secondsToWait * 1000));
-            ScenarioEventSourceProvider.EventLog.WaitStop(secondsToWait);
+            ScenarioEventSourceProvider.EventLog.WaitStop(secondsToWait, "");
+        }
+
+        /// <summary>
+        /// Waits for the specified amount of time before executing the next command.
+        /// </summary>
+        /// <param name="secondsToWait">The number of seconds to wait</param>
+        /// <param name="waitEventTag">String to be inserted with the wait start and stop trace event</param>
+        public static void Wait(this RemoteWebDriver remoteWebDriver, double secondsToWait, string waitEventTag)
+        {
+            ScenarioEventSourceProvider.EventLog.WaitStart(secondsToWait, waitEventTag);
+            Thread.Sleep((int)(secondsToWait * 1000));
+            ScenarioEventSourceProvider.EventLog.WaitStop(secondsToWait, waitEventTag);
         }
 
         /// <summary>
@@ -283,7 +295,7 @@ namespace BrowserEfficiencyTest
         /// <param name="browser">The browser to get instantiate the Web Driver for.</param>
         /// <param name="browserProfilePath">The folder path to the browser user profile to use with the browser.</param>
         /// <returns>The RemoteWebDriver of the browser passed in to the method.</returns>
-        public static RemoteWebDriver CreateDriverAndMaximize(string browser, bool clearBrowserCache, string browserProfilePath = "", List<string> extensionPaths = null, int port = 17556, string hostName = "localhost")
+        public static RemoteWebDriver CreateDriverAndMaximize(string browser, bool clearBrowserCache, bool enableVerboseLogging = false, string browserProfilePath = "", List<string> extensionPaths = null, int port = 17556, string hostName = "localhost")
         {
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
@@ -312,19 +324,24 @@ namespace BrowserEfficiencyTest
                 case "chrome":
                     ChromeOptions option = new ChromeOptions();
                     option.AddUserProfilePreference("profile.default_content_setting_values.notifications", 1);
+                    ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
+                    if (enableVerboseLogging)
+                    {
+                        chromeDriverService.EnableVerboseLogging = true;
+                    }
 
                     if (!string.IsNullOrEmpty(browserProfilePath))
                     {
                         option.AddArgument("--user-data-dir=" + browserProfilePath);
                     }
 
-                    driver = new ChromeDriver(option);
+                    driver = new ChromeDriver(chromeDriverService, option);
                     break;
                 default:
                     EdgeOptions edgeOptions = new EdgeOptions();
                     edgeOptions.AddAdditionalCapability("browserName", "Microsoft Edge");
 
-                    EdgeDriverService svc = null;
+                    EdgeDriverService edgeDriverService = null;
 
                     if (extensionPaths != null && extensionPaths.Count != 0)
                     {
@@ -342,13 +359,17 @@ namespace BrowserEfficiencyTest
                         // We have to use EdgeDriver here instead of RemoteWebDriver because we need a
                         // DriverServiceCommandExecutor object which EdgeDriver creates when instantiated
 
-                        svc = EdgeDriverService.CreateDefaultService();
+                        edgeDriverService = EdgeDriverService.CreateDefaultService();
+                        if(enableVerboseLogging)
+                        {
+                            edgeDriverService.UseVerboseLogging = true;
+                        }
 
-                        _port = svc.Port;
+                        _port = edgeDriverService.Port;
                         _hostName = hostName;
 
                         Logger.LogWriteLine(string.Format("  Instantiating EdgeDriver object for local execution - Host: {0}  Port: {1}", _hostName, _port));
-                        driver = new EdgeDriver(svc, edgeOptions);
+                        driver = new EdgeDriver(edgeDriverService, edgeOptions);
                     }
                     else
                     {
@@ -366,21 +387,24 @@ namespace BrowserEfficiencyTest
                         driver = new RemoteWebDriver(remoteUri, edgeOptions.ToCapabilities());
                     }
 
+                    Thread.Sleep(2000);
+
+                    if (clearBrowserCache)
+                    {
+                        Logger.LogWriteLine("   Clearing Edge browser cache...");
+                        ScenarioEventSourceProvider.EventLog.ClearEdgeBrowserCacheStart();
+                        // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
+                        HttpClient client = new HttpClient();
+                        client.DeleteAsync($"http://{_hostName}:{_port}/session/{driver.SessionId}/ms/history").Wait();
+                        ScenarioEventSourceProvider.EventLog.ClearEdgeBrowserCacheStop();
+                    }
+
                     _edgeBrowserBuildNumber = GetEdgeBuildNumber(driver);
                     Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge Build Version: {0}", _edgeBrowserBuildNumber));
 
                     string webDriverServerVersion = GetEdgeWebDriverVersion(driver);
                     Logger.LogWriteLine(string.Format("   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {0}", webDriverServerVersion));
                     _edgeWebDriverBuildNumber = Convert.ToInt32(webDriverServerVersion.Split('.')[2]);
-                    Thread.Sleep(2000);
-
-                    if (clearBrowserCache)
-                    {
-                        Logger.LogWriteLine("   Clearing Edge browser cache...");
-                        // Warning: this blows away all Microsoft Edge data, including bookmarks, cookies, passwords, etc
-                        HttpClient client = new HttpClient();
-                        client.DeleteAsync($"http://{_hostName}:{_port}/session/{driver.SessionId}/ms/history").Wait();
-                    }
 
                     break;
             }

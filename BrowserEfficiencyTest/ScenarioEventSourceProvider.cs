@@ -51,6 +51,8 @@ namespace BrowserEfficiencyTest
             public const EventTask TypeIntoField = (EventTask)5;
             public const EventTask AccoungLogIn = (EventTask)6;
             public const EventTask WarmupExecution = (EventTask)7;
+            public const EventTask MeasurementRegion = (EventTask)8;
+            public const EventTask ClearEdgeBrowserCache = (EventTask)9;
         }
 
         [Event(1, Opcode = EventOpcode.Start, Task = Tasks.WorkloadExecution)]
@@ -93,10 +95,10 @@ namespace BrowserEfficiencyTest
         public void ScrollEvent() { WriteEvent(13); }
 
         [Event(14, Opcode = EventOpcode.Start, Task = Tasks.Wait)]
-        public void WaitStart(double SecondsToWait) { WriteEvent(14, SecondsToWait); }
+        public void WaitStart(double SecondsToWait, string WaitTag) { WriteEvent(14, SecondsToWait, WaitTag); }
 
         [Event(15, Opcode = EventOpcode.Stop, Task = Tasks.Wait)]
-        public void WaitStop(double SecondsToWait) { WriteEvent(15, SecondsToWait); }
+        public void WaitStop(double SecondsToWait, string WaitTag) { WriteEvent(15, SecondsToWait, WaitTag); }
 
         [Event(16, Opcode = EventOpcode.Start, Task = Tasks.TypeIntoField)]
         public void TypeIntoFieldStart(int NumCharacters) { WriteEvent(16, NumCharacters); }
@@ -124,5 +126,17 @@ namespace BrowserEfficiencyTest
 
         [Event(24, Opcode = EventOpcode.Stop, Task = Tasks.WarmupExecution)]
         public void WarmupExecutionStop() { WriteEvent(24); }
+
+        [Event(25, Opcode = EventOpcode.Start, Task = Tasks.MeasurementRegion)]
+        public void MeasurementRegionStart(string MeasurementTag) { WriteEvent(25, MeasurementTag); }
+
+        [Event(26, Opcode = EventOpcode.Stop, Task = Tasks.MeasurementRegion)]
+        public void MeasurementRegionStop(string MeasurementTag) { WriteEvent(26, MeasurementTag); }
+
+        [Event(27, Opcode = EventOpcode.Start, Task = Tasks.ClearEdgeBrowserCache)]
+        public void ClearEdgeBrowserCacheStart() { WriteEvent(27); }
+
+        [Event(28, Opcode = EventOpcode.Stop, Task = Tasks.ClearEdgeBrowserCache)]
+        public void ClearEdgeBrowserCacheStop() { WriteEvent(28); }
     }
 }

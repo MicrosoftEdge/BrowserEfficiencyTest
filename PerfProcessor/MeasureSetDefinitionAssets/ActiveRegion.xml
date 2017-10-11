@@ -15,6 +15,16 @@
                   <Event Provider="{36b6f488-aad7-48c2-afe3-d4ec2c8b46fa}" Id="126" Version="0" />
                </Stop>
             </Region>
+            <Region Guid="{DC499FEE-F5B9-4269-B568-159A365F38E5}"
+                    Name="MeasurementRegion1"
+                    FriendlyName="MeasurementRegion1">
+                 <Start>
+                     <Event Provider="{7592876e-8266-5a0c-3f40-1a859137e93a}" Id="25" Version="0" />
+                 </Start>
+                 <Stop>
+                     <Event Provider="{7592876e-8266-5a0c-3f40-1a859137e93a}" Id="26" Version="0" />
+                 </Stop>
+             </Region>
          </RegionRoot>
       </Regions>
    </Instrumentation>

@@ -44,7 +44,7 @@ namespace BrowserEfficiencyTest
             TracingMode = TraceCaptureMode.Memory;
             Name = "diskUsage";
             _wpaExportedDataFileNames = new List<string>() { "Disk_Usage_SizeAndServiceTimeByIOType.csv" };
-            _wpaRegionName = "TraceActiveRegion";
+            WpaRegionName = "TraceActiveRegion";
         }
 
         /// <summary>

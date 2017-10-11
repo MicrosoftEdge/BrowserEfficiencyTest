@@ -3,7 +3,9 @@
   <Content xsi:type="WpaProfile2">
     <Sessions>
       <Session Index="0">
-        <FileReferences />
+          <FileReferences>
+              <FileReference FileName="ActiveRegion.xml" ServiceMoniker="Regions.{51EF6868-EFEC-42A3-B284-1838673CC095}" />
+          </FileReferences>
       </Session>
     </Sessions>
     <Views>
