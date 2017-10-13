@@ -61,7 +61,7 @@ namespace BrowserEfficiencyTest
 
                 Logger.LogWriteLine("    Starting logging into Gmail...");
 
-                ScenarioEventSourceProvider.EventLog.AccoungLogInStart("Gmail");
+                ScenarioEventSourceProvider.EventLog.AccountLogInStart("Gmail");
                 try
                 {
                     // Enter username
@@ -86,7 +86,7 @@ namespace BrowserEfficiencyTest
                     throw new Exception("Login to Gmail failed!");
                 }
 
-                ScenarioEventSourceProvider.EventLog.AccoungLogInStop("Gmail");
+                ScenarioEventSourceProvider.EventLog.AccountLogInStop("Gmail");
                 Logger.LogWriteLine("    Completed logging into Gmail...");
             }
             else
