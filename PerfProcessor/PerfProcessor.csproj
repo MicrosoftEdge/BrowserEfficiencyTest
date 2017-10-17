@@ -44,6 +44,7 @@
     <Compile Include="AutomateWPAExporter.cs" />
     <Compile Include="MeasureSets\CpuUsageVerbose.cs" />
     <Compile Include="MeasureSets\CpuUsage.cs" />
+    <Compile Include="MeasureSets\Debug.cs" />
     <Compile Include="MeasureSets\DiskUsage.cs" />
     <Compile Include="MeasureSets\EnergyVerbose.cs" />
     <Compile Include="PerfProcessor.cs" />

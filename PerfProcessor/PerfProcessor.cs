@@ -53,7 +53,8 @@ namespace BrowserEfficiencyTest
             new EnergyVerbose(),
             new NetworkUsage(),
             new RefSet(),
-            new CpuUsageVerbose()
+            new CpuUsageVerbose(),
+            new Debug()
             // Add new MeasureSets here.
         }).ToDictionary(k => k.Name, v => v));
 

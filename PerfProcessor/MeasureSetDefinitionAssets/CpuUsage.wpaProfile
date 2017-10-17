@@ -5,7 +5,6 @@
       <Session Index="0">
         <FileReferences>
           <FileReference FileName="ActiveRegion.xml" ServiceMoniker="Regions.{51EF6868-EFEC-42A3-B284-1838673CC095}" />
-          <FileReference FileName="D:\WPA_14393\ActiveRegion.xml" ServiceMoniker="Regions.{51EF6868-EFEC-42A3-B284-1838673CC095}" />
         </FileReferences>
       </Session>
     </Sessions>
