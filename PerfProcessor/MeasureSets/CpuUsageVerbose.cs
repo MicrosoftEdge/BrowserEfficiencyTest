@@ -34,14 +34,14 @@ namespace BrowserEfficiencyTest
     /// <summary>
     /// CPU Usage measure. Calculates the CPU Usage time by process.
     /// </summary>
-    internal class CpuUsage : MeasureSet
+    internal class CpuUsageVerbose : MeasureSet
     {
-        public CpuUsage()
+        public CpuUsageVerbose()
         {
             _wpaProfile = @".\MeasureSetDefinitionAssets\CpuUsage.wpaProfile";
             WprProfile = "cpuUsage";
             TracingMode = TraceCaptureMode.File;
-            Name = "cpuUsage";
+            Name = "cpuUsageVerbose";
             _wpaExportedDataFileNames = new List<string>() { "CPU_Usage_(Attributed)_CPU_UsageTime_ByProcess.csv" };
         }
 
@@ -66,6 +66,11 @@ namespace BrowserEfficiencyTest
             cpuUsageTimeNotIdle = (Decimal)100.0 - idleCpuUsageTime;
 
             metrics = new Dictionary<string, string>() { { "CPU Total Utilization %", cpuUsageTimeNotIdle.ToString() } };
+
+            foreach (var row in rawCpuUsageTimeData)
+            {
+                metrics.Add("CPU Usage % | " + row.ProcessName, row.CpuUsagePercentage.ToString());
+            }
 
             return metrics;
         }

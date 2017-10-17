@@ -116,10 +116,10 @@ namespace BrowserEfficiencyTest
         public void NavigateBack() { WriteEvent(20); }
 
         [Event(21, Opcode = EventOpcode.Start, Task = Tasks.AccoungLogIn)]
-        public void AccoungLogInStart(string WebsiteName) { WriteEvent(21, WebsiteName); }
+        public void AccountLogInStart(string WebsiteName) { WriteEvent(21, WebsiteName); }
 
         [Event(22, Opcode = EventOpcode.Stop, Task = Tasks.AccoungLogIn)]
-        public void AccoungLogInStop(string WebsiteName) { WriteEvent(22, WebsiteName); }
+        public void AccountLogInStop(string WebsiteName) { WriteEvent(22, WebsiteName); }
 
         [Event(23, Opcode = EventOpcode.Start, Task = Tasks.WarmupExecution)]
         public void WarmupExecutionStart() { WriteEvent(23); }

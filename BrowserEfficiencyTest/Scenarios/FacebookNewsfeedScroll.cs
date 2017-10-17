@@ -50,7 +50,7 @@ namespace BrowserEfficiencyTest
             if (driver.Title == "Log into Facebook | Facebook" || driver.Title == "Facebook - Log In or Sign Up")
             {
                 Logger.LogWriteLine("    Starting logging into Facebook...");
-                ScenarioEventSourceProvider.EventLog.AccoungLogInStart("Facebook");
+                ScenarioEventSourceProvider.EventLog.AccountLogInStart("Facebook");
 
                 // if not logged on, log on
                 var elems = driver.FindElements(By.CssSelector("H2"));
@@ -68,7 +68,7 @@ namespace BrowserEfficiencyTest
                 driver.TypeIntoField(password, credentials.Password + Keys.Enter);
                 driver.Wait(1);
 
-                ScenarioEventSourceProvider.EventLog.AccoungLogInStop("Facebook");
+                ScenarioEventSourceProvider.EventLog.AccountLogInStop("Facebook");
                 Logger.LogWriteLine("    Completed logging into Facebook...");
             }
             else
