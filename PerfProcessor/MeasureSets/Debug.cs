@@ -32,7 +32,7 @@ using System.Linq;
 namespace BrowserEfficiencyTest
 {
     /// <summary>
-    /// CPU Usage measure. Calculates the CPU Usage time by process.
+    /// Debug MeasureSet. This is a dummy placeholder for using the Debug wprp profile.
     /// </summary>
     internal class Debug : MeasureSet
     {
