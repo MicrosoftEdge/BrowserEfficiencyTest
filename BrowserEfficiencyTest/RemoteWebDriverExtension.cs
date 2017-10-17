@@ -89,7 +89,7 @@ namespace BrowserEfficiencyTest
             int originalTabCount = remoteWebDriver.WindowHandles.Count;
             int endingTabCount = 0;
 
-            ScenarioEventSourceProvider.EventLog.OpenNewTab(originalTabCount, originalTabCount + 1);
+            ScenarioEventSourceProvider.EventLog.OpenNewTab(originalTabCount);
 
             if (IsNewTabCommandSupported(remoteWebDriver))
             {
@@ -300,7 +300,7 @@ namespace BrowserEfficiencyTest
             // Create a webdriver for the respective browser, depending on what we're testing.
             RemoteWebDriver driver = null;
             _browser = browser.ToLowerInvariant();
-            ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
+            
             switch (browser)
             {
                 case "opera":
@@ -316,9 +316,11 @@ namespace BrowserEfficiencyTest
                         // rather than depending on flaky hard-coded version in directory
                         oOption.BinaryLocation = @"C:\Program Files (x86)\Opera beta\38.0.2220.25\opera.exe";
                     }
+                    ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
                     driver = new OperaDriver(oOption);
                     break;
                 case "firefox":
+                    ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
                     driver = new FirefoxDriver();
                     break;
                 case "chrome":
@@ -335,6 +337,7 @@ namespace BrowserEfficiencyTest
                         option.AddArgument("--user-data-dir=" + browserProfilePath);
                     }
 
+                    ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
                     driver = new ChromeDriver(chromeDriverService, option);
                     break;
                 default:
@@ -369,6 +372,7 @@ namespace BrowserEfficiencyTest
                         _hostName = hostName;
 
                         Logger.LogWriteLine(string.Format("  Instantiating EdgeDriver object for local execution - Host: {0}  Port: {1}", _hostName, _port));
+                        ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
                         driver = new EdgeDriver(edgeDriverService, edgeOptions);
                     }
                     else
@@ -384,10 +388,12 @@ namespace BrowserEfficiencyTest
                         var remoteUri = new Uri("http://" + _hostName + ":" + _port + "/");
 
                         Logger.LogWriteLine(string.Format("  Instantiating RemoteWebDriver object for remote execution - Host: {0}  Port: {1}", _hostName, _port));
+                        ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
                         driver = new RemoteWebDriver(remoteUri, edgeOptions.ToCapabilities());
                     }
 
-                    Thread.Sleep(2000);
+                    //Thread.Sleep(2000);
+                    driver.Wait(2);
 
                     if (clearBrowserCache)
                     {
@@ -411,8 +417,8 @@ namespace BrowserEfficiencyTest
 
             ScenarioEventSourceProvider.EventLog.MaximizeBrowser(browser);
             driver.Manage().Window.Maximize();
-            Thread.Sleep(1000);
-
+            //Thread.Sleep(1000);
+            driver.Wait(1);
             return driver;
         }
 

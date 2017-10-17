@@ -47,16 +47,23 @@ namespace BrowserEfficiencyTest
             driver.NavigateToUrl("https://www.amazon.com");
             driver.Wait(5);
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Search for 'Game of Thrones'");
             // Type "Game of Thrones" in the search box and hit enter
             driver.TypeIntoField(driver.FindElementById("twotabsearchtextbox"), "Game of Thrones" + Keys.Enter);
             driver.Wait(5);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Search for 'Game of Thrones'");
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Click on 'Game of Thrones Season 1'");
             // Click into "Game of Thrones Season 1"
             driver.ClickElement(driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']"));
+            driver.WaitForPageLoad();
             driver.Wait(2);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Click on 'Game of Thrones Season 1'");
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll down page");
             // Scroll down to reviews
             driver.ScrollPage(5);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll down page");
         }
     }
 }

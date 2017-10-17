@@ -46,8 +46,10 @@ namespace BrowserEfficiencyTest
             driver.NavigateToUrl("https://en.wikipedia.org/wiki/United_States");
             driver.Wait(5);
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll down page");
             // Scroll a bit
             driver.ScrollPage(12);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll down page");
 
             timer.ExtractPageLoadTime("Wikipedia article");
         }

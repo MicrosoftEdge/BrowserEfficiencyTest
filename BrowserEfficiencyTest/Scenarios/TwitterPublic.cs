@@ -47,8 +47,10 @@ namespace BrowserEfficiencyTest
             driver.NavigateToUrl("https://www.twitter.com");
             driver.Wait(5);
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll down page");
             // Scroll through the infinite list
             driver.ScrollPage(16);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll down page");
         }
     }
 }
