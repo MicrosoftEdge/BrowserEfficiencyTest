@@ -498,7 +498,6 @@ namespace BrowserEfficiencyTest
                             {
                                 ScenarioEventSourceProvider.EventLog.ScenarioIdleStart(currentScenario.ScenarioName, timeLeft.TotalSeconds);
                                 Logger.LogWriteLine(string.Format("    Scenario {0} returned in {1} seconds. Sleep for remaining {2} seconds.", currentScenario.ScenarioName, runTime.TotalSeconds, timeLeft.TotalSeconds));
-                                //driver.Wait(timeLeft.TotalSeconds,"ScenarioWait");
                                 Thread.Sleep((int)timeLeft.TotalMilliseconds);
                                 ScenarioEventSourceProvider.EventLog.ScenarioIdleStop(currentScenario.ScenarioName, timeLeft.TotalSeconds);
                             }
