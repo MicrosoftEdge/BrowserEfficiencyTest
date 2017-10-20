@@ -392,7 +392,6 @@ namespace BrowserEfficiencyTest
                         driver = new RemoteWebDriver(remoteUri, edgeOptions.ToCapabilities());
                     }
 
-                    //Thread.Sleep(2000);
                     driver.Wait(2);
 
                     if (clearBrowserCache)
@@ -417,7 +416,6 @@ namespace BrowserEfficiencyTest
 
             ScenarioEventSourceProvider.EventLog.MaximizeBrowser(browser);
             driver.Manage().Window.Maximize();
-            //Thread.Sleep(1000);
             driver.Wait(1);
             return driver;
         }
