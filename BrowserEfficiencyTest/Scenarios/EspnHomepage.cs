@@ -47,8 +47,10 @@ namespace BrowserEfficiencyTest
             driver.NavigateToUrl("http://www.espn.com");
             driver.Wait(10);
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll down page");
             // Scroll through the infinite list
             driver.ScrollPage(20);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll down page");
 
             timer.ExtractPageLoadTime("ESPN homepage");
         }

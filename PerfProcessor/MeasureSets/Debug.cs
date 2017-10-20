@@ -38,11 +38,12 @@ namespace BrowserEfficiencyTest
     {
         public Debug()
         {
-            _wpaProfile = @".\MeasureSetDefinitionAssets\CpuUsage.wpaProfile";
+            // Extract Energy metrics from Debug traces
+            _wpaProfiles = new List<string>() { @".\MeasureSetDefinitionAssets\Energy.wpaProfile" };
             WprProfile = "debug";
             TracingMode = TraceCaptureMode.File;
             Name = "debug";
-            _wpaExportedDataFileNames = new List<string>() { "CPU_Usage_(Attributed)_CPU_UsageTime_ByProcess.csv" };
+            _wpaExportedDataFileNames = new List<string>() { "Energy_Estimation_Engine_Summary_Table_(by_Process)_E3EnergyByProcess.csv" };
         }
 
         /// <summary>
@@ -53,7 +54,23 @@ namespace BrowserEfficiencyTest
         protected override Dictionary<string, string> CalculateMetrics(Dictionary<string, List<string>> csvData)
         {
             Dictionary<string, string> metrics = null;
-            // This is just an empty MeasureSet to be used with Debug wprp profile.
+            // Energy Usage Verbose calculations
+            // Since this is the verbose version of the energy measure, report all the energy data we have in the csv file.
+            foreach (var row in csvData["Energy_Estimation_Engine_Summary_Table_(by_Process)_E3EnergyByProcess.csv"])
+            {
+                string[] columns = SplitCsvString(row);
+                metrics.Add(columns[0] + " | CpuEnergy(mJ)", columns[1]);
+                metrics.Add(columns[0] + " | SocEnergy(mJ)", columns[2]);
+                metrics.Add(columns[0] + " | DiskEnergy(mJ)", columns[3]);
+                metrics.Add(columns[0] + " | DisplayEnergy(mJ)", columns[4]);
+                metrics.Add(columns[0] + " | MbbEnergy(mJ)", columns[5]);
+                metrics.Add(columns[0] + " | NetworkEnergy(mJ)", columns[6]);
+                metrics.Add(columns[0] + " | OtherEnergy(mJ)", columns[7]);
+                metrics.Add(columns[0] + " | TotalEnergy(mJ)", columns[8]);
+                metrics.Add(columns[0] + " | StartTime(ns)", columns[9]);
+                metrics.Add(columns[0] + " | EndTime(ns)", columns[10]);
+            }
+
             return metrics;
         }
     }

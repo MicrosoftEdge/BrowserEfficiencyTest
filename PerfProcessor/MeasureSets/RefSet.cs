@@ -39,7 +39,7 @@ namespace BrowserEfficiencyTest
     {
         public RefSet()
         {
-            _wpaProfile = @".\MeasureSetDefinitionAssets\RefSet.wpaProfile";
+            _wpaProfiles = new List<string>() { @".\MeasureSetDefinitionAssets\RefSet.wpaProfile" };
             WprProfile = "refSet";
             TracingMode = TraceCaptureMode.File;
             Name = "refSet";

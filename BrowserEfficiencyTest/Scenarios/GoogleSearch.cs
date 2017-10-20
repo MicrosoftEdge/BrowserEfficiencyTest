@@ -45,9 +45,11 @@ namespace BrowserEfficiencyTest
             driver.NavigateToUrl("http://www.google.com");
             driver.Wait(5);
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Execute google search");
             // Search for "Seattle" and hit enter
             driver.TypeIntoField(driver.FindElementByXPath("//*[@title='Search']"), "Seattle" + Keys.Enter);
-
+            driver.WaitForPageLoad();
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Execute google search");
             // Simply yield control back to the main thread and look at results
         }
     }

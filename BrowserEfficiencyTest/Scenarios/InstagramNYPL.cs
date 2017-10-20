@@ -47,14 +47,20 @@ namespace BrowserEfficiencyTest
             driver.NavigateToUrl("https://www.instagram.com/nypl/");
             driver.Wait(5);
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll down to 'Load More' button");
             driver.ScrollPage(2);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll down to 'Load More' button");
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Click on 'Load More' button");
             // Start the infinite scrolling list by clicking on "load more"
             driver.ClickElement(driver.FindElement(By.XPath("//*[contains(text(), 'Load more')]")));
             driver.Wait(3);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Click on 'Load More' button");
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll down page");
             // Then scroll through it
             driver.ScrollPage(8);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll down page");
 
             timer.ExtractPageLoadTime("Instagram account");
         }

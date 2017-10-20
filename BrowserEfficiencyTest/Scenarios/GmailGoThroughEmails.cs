@@ -97,6 +97,7 @@ namespace BrowserEfficiencyTest
 
         private void BrowseEmails(RemoteWebDriver driver, int numOfEmailsToBrowse)
         {
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Browse Emails");
             // Go through some emails
             for (int i = 0; i < numOfEmailsToBrowse; i++)
             {
@@ -113,6 +114,7 @@ namespace BrowserEfficiencyTest
                 driver.SendKeys("j");
                 driver.Wait(2);
             }
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Browse Emails");
         }
     }
 }

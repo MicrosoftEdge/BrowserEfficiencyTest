@@ -85,7 +85,9 @@ namespace BrowserEfficiencyTest
             // Once we're logged in, all we're going to do is scroll through the page
             // We're simply measuring a user looking through their news feed for a minute
             driver.Wait(5);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll through timeline");
             driver.ScrollPage(20);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll through timeline");
         }
     }
 }

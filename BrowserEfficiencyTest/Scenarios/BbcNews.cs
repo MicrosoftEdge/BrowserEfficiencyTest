@@ -52,12 +52,15 @@ namespace BrowserEfficiencyTest
 
             // Navigate to the hero headline
             driver.ClickElement(driver.FindElement(By.XPath("//*[@rev='hero1|headline']")));
+            driver.WaitForPageLoad();
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Read News Article");
             // Read (some of) the article
             driver.Wait(8);
             driver.ScrollPage(2);
             driver.Wait(2);
             driver.ScrollPage(2);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Read News Article");
 
             timer.ExtractPageLoadTime("BBC article");
         }

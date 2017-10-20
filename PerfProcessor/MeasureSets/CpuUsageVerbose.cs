@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
     {
         public CpuUsageVerbose()
         {
-            _wpaProfile = @".\MeasureSetDefinitionAssets\CpuUsage.wpaProfile";
+            _wpaProfiles = new List<string>() { @".\MeasureSetDefinitionAssets\CpuUsage.wpaProfile" };
             WprProfile = "cpuUsage";
             TracingMode = TraceCaptureMode.File;
             Name = "cpuUsageVerbose";

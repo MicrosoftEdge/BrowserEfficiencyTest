@@ -45,14 +45,19 @@ namespace BrowserEfficiencyTest
         {
             driver.NavigateToUrl("https://www.reddit.com/");
             driver.Wait(2);
-            
+
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Execute search for 'Microsoft Surface'");
             // Find search box and type "Microsoft Surface" in it
             var redditSearchBoxElement = driver.FindElementById("search").FindElement(By.XPath("//input[@type='text']"));
             driver.TypeIntoField(redditSearchBoxElement, "Microsoft Surface" + Keys.Enter + Keys.Enter);
             driver.WaitForPageLoad();
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Execute search for 'Microsoft Surface'");
 
             driver.Wait(3);
+
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll Down");
             driver.ScrollPage(3);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll Down");
 
             // Then go back to the news homepage
             driver.NavigateBack();

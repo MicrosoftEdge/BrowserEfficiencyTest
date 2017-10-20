@@ -39,7 +39,7 @@ namespace BrowserEfficiencyTest
     {
         public DiskUsage()
         {
-            _wpaProfile = @".\MeasureSetDefinitionAssets\DiskUsage.wpaProfile";
+            _wpaProfiles = new List<string>() { @".\MeasureSetDefinitionAssets\DiskUsage.wpaProfile" };
             WprProfile = "diskUsage";
             TracingMode = TraceCaptureMode.Memory;
             Name = "diskUsage";
