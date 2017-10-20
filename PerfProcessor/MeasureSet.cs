@@ -44,9 +44,9 @@ namespace BrowserEfficiencyTest
         private AutomateWPAExporter _wpaExporter;
 
         /// <summary>
-        /// The Windows Performance Analyzer(WPA) Profile to use when extracting data from an ETL.
+        /// A list of the Windows Performance Analyzer(WPA) Profiles (.wpaprofile) to use when extracting data from an ETL.
         /// </summary>
-        protected string _wpaProfile;
+        protected List<string> _wpaProfiles;
 
         /// <summary>
         /// The Windows Performance Analyzer(WPA) Region name to use when extracting data from an ETL.
@@ -110,16 +110,19 @@ namespace BrowserEfficiencyTest
             Dictionary<string, List<string>> etlRawCsvDataSet = new Dictionary<string, List<string>>();
             List<string> etlRawCsvData = null;
 
-            if (string.IsNullOrEmpty(_wpaProfile) || string.IsNullOrEmpty(Name) || _wpaExportedDataFileNames.Count == 0)
+            if (_wpaProfiles == null || _wpaProfiles.Count == 0 || string.IsNullOrEmpty(Name) || _wpaExportedDataFileNames.Count == 0)
             {
                 throw new ArgumentException("Not all required members of MeasureSetDefinition have been defined by the child class.");
             }
 
-            Console.WriteLine("[{0}] - Processing ETL {1} using profile {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), etlFileName, _wpaProfile);
+            Console.WriteLine("[{0}] - Processing ETL {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), etlFileName);
 
-            // Dump the data from the ETL File using the specified wpaProfile.
-            _wpaExporter.WPAExport(etlFileName, _wpaProfile, WpaRegionName);
-
+            // Dump the data from the ETL File using the specified wpaProfiles for the measureset.
+            foreach (var wpaProfile in _wpaProfiles)
+            {
+                Console.WriteLine("[{0}] -   Exporting profile {1} data from ETL {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), wpaProfile, etlFileName);
+                _wpaExporter.WPAExport(etlFileName, wpaProfile, WpaRegionName);
+            }
             // Load the data from all the csv files exported above.
             foreach (string wpaExportedDataFile in _wpaExportedDataFileNames)
             {

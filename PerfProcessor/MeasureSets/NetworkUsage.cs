@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
     {
         public NetworkUsage()
         {
-            _wpaProfile = @".\MeasureSetDefinitionAssets\NetworkUsage.wpaProfile";
+            _wpaProfiles = new List<string>() { @".\MeasureSetDefinitionAssets\NetworkUsage.wpaProfile" };
             WprProfile = "networkUsage";
             TracingMode = TraceCaptureMode.File;
             Name = "networkUsage";

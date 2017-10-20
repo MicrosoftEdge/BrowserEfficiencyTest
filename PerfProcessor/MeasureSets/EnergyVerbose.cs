@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
     {
         public EnergyVerbose()
         {
-            _wpaProfile = @".\MeasureSetDefinitionAssets\Energy.wpaProfile";
+            _wpaProfiles = new List<string>() { @".\MeasureSetDefinitionAssets\Energy.wpaProfile" };
             WprProfile = "energy";
             TracingMode = TraceCaptureMode.File;
             Name = "energyVerbose";
