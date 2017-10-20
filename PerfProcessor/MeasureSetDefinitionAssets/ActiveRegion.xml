@@ -19,10 +19,10 @@
                     Name="MeasurementRegion1"
                     FriendlyName="MeasurementRegion1">
                  <Start>
-                     <Event Provider="{7592876e-8266-5a0c-3f40-1a859137e93a}" Id="25" Version="0" />
+                     <Event Provider="{7592876e-8266-5a0c-3f40-1a859137e93a}" Id="100" Version="0" />
                  </Start>
                  <Stop>
-                     <Event Provider="{7592876e-8266-5a0c-3f40-1a859137e93a}" Id="26" Version="0" />
+                     <Event Provider="{7592876e-8266-5a0c-3f40-1a859137e93a}" Id="101" Version="0" />
                  </Stop>
              </Region>
          </RegionRoot>
