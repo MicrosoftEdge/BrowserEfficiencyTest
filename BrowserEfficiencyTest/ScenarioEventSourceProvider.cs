@@ -58,6 +58,7 @@ namespace BrowserEfficiencyTest
             public const EventTask ScenarioAction = (EventTask)11;
         }
 
+        // Basic events - Events for basic test operations are covered by these such as starting and ending of a scenario
         [Event(1, Opcode = EventOpcode.Start, Task = Tasks.WorkloadExecution)]
         public void WorkloadStart(string Workload, string Browser, string WprProfile, int Iteration, int Attempt) { WriteEvent(1, Workload, Browser, WprProfile, Iteration, Attempt); }
 
@@ -103,10 +104,7 @@ namespace BrowserEfficiencyTest
         [Event(15, Opcode = EventOpcode.Stop, Task = Tasks.Wait)]
         public void WaitStop(double SecondsToWait, string WaitTag) { WriteEvent(15, SecondsToWait, WaitTag); }
 
-
-
-
-
+        // Functional Events - Events for WebDriver functions such as ClickElement are covered here
         [Event(30, Opcode = EventOpcode.Info)]
         public void ClickElement(string ElementText) { WriteEvent(30, ElementText); }
 
@@ -128,12 +126,7 @@ namespace BrowserEfficiencyTest
         [Event(36, Opcode = EventOpcode.Info)]
         public void NavigateBack() { WriteEvent(36); }
 
-
-
-
-        
-
-
+        // These are events for optional base functionality such as clearing the browser cache
         [Event(60, Opcode = EventOpcode.Start, Task = Tasks.WarmupExecution)]
         public void WarmupExecutionStart() { WriteEvent(60); }
 
@@ -146,11 +139,7 @@ namespace BrowserEfficiencyTest
         [Event(63, Opcode = EventOpcode.Stop, Task = Tasks.ClearEdgeBrowserCache)]
         public void ClearEdgeBrowserCacheStop() { WriteEvent(63); }
 
-
-
-
-
-
+        // Scenario actions - events for noting scenario level actions such as logging in to an account
         [Event(80, Opcode = EventOpcode.Start, Task = Tasks.AccoungLogIn)]
         public void AccountLogInStart(string WebsiteName) { WriteEvent(80, WebsiteName); }
 
@@ -162,8 +151,6 @@ namespace BrowserEfficiencyTest
 
         [Event(83, Opcode = EventOpcode.Stop, Task = Tasks.ScenarioAction)]
         public void ScenarioActionStop(string ActionTag) { WriteEvent(83, ActionTag); }
-
-
 
         // These are the MeasurementRegion start and stop events.
         // Place these in a scenario and use with the -regions option to force the PerfProcessor
