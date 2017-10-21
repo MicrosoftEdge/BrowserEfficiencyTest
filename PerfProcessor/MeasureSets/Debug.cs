@@ -53,7 +53,7 @@ namespace BrowserEfficiencyTest
         /// <returns>A dictionary of processes and their CPU usage time in milliseconds.</returns>
         protected override Dictionary<string, string> CalculateMetrics(Dictionary<string, List<string>> csvData)
         {
-            Dictionary<string, string> metrics = null;
+            Dictionary<string, string> metrics = new Dictionary<string, string>();
             // Energy Usage Verbose calculations
             // Since this is the verbose version of the energy measure, report all the energy data we have in the csv file.
             foreach (var row in csvData["Energy_Estimation_Engine_Summary_Table_(by_Process)_E3EnergyByProcess.csv"])
