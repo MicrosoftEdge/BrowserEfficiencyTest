@@ -49,7 +49,12 @@ namespace BrowserEfficiencyTest
             ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Execute search for 'Microsoft Surface'");
             // Find search box and type "Microsoft Surface" in it
             var redditSearchBoxElement = driver.FindElementById("search").FindElement(By.XPath("//input[@type='text']"));
-            driver.TypeIntoField(redditSearchBoxElement, "Microsoft Surface" + Keys.Enter + Keys.Enter);
+            driver.TypeIntoField(redditSearchBoxElement, "Microsoft Surface");
+
+            //Find the execute search button and click it to start the search
+            var executeSearchButtonElement = driver.FindElementById("search").FindElement(By.XPath("//input[@type='submit']"));
+            driver.ClickElement(executeSearchButtonElement);
+
             driver.WaitForPageLoad();
             ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Execute search for 'Microsoft Surface'");
 
