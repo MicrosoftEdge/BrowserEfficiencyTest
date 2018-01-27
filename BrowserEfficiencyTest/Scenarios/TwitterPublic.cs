@@ -43,9 +43,14 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            // Nagivate to the homepage for Twitter
-            driver.NavigateToUrl("https://www.twitter.com");
+            // Nagivate to the Microsoft Twitter page
+            driver.NavigateToUrl("https://twitter.com/microsoft");
             driver.Wait(5);
+
+            // On the first navigation to the page on a new device or after clearing the cookies, Twitter will open the login dropdown window.
+            // Sending the keyboard escape key clears this and allows us to continue scrolling on the page.
+            driver.SendKeys(Keys.Escape);
+            driver.Wait(1);
 
             ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll down page");
             // Scroll through the infinite list
