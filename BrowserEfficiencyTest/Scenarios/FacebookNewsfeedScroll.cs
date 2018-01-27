@@ -42,6 +42,9 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
+            IWebElement notificationWindow = null;
+            IWebElement cancelButton = null;
+
             driver.NavigateToUrl("http://www.facebook.com");
             driver.Wait(5);
 
@@ -82,11 +85,40 @@ namespace BrowserEfficiencyTest
                 throw new Exception("Login to Facebook failed!");
             }
 
+            // It sometimes takes Facebook several seconds before it pops up a notification popup asking the user to enable or disable facebook notifications.
+            // Using 20 seconds to be safe and account for having longer delays on slower devices.
+            driver.Wait(20);
+
+            // find the "Turn on Facebook Notifications" window if it exists.
+            // This should only show up on the first login to Facebook on a new machine or if cookies have been cleared.
+            try
+            {
+                Logger.LogWriteLine("    Check for Facebook notification request window.");
+                notificationWindow = driver.FindElementById("notification-permission-title");
+
+                Logger.LogWriteLine("    Facebook notification request window found! Attempting to click 'Not Now' button.");
+                cancelButton = driver.FindElementByLinkText("Not Now");
+                driver.ClickElement(cancelButton);
+            }
+            catch (NoSuchElementException)
+            {
+                // No facebook notification window found so continue on our merry way.
+                if (notificationWindow == null)
+                {
+                    Logger.LogWriteLine("    No notification window found. Continuing on with scenario execution.");
+                }
+                else
+                {
+                    Logger.LogWriteLine("    Unable to click 'Not Now' button in the Facebook notification request window!");
+                    throw;
+                }
+            }
+
             // Once we're logged in, all we're going to do is scroll through the page
             // We're simply measuring a user looking through their news feed for a minute
-            driver.Wait(5);
+            driver.Wait(1);
             ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll through timeline");
-            driver.ScrollPage(20);
+            driver.ScrollPage(10);
             ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll through timeline");
         }
     }
