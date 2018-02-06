@@ -71,6 +71,7 @@ namespace BrowserEfficiencyTest
         private int _port;
         private bool _enableVerboseLogging;
         private bool _enableScenarioTracing;
+        private string _executeScriptFileName;
 
         // _measureSets format: Dictionary< "measure set name", Tuple < "WPR profile name", "tracing mode" >>
         private Dictionary<string, Tuple<string, string>> _measureSets;
@@ -103,6 +104,7 @@ namespace BrowserEfficiencyTest
             _port = args.Port;
             _enableVerboseLogging = args.EnableVerboseWebDriverLogging;
             _enableScenarioTracing = args.EnableScenarioTracing;
+            _executeScriptFileName = args.ExecuteScriptFileName;
 
             if (!string.IsNullOrEmpty(args.ExtensionsPath))
             {
@@ -415,6 +417,11 @@ namespace BrowserEfficiencyTest
 
                 // Start tracing
                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {workloadName} WPRPROFILE {wprProfileName} MODE {tracingMode}").Wait();
+                if(!string.IsNullOrEmpty(_executeScriptFileName))
+                {
+                    // execute the selected script and pass "STARTSCENARIO"+<scenario>+<iteration>
+                    ExecuteScript(_executeScriptFileName, "STARTSCENARIO " + _scenarios[0].ScenarioName + " " + iteration.ToString());
+                }
 
                 if (usingTraceController)
                 {
@@ -454,6 +461,15 @@ namespace BrowserEfficiencyTest
 
                                 // Start tracing for the current scenario
                                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} {browser} ITERATION {iteration} SCENARIO_NAME {workloadName} WPRPROFILE {wprProfileName} MODE {tracingMode}").Wait();
+                            }
+
+                            if (!string.IsNullOrEmpty(_executeScriptFileName) && scenarioIndex > 0)
+                            {
+                                // execute the selected script and pass "ENDSCENARIO"
+                                ExecuteScript(_executeScriptFileName, "ENDSCENARIO");
+
+                                // execute the selected script and pass "STARTSCENARIO"+<scenario>+<iteration>
+                                ExecuteScript(_executeScriptFileName, "STARTSCENARIO " + currentScenario.ScenarioName + " " + iteration.ToString());
                             }
 
                             // Save the name of the current scenarion in case an exception is thrown in which case the local variable 'currentScenario' will be lost
@@ -519,6 +535,12 @@ namespace BrowserEfficiencyTest
                         // and put everything back into a state where we can start the next iteration.
                         elevatorClient.SendControllerMessageAsync(Elevator.Commands.CANCEL_PASS);
 
+                        if (!string.IsNullOrEmpty(_executeScriptFileName))
+                        {
+                            // execute the selected script and pass "FAIL"
+                            ExecuteScript(_executeScriptFileName, "FAIL");
+                        }
+
                         try
                         {
                             // Attempt to save the page source
@@ -574,6 +596,11 @@ namespace BrowserEfficiencyTest
             {
                 // Stop tracing
                 elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} {browser}").Wait();
+                if (!string.IsNullOrEmpty(_executeScriptFileName))
+                {
+                    // execute the selected script and pass "ENDSCENARIO"
+                    ExecuteScript(_executeScriptFileName, "ENDSCENARIO");
+                }
             }
             else
             {
@@ -596,6 +623,44 @@ namespace BrowserEfficiencyTest
                 Logger.LogWriteLine(string.Format("  ProductName: {0}", (string)regKey.GetValue("ProductName")));
                 Logger.LogWriteLine("---------------------");
             }
+        }
+
+        // Open another process and run the desired script with the desired parameters
+        private bool ExecuteScript(string scriptFileName, string parameterString)
+        {
+            bool isSuccess = false;
+
+            Logger.LogWriteLine(string.Format("   Executing script: {0} {1}", scriptFileName, parameterString));
+
+            if (string.IsNullOrEmpty(scriptFileName))
+            {
+                return false;
+            }
+
+            try
+            {
+                ProcessStartInfo processInfo = new ProcessStartInfo(scriptFileName);
+                processInfo.Arguments = parameterString;
+                processInfo.UseShellExecute = false;
+                processInfo.RedirectStandardError = true;
+
+                Process commandProcess = new Process();
+                commandProcess.StartInfo = processInfo;
+                commandProcess.Start();
+                commandProcess.WaitForExit();
+
+                isSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWriteLine("------ EXCEPTION caught while trying to execute a script in a separate process! ------------------------------------");
+                Logger.LogWriteLine(string.Format("    Script:     {0}", scriptFileName));
+                Logger.LogWriteLine(string.Format("    Parameters: {0}", parameterString));
+                Logger.LogWriteLine("    Exception:   " + ex.ToString());
+                throw;
+            }
+
+            return isSuccess;
         }
     }
 }
