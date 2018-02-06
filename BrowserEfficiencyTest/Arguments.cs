@@ -70,6 +70,7 @@ namespace BrowserEfficiencyTest
         public string RegionOfInterest { get; private set; }
         public bool EnableVerboseWebDriverLogging { get; private set; }
         public bool EnableScenarioTracing { get; private set; }
+        public string ExecuteScriptFileName { get; private set; }
 
         /// <summary>
         /// List of all scenarios to be run.
@@ -133,6 +134,7 @@ namespace BrowserEfficiencyTest
             RegionOfInterest = "";
             EnableVerboseWebDriverLogging = false;
             EnableScenarioTracing = false;
+            ExecuteScriptFileName = "";
 
             CreatePossibleScenarios();
             LoadWorkloads();
@@ -570,6 +572,21 @@ namespace BrowserEfficiencyTest
                     case "-enablescenariotracing":
                         EnableScenarioTracing = true;
                         break;
+                    case "-executescript":
+                    case "-es":
+                        // The script name must follow the -es|-executescript option.
+                        argNum++;
+                        if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
+                        {
+                            ExecuteScriptFileName = args[argNum];
+                        }
+                        else
+                        {
+                            // No filename was specified after the -es|-executescript option.
+                            argumentsAreValid = false;
+                            Logger.LogWriteLine("A valid script filename must be specified after the -es|-executescript option!", false);
+                        }
+                        break;
                     default:
                         argumentsAreValid = false;
                         Logger.LogWriteLine(string.Format("Invalid argument encountered '{0}'", args[argNum]), false);
@@ -641,7 +658,12 @@ namespace BrowserEfficiencyTest
                                 + "[-clearbrowsercache|-cbc] "
                                 + "[-warmuprun|-wu] "
                                 + "[-host|-h <host name>] "
-                                + "[-port <port number>]", false);
+                                + "[-port <port number>] "
+                                + "[-region <region of interest name from ActiveRegion.xml> "
+                                + "[-verbose] "
+                                + "[-enablescenariotracing] "
+                                + "[-executescript|-es <script file name>] "
+                                , false);
         }
 
         // Output all the available scenarios.
