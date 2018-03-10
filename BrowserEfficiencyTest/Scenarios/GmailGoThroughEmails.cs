@@ -44,7 +44,7 @@ namespace BrowserEfficiencyTest
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
             driver.NavigateToUrl("https://accounts.google.com/ServiceLogin?service=mail&continue=https://mail.google.com/mail/#identifier");
-            driver.Wait(2);
+            driver.Wait(5);
             LogIn(driver, credentialManager);
             BrowseEmails(driver, 5);
         }
