@@ -41,7 +41,7 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            driver.NavigateToUrl("https://www.youtube.com/watch?v=l42U5Cwn1Y0");
+            driver.NavigateToUrl("https://www.youtube.com/watch?v=CjX2Hl3pAgo");
             driver.Wait(2);
         }
     }
