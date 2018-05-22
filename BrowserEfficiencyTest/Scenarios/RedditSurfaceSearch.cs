@@ -43,7 +43,7 @@ namespace BrowserEfficiencyTest
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
         {
-            driver.NavigateToUrl("https://www.reddit.com/");
+            driver.NavigateToUrl("www.reddit.com/");
             driver.Wait(2);
 
             ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Execute search for 'Microsoft Surface'");
