@@ -159,6 +159,10 @@ namespace BrowserEfficiencyTest
             // Page down seemed to be the best compromise in terms of it behaving like a real user scrolling, and it
             // working reliably across browsers.
             // Use the page down key.
+
+            var userAction = new OpenQA.Selenium.Interactions.Actions(remoteWebDriver);
+            userAction.SendKeys(Keys.PageDown);
+
             for (int i = 0; i < timesToScroll; i++)
             {
                 ScenarioEventSourceProvider.EventLog.ScrollEvent();
@@ -170,16 +174,14 @@ namespace BrowserEfficiencyTest
                 }
                 else
                 {
-                    remoteWebDriver.Keyboard.SendKeys(Keys.PageDown);
+                    userAction.Perform();
                 }
-
                 Thread.Sleep(1000);
             }
         }
 
         /// <summary>
         /// Sends keystrokes to the browser. Not to a specific element.
-        /// Wrapper for driver.Keyboard.SendKeys(...)
         /// </summary>
         /// <param name="keys">Keystrokes to send to the browser.</param>
         public static void SendKeys(this RemoteWebDriver remoteWebDriver, string keys)
@@ -194,7 +196,8 @@ namespace BrowserEfficiencyTest
             }
             else
             {
-                remoteWebDriver.Keyboard.SendKeys(keys);
+                var userAction = new OpenQA.Selenium.Interactions.Actions(remoteWebDriver);
+                userAction.SendKeys(keys).Perform();
             }
             ScenarioEventSourceProvider.EventLog.SendKeysStop(keys.Length);
         }
