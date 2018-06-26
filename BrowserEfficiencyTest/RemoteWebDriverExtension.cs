@@ -408,9 +408,8 @@ namespace BrowserEfficiencyTest
                     _edgeBrowserBuildNumber = GetEdgeBuildNumber(driver);
                     Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge Build Version: {0}", _edgeBrowserBuildNumber));
 
-                    string webDriverServerVersion = GetEdgeWebDriverVersion(driver);
-                    Logger.LogWriteLine(string.Format("   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {0}", webDriverServerVersion));
-                    _edgeWebDriverBuildNumber = Convert.ToInt32(webDriverServerVersion.Split('.')[2]);
+                    _edgeWebDriverBuildNumber = GetEdgeWebDriverVersion(driver);
+                    Logger.LogWriteLine(string.Format("   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {0}", _edgeWebDriverBuildNumber));
 
                     break;
             }
@@ -503,11 +502,24 @@ namespace BrowserEfficiencyTest
         }
 
         // Retrieves the WebDriver server version
-        private static string GetEdgeWebDriverVersion(this RemoteWebDriver remoteWebDriver)
+        private static int GetEdgeWebDriverVersion(this RemoteWebDriver remoteWebDriver)
         {
             var statusResponse = Newtonsoft.Json.Linq.JObject.Parse(CallStatusCommand(remoteWebDriver).Result);
-            string webDriverVersion = (string)statusResponse["value"]["build"]["version"];
+            int webDriverVersion = 0;
 
+            try
+            {
+                string webDriverVersionString = (string)statusResponse["value"]["build"]["version"];
+                webDriverVersion = Convert.ToInt32(webDriverVersionString.Split('.')[2]);
+            }
+            catch (System.NullReferenceException)
+            {
+                // Newer versions of MicrosoftWebDriver.exe (RS4 and later) default to the W3C WebDriver spec which does not return
+                // the webdriver build number in the response to the status command. However, since this happens in RS4 and later builds
+                // we can safely assume the newTab command is supported since the newTab command is in RS3 16203 builds and higher.
+                // So let's set the webDriverVersion to an arbitrary number that is larger than 16203.
+                webDriverVersion = 99999;
+            }
             return webDriverVersion;
         }
 
