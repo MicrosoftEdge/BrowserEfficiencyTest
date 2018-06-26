@@ -342,8 +342,6 @@ namespace BrowserEfficiencyTest
                     break;
                 default:
                     EdgeOptions edgeOptions = new EdgeOptions();
-                    edgeOptions.AddAdditionalCapability("browserName", "Microsoft Edge");
-
                     EdgeDriverService edgeDriverService = null;
 
                     if (extensionPaths != null && extensionPaths.Count != 0)
