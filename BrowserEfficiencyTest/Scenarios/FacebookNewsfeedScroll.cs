@@ -69,7 +69,7 @@ namespace BrowserEfficiencyTest
                 driver.Wait(1);
 
                 driver.TypeIntoField(password, credentials.Password + Keys.Enter);
-                driver.Wait(1);
+                driver.Wait(2);
 
                 ScenarioEventSourceProvider.EventLog.AccountLogInStop("Facebook");
                 Logger.LogWriteLine("    Completed logging into Facebook...");
@@ -99,6 +99,19 @@ namespace BrowserEfficiencyTest
                 Logger.LogWriteLine("    Facebook notification request window found! Attempting to click 'Not Now' button.");
                 cancelButton = driver.FindElementByLinkText("Not Now");
                 driver.ClickElement(cancelButton);
+
+                try
+                {
+                    // Check again for the notification window. It should be gone at this point.
+                    notificationWindow = driver.FindElementById("notification-permission-title");
+
+                    // If we get here then the notification window is still open!
+                    throw new Exception("Failed to close Facebook notification window!");
+                }
+                catch (NoSuchElementException)
+                {
+                    Logger.LogWriteLine("    Successfully closed the Facebook notification window.");
+                }
             }
             catch (NoSuchElementException)
             {
@@ -117,6 +130,7 @@ namespace BrowserEfficiencyTest
             // Once we're logged in, all we're going to do is scroll through the page
             // We're simply measuring a user looking through their news feed for a minute
             driver.Wait(1);
+            Logger.LogWriteLine("    Scroll through Facebook timeline.");
             ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Scroll through timeline");
             driver.ScrollPage(10);
             ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Scroll through timeline");
