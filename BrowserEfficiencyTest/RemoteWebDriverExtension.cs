@@ -109,7 +109,7 @@ namespace BrowserEfficiencyTest
             // sanity check to make sure we in fact did get a new tab opened.
             if (endingTabCount != (originalTabCount + 1))
             {
-                throw new Exception(string.Format("New tab was not created as expected! Expected {0} tabs but found {1} tabs.", (originalTabCount + 1), endingTabCount));
+                throw new Exception($"New tab was not created as expected! Expected {originalTabCount + 1} tabs but found {endingTabCount} tabs.");
             }
 
             // Go to that tab
@@ -280,7 +280,7 @@ namespace BrowserEfficiencyTest
                 {
                     attempt++;
 
-                    Logger.LogWriteLine("Failed attempt " + attempt + " to click element " + element.ToString());
+                    Logger.LogWriteLine($"Failed attempt {attempt} to click element {element.ToString()}");
 
                     Thread.Sleep(1000);
 
@@ -353,7 +353,7 @@ namespace BrowserEfficiencyTest
                         edgeOptions.AddAdditionalCapability("extensionPaths", extensionPaths);
                         foreach (var path in extensionPaths)
                         {
-                            Logger.LogWriteLine("Sideloading extension(s) from " + path);
+                            Logger.LogWriteLine($"Sideloading extension(s) from {path}");
                         }
                     }
 
@@ -372,7 +372,7 @@ namespace BrowserEfficiencyTest
                         _port = edgeDriverService.Port;
                         _hostName = hostName;
 
-                        Logger.LogWriteLine(string.Format("  Instantiating EdgeDriver object for local execution - Host: {0}  Port: {1}", _hostName, _port));
+                        Logger.LogWriteLine($"  Instantiating EdgeDriver object for local execution - Host: {_hostName}  Port: {_port}");
                         ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
                         driver = new EdgeDriver(edgeDriverService, edgeOptions);
                     }
@@ -388,7 +388,7 @@ namespace BrowserEfficiencyTest
                         _hostName = hostName;
                         var remoteUri = new Uri("http://" + _hostName + ":" + _port + "/");
 
-                        Logger.LogWriteLine(string.Format("  Instantiating RemoteWebDriver object for remote execution - Host: {0}  Port: {1}", _hostName, _port));
+                        Logger.LogWriteLine($"  Instantiating RemoteWebDriver object for remote execution - Host: {_hostName}  Port: {_port}");
                         ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
                         driver = new RemoteWebDriver(remoteUri, edgeOptions.ToCapabilities());
                     }
@@ -406,10 +406,10 @@ namespace BrowserEfficiencyTest
                     }
 
                     _edgeBrowserBuildNumber = GetEdgeBuildNumber(driver);
-                    Logger.LogWriteLine(string.Format("   Browser Version - MicrosoftEdge Build Version: {0}", _edgeBrowserBuildNumber));
+                    Logger.LogWriteLine($"   Browser Version - MicrosoftEdge Build Version: {_edgeBrowserBuildNumber}");
 
                     _edgeWebDriverBuildNumber = GetEdgeWebDriverVersion(driver);
-                    Logger.LogWriteLine(string.Format("   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {0}", _edgeWebDriverBuildNumber));
+                    Logger.LogWriteLine($"   WebDriver Server Version - MicrosoftWebDriver.exe File Version: {_edgeWebDriverBuildNumber}");
 
                     break;
             }
@@ -443,7 +443,7 @@ namespace BrowserEfficiencyTest
                     }
                     else
                     {
-                        Logger.LogWriteLine(string.Format("   Unable to extract Edge build version from {0}", edgeVersionToken));
+                        Logger.LogWriteLine($"   Unable to extract Edge build version from {edgeVersionToken}");
                     }
                 }
             }
