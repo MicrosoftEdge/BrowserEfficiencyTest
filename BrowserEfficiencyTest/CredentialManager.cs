@@ -62,7 +62,7 @@ namespace BrowserEfficiencyTest
                     return item;
                 }
             }
-            throw new Exception("No credentials matching domain '" + domain + "' were found in " + _credentialsPath);
+            throw new Exception($"No credentials matching domain '{domain}' were found in {_credentialsPath}");
         }
     }
 }
