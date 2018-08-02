@@ -18,7 +18,7 @@ namespace BrowserEfficiencyTest
     internal class ResponsivenessTimer
     {
         private List<List<String>> _results;
-        private string _currentSceanrio;
+        private string _currentScenario;
         private int _iteration;
         private string _browser;
         private string _measureSet;
@@ -76,7 +76,7 @@ namespace BrowserEfficiencyTest
         /// <param name="scenario">The current scenario</param>
         public void SetScenario(string scenario)
         {
-            _currentSceanrio = scenario;
+            _currentScenario = scenario;
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace BrowserEfficiencyTest
             DateTime now = DateTime.Now;
             List<String> record = new List<String>();
             record.Add("no_etl");
-            record.Add(_currentSceanrio);
+            record.Add(_currentScenario);
             record.Add(_iteration.ToString());
             record.Add(_browser);
             record.Add(now.ToString("yyyyMMdd"));
