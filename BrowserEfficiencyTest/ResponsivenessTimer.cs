@@ -64,7 +64,7 @@ namespace BrowserEfficiencyTest
         /// <summary>
         /// Sets the measureSet, which will be included when a measurement is recorded later.
         /// </summary>
-        /// <param name="measureSet">The current measureSet</param>
+        /// <param name="measureSet">The current measureset</param>
         public void SetMeasureSet(string measureSet)
         {
             _measureSet = measureSet;
