@@ -49,7 +49,7 @@ namespace BrowserEfficiencyTest
         public static void SetupFileLogging(string path = null)
         {
             string _logPath = null;
-            string fileName = string.Format("BrowserEfficiencyTestLog" + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt");
+            string fileName = $"BrowserEfficiencyTestLog_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
 
             if (string.IsNullOrEmpty(path) )
             {
@@ -87,7 +87,7 @@ namespace BrowserEfficiencyTest
             if (includeDateTimeStamp)
             {
                 // prefix log message with the current date-time stamp
-                dateTimeStamp = string.Format("[{0}] ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                dateTimeStamp = $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] ";
             }
 
             string logEntry = dateTimeStamp + logString;
