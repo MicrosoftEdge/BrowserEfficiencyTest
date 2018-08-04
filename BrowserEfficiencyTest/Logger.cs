@@ -49,7 +49,7 @@ namespace BrowserEfficiencyTest
         public static void SetupFileLogging(string path = null)
         {
             string _logPath = null;
-            string fileName = $"BrowserEfficiencyTestLog_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.txt";
+            string fileName = String.Format("BrowserEfficiencyTestLog_{0}.txt", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
 
             if (string.IsNullOrEmpty(path) )
             {
