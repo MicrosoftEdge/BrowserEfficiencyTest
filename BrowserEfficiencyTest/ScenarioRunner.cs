@@ -153,7 +153,7 @@ namespace BrowserEfficiencyTest
                     var extensionStagingPath = Path.Combine(ExtensionsStagingRootPath, directoryName, extensionFolderName);
                     Directory.CreateDirectory(extensionStagingPath);
 
-                    Logger.LogWriteLine("Staging extensions files: Source='" + extensionPath + "' Destination='" + extensionStagingPath + "'", false);
+                    Logger.LogWriteLine($"Staging extensions files: Source='{extensionPath}' Destination='{extensionStagingPath}'", false);
 
                     try
                     {
@@ -170,19 +170,19 @@ namespace BrowserEfficiencyTest
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogWriteLine("Copying of extension(s) failed with: \n" + ex.Message);
-                        throw new Exception("Copying of extension(s) failed with: \n" + ex.Message);
+                        Logger.LogWriteLine($"Copying of extension(s) failed with: \n{ex.Message}");
+                        throw new Exception($"Copying of extension(s) failed with: \n{ex.Message}");
                     }
                 }
             }
             else
             {
-                Logger.LogWriteLine("No valid extensions found in given path " + path +
-                    ". The folder structure should be as follows: \n" +
-                    "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
-                throw new Exception("No valid extensions found in given path " + path +
-                    ". The folder structure should be as follows: \n" +
-                    "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >");
+                string noValidExtensionsMessage = "No valid extensions found in given path " + path
+                    + ". The folder structure should be as follows: \n"
+                    + "unpackedExtensions \n| ----extension1\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >\n| ----extension2\n| ----| ----Assets\n| ----| ----AppXManifest.xml\n| ----| ----Extension\n| ----| ----| ----manifest.json\n| ----| ----| ---- < otherExtFiles >";
+
+                Logger.LogWriteLine(noValidExtensionsMessage);
+                throw new Exception(noValidExtensionsMessage);
             }
 
             return sideloadExtensionPaths;
@@ -226,7 +226,7 @@ namespace BrowserEfficiencyTest
 
             if (!sourceDirectory.Exists)
             {
-                throw new DirectoryNotFoundException("Source directory does not exist or could not be found: " + sourceDirectoryName);
+                throw new DirectoryNotFoundException($"Source directory does not exist or could not be found: {sourceDirectoryName}");
             }
 
             DirectoryInfo[] sourceSubDirectories = sourceDirectory.GetDirectories();
@@ -307,7 +307,7 @@ namespace BrowserEfficiencyTest
                         Logger.LogWriteLine(string.Format(" Executing warmup of {0} browser", browser));
                         // use -1 as the iteration value to denote warmup run
                         ExecuteWorkload(-1, browser, "None", "", "", true, false, elevatorClient);
-                        Logger.LogWriteLine(string.Format(" Completed warmup of {0} browser", browser));
+                        Logger.LogWriteLine($" Completed warmup of {browser} browser");
                     }
                 }
                 ScenarioEventSourceProvider.EventLog.WarmupExecutionStop();
@@ -338,7 +338,7 @@ namespace BrowserEfficiencyTest
                 // TODO: Consider breaking up this large loop into smaller methods to ease readability.
                 for (int iteration = 0; iteration < _iterations; iteration++)
                 {
-                    Logger.LogWriteLine(string.Format("Iteration: {0} ------------------", iteration));
+                    Logger.LogWriteLine($"Iteration: {iteration} ------------------");
                     _timer.SetIteration(iteration);
                     foreach (var currentMeasureSet in _measureSets)
                     {
@@ -349,7 +349,7 @@ namespace BrowserEfficiencyTest
                             // The idea is to get a baseline performance capture of the system without the browser and test pass so it
                             // can be used as a comparison.
 
-                            Logger.LogWriteLine(string.Format(" Starting capture of system baseline for {0} seconds - measureset {1}  iteration {2}", _baselineCaptureSeconds, currentMeasureSet.Value.Item1, iteration));
+                            Logger.LogWriteLine($" Starting capture of system baseline for {_baselineCaptureSeconds} seconds - measureset {currentMeasureSet.Value.Item1}  iteration {iteration}");
 
                             // Start the trace capture for baseline scenario
                             elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.START_BROWSER} BASE ITERATION {iteration} SCENARIO_NAME BaseLineCapture WPRPROFILE {currentMeasureSet.Value.Item1} MODE {currentMeasureSet.Value.Item2}").Wait();
@@ -360,7 +360,7 @@ namespace BrowserEfficiencyTest
 
                             ScenarioEventSourceProvider.EventLog.MeasurementRegionStop("BaselineCapture");
 
-                            Logger.LogWriteLine(string.Format(" Finished capture of system baseline of measureset {0}  iteration {1}", currentMeasureSet.Value.Item1, iteration));
+                            Logger.LogWriteLine($" Finished capture of system baseline of measureset {currentMeasureSet.Value.Item1}  iteration {iteration}");
 
                             // End the trace capture for baseline scenario
                             elevatorClient.SendControllerMessageAsync($"{Elevator.Commands.END_BROWSER} BASE").Wait();
@@ -420,19 +420,19 @@ namespace BrowserEfficiencyTest
                 if(!string.IsNullOrEmpty(_executeScriptFileName))
                 {
                     // execute the selected script and pass "STARTSCENARIO"+<scenario>+<iteration>
-                    ExecuteScript(_executeScriptFileName, "STARTSCENARIO " + _scenarios[0].ScenarioName + " " + iteration.ToString());
+                    ExecuteScript(_executeScriptFileName, $"STARTSCENARIO {_scenarios[0].ScenarioName} {iteration.ToString()}");
                 }
 
                 if (usingTraceController)
                 {
-                    Logger.LogWriteLine(string.Format("  Pausing {0} seconds after starting the trace session to reduce interference.", _e3RefreshDelaySeconds));
+                    Logger.LogWriteLine($"  Pausing {_e3RefreshDelaySeconds} seconds after starting the trace session to reduce interference.");
 
                     // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
                     // that the browser energy data reported by E3 for this run is only for this run and does not bleed into any other runs.
                     Thread.Sleep(_e3RefreshDelaySeconds * 1000);
                 }
 
-                Logger.LogWriteLine(string.Format(" Launching Browser Driver: '{0}'", browser));
+                Logger.LogWriteLine($" Launching Browser Driver: '{browser}'");
                 ScenarioEventSourceProvider.EventLog.WorkloadStart(_workloadName, browser, wprProfileName, iteration, attemptNumber);
 
                 using (var driver = RemoteWebDriverExtension.CreateDriverAndMaximize(browser, _clearBrowserCache, _enableVerboseLogging, _browserProfilePath, _extensionsPaths, _port, _hostName))
@@ -469,7 +469,7 @@ namespace BrowserEfficiencyTest
                                 ExecuteScript(_executeScriptFileName, "ENDSCENARIO");
 
                                 // execute the selected script and pass "STARTSCENARIO"+<scenario>+<iteration>
-                                ExecuteScript(_executeScriptFileName, "STARTSCENARIO " + currentScenario.ScenarioName + " " + iteration.ToString());
+                                ExecuteScript(_executeScriptFileName, $"STARTSCENARIO {currentScenario.ScenarioName} {iteration.ToString()}");
                             }
 
                             // Save the name of the current scenarion in case an exception is thrown in which case the local variable 'currentScenario' will be lost
@@ -492,7 +492,7 @@ namespace BrowserEfficiencyTest
 
                             isFirstScenario = false;
 
-                            Logger.LogWriteLine(string.Format("  Executing - Scenario: {0}  Iteration: {1}  Attempt: {2}  Browser: {3}  MeasureSet: {4}", currentScenario.ScenarioName, iteration, attemptNumber, browser, measureSetName));
+                            Logger.LogWriteLine($"  Executing - Scenario: {currentScenario.ScenarioName}  Iteration: {iteration}  Attempt: {attemptNumber}  Browser: {browser}  MeasureSet: {measureSetName}");
                             ScenarioEventSourceProvider.EventLog.ScenarioExecutionStart(browser, currentScenario.ScenarioName);
 
                             // Here, control is handed to the scenario to navigate, and do whatever it wants
@@ -507,26 +507,26 @@ namespace BrowserEfficiencyTest
                             {
                                 // Of course it's possible we don't get control back until after we were supposed to
                                 // continue to the next scenario. In that case, invalidate the run by throwing.
-                                Logger.LogWriteLine(string.Format("   !!! Scenario {0} ran longer than expected! The browser ran for {1}s. The timeout for this scenario is {2}s.", currentScenario.ScenarioName, runTime.TotalSeconds, currentScenario.Duration));
-                                throw new Exception(string.Format("Scenario {0} ran longer than expected! The browser ran for {1}s. The timeout for this scenario is {2}s.", currentScenario.ScenarioName, runTime.TotalSeconds, currentScenario.Duration));
+                                Logger.LogWriteLine($"   !!! Scenario {currentScenario.ScenarioName} ran longer than expected! The browser ran for {runTime.TotalSeconds}s. The timeout for this scenario is {currentScenario.Duration}s.");
+                                throw new Exception($"Scenario {currentScenario.ScenarioName} ran longer than expected! The browser ran for {runTime.TotalSeconds}s. The timeout for this scenario is {currentScenario.Duration}s.");
                             }
                             else if (!overrideTimeout)
                             {
                                 ScenarioEventSourceProvider.EventLog.ScenarioIdleStart(currentScenario.ScenarioName, timeLeft.TotalSeconds);
-                                Logger.LogWriteLine(string.Format("    Scenario {0} returned in {1} seconds. Sleep for remaining {2} seconds.", currentScenario.ScenarioName, runTime.TotalSeconds, timeLeft.TotalSeconds));
+                                Logger.LogWriteLine($"    Scenario {currentScenario.ScenarioName} returned in {runTime.TotalSeconds} seconds. Sleep for remaining {timeLeft.TotalSeconds} seconds.");
                                 Thread.Sleep((int)timeLeft.TotalMilliseconds);
                                 ScenarioEventSourceProvider.EventLog.ScenarioIdleStop(currentScenario.ScenarioName, timeLeft.TotalSeconds);
                             }
 
                             ScenarioEventSourceProvider.EventLog.ScenarioExecutionStop(browser, currentScenario.ScenarioName);
-                            Logger.LogWriteLine(string.Format("  Completed - Scenario: {0}  Iteration: {1}  Attempt: {2}  Browser: {3}  MeasureSet: {4}", currentScenario.ScenarioName, iteration, attemptNumber, browser, measureSetName, runTime.TotalSeconds));
+                            Logger.LogWriteLine($"  Completed - Scenario: {currentScenario.ScenarioName}  Iteration: {iteration}  Attempt: {attemptNumber}  Browser: {browser}  MeasureSet: {measureSetName}");
                             scenarioIndex++;
                         }
 
                         driver.CloseBrowser(browser);
                         passSucceeded = true;
 
-                        Logger.LogWriteLine(string.Format(" SUCCESS!  Completed Browser: {0}  Iteration: {1}  Attempt: {2}  MeasureSet: {3}", browser, iteration, attemptNumber, measureSetName));
+                        Logger.LogWriteLine($" SUCCESS!  Completed Browser: {browser}  Iteration: {iteration}  Attempt: {attemptNumber}  MeasureSet: {measureSetName}");
                         ScenarioEventSourceProvider.EventLog.WorkloadStop(_workloadName, browser, wprProfileName, iteration, attemptNumber);
                     }
                     catch (Exception ex)
@@ -564,12 +564,12 @@ namespace BrowserEfficiencyTest
 
                         driver.CloseBrowser(browser);
                         Logger.LogWriteLine("------ EXCEPTION caught while trying to run scenario! ------------------------------------");
-                        Logger.LogWriteLine(string.Format("    Iteration:   {0}", iteration));
-                        Logger.LogWriteLine(string.Format("    Measure Set: {0}", measureSetName));
-                        Logger.LogWriteLine(string.Format("    Browser:     {0}", browser));
-                        Logger.LogWriteLine(string.Format("    Attempt:     {0}", attemptNumber));
-                        Logger.LogWriteLine(string.Format("    Scenario:    {0}", currentScenarioName));
-                        Logger.LogWriteLine("    Exception:   " + ex.ToString());
+                        Logger.LogWriteLine($"    Iteration:   {iteration}");
+                        Logger.LogWriteLine($"    Measure Set: {measureSetName}");
+                        Logger.LogWriteLine($"    Browser:     {browser}");
+                        Logger.LogWriteLine($"    Attempt:     {attemptNumber}");
+                        Logger.LogWriteLine($"    Scenario:    {currentScenarioName}");
+                        Logger.LogWriteLine($"    Exception:   {ex.ToString()}");
 
                         if (usingTraceController)
                         {
@@ -582,7 +582,7 @@ namespace BrowserEfficiencyTest
                     {
                         if (usingTraceController)
                         {
-                            Logger.LogWriteLine(string.Format("  Pausing {0} seconds before stopping the trace session to reduce interference.", _e3RefreshDelaySeconds));
+                            Logger.LogWriteLine($"  Pausing {_e3RefreshDelaySeconds} seconds before stopping the trace session to reduce interference.");
 
                             // E3 system aggregates energy data at regular intervals. For our test passes we use 10 second intervals. Waiting here for 12 seconds before continuing ensures
                             // that the browser energy data reported by E3 for this run is only for this run and does not bleed into any other runs.
@@ -605,8 +605,8 @@ namespace BrowserEfficiencyTest
             else
             {
                 CleanupExtensions();
-                Logger.LogWriteLine(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
-                throw new Exception(string.Format("!!! Failed to successfully complete iteration {0} with browser '{1}' after {2} attempts!", iteration, browser, _maxAttempts));
+                Logger.LogWriteLine($"!!! Failed to successfully complete iteration {iteration} with browser '{browser}' after {_maxAttempts} attempts!");
+                throw new Exception($"!!! Failed to successfully complete iteration {iteration} with browser '{browser}' after {_maxAttempts} attempts!");
             }
 
             return passSucceeded;
@@ -618,9 +618,9 @@ namespace BrowserEfficiencyTest
             using (RegistryKey regKey = Registry.LocalMachine.OpenSubKey(@"software\microsoft\windows NT\currentVersion"))
             {
                 Logger.LogWriteLine("--- OS Version ------");
-                Logger.LogWriteLine(string.Format("  BuildLabEx: {0}", (string)regKey.GetValue("BuildLabEx")));
-                Logger.LogWriteLine(string.Format("  EditionID: {0}", (string)regKey.GetValue("EditionID")));
-                Logger.LogWriteLine(string.Format("  ProductName: {0}", (string)regKey.GetValue("ProductName")));
+                Logger.LogWriteLine($"  BuildLabEx: {(string)regKey.GetValue("BuildLabEx")}");
+                Logger.LogWriteLine($"  EditionID: {(string)regKey.GetValue("EditionID")}");
+                Logger.LogWriteLine($"  ProductName: {(string)regKey.GetValue("ProductName")}");
                 Logger.LogWriteLine("---------------------");
             }
         }
@@ -630,7 +630,7 @@ namespace BrowserEfficiencyTest
         {
             bool isSuccess = false;
 
-            Logger.LogWriteLine(string.Format("   Executing script: {0} {1}", scriptFileName, parameterString));
+            Logger.LogWriteLine($"   Executing script: {scriptFileName} {parameterString}");
 
             if (string.IsNullOrEmpty(scriptFileName))
             {
@@ -654,9 +654,9 @@ namespace BrowserEfficiencyTest
             catch (Exception ex)
             {
                 Logger.LogWriteLine("------ EXCEPTION caught while trying to execute a script in a separate process! ------------------------------------");
-                Logger.LogWriteLine(string.Format("    Script:     {0}", scriptFileName));
-                Logger.LogWriteLine(string.Format("    Parameters: {0}", parameterString));
-                Logger.LogWriteLine("    Exception:   " + ex.ToString());
+                Logger.LogWriteLine($"    Script:     {scriptFileName}");
+                Logger.LogWriteLine($"    Parameters: {parameterString}");
+                Logger.LogWriteLine($"    Exception:   {ex.ToString()}");
                 throw;
             }
 

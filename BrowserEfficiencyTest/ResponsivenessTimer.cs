@@ -18,7 +18,7 @@ namespace BrowserEfficiencyTest
     internal class ResponsivenessTimer
     {
         private List<List<String>> _results;
-        private string _currentSceanrio;
+        private string _currentScenario;
         private int _iteration;
         private string _browser;
         private string _measureSet;
@@ -56,7 +56,7 @@ namespace BrowserEfficiencyTest
             {
                 foreach (var extension in extensionsNameAndVersion)
                 {
-                    _browser = _browser + "|" + extension.Key + " " + extension.Value;
+                    _browser = $"{_browser}|{extension.Key} {extension.Value}";
                 }
             }
         }
@@ -64,19 +64,19 @@ namespace BrowserEfficiencyTest
         /// <summary>
         /// Sets the measureSet, which will be included when a measurement is recorded later.
         /// </summary>
-        /// <param name="measureSet"></param>
+        /// <param name="measureSet">The current measureset</param>
         public void SetMeasureSet(string measureSet)
         {
             _measureSet = measureSet;
         }
 
         /// <summary>
-        /// Sets the sceanrio, which will be included when a measurement is recorded later.
+        /// Sets the scenario, which will be included when a measurement is recorded later.
         /// </summary>
         /// <param name="scenario">The current scenario</param>
         public void SetScenario(string scenario)
         {
-            _currentSceanrio = scenario;
+            _currentScenario = scenario;
         }
 
         /// <summary>
@@ -105,16 +105,16 @@ namespace BrowserEfficiencyTest
             List<string> results = new List<string>();
             foreach (List<string> result in _results)
             {
-                string resultString = "";
+                StringBuilder resultString = new StringBuilder();
                 foreach(string component in result)
                 {
-                    if (resultString != "")
+                    if (resultString.ToString() != "")
                     {
-                        resultString += ",";
+                        resultString.Append(",");
                     }
-                    resultString += component;
+                    resultString.Append(component);
                 }
-                results.Add(resultString);
+                results.Add(resultString.ToString());
             }
             return results;
         }
@@ -134,7 +134,7 @@ namespace BrowserEfficiencyTest
                 string measureName = "Page Load Time (ms)";
                 if (pageLoaded != null && pageLoaded != "")
                 {
-                    measureName += ": " + pageLoaded;
+                    measureName += $": {pageLoaded}";
                 }
                 MakeRecord(measureName, timeToLoad.ToString());
             }
@@ -152,12 +152,12 @@ namespace BrowserEfficiencyTest
             DateTime now = DateTime.Now;
             List<String> record = new List<String>();
             record.Add("no_etl");
-            record.Add(_currentSceanrio);
+            record.Add(_currentScenario);
             record.Add(_iteration.ToString());
             record.Add(_browser);
             record.Add(now.ToString("yyyyMMdd"));
             record.Add(now.ToString("HHmmss"));
-            record.Add("responsiveness (" + _measureSet + ")");
+            record.Add($"responsiveness ({_measureSet})");
             record.Add(measure);
             record.Add(result);
             _results.Add(record);

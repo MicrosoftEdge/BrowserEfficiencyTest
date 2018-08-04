@@ -200,7 +200,7 @@ namespace BrowserEfficiencyTest
                             if (selectedWorkload == null)
                             {
                                 argumentsAreValid = false;
-                                Logger.LogWriteLine(string.Format("The specified workload '{0}' was not found!", args[argNum]), false);
+                                Logger.LogWriteLine($"The specified workload '{args[argNum]}' was not found!", false);
                             }
                             else
                             {
@@ -208,7 +208,7 @@ namespace BrowserEfficiencyTest
                                 if (!successfullyAddedScenarios)
                                 {
                                     argumentsAreValid = false;
-                                    Logger.LogWriteLine(string.Format("Invalid scenario specified in workload '{0}'!", selectedWorkload.Name), false);
+                                    Logger.LogWriteLine($"Invalid scenario specified in workload '{selectedWorkload.Name}'!", false);
                                 }
                                 else
                                 {
@@ -259,7 +259,7 @@ namespace BrowserEfficiencyTest
                             else
                             {
                                 argumentsAreValid = false;
-                                Logger.LogWriteLine(string.Format("The specified scenario '{0}' does not exist!", selectedScenario), false);
+                                Logger.LogWriteLine($"The specified scenario '{selectedScenario}' does not exist!", false);
                             }
                         }
 
@@ -316,7 +316,7 @@ namespace BrowserEfficiencyTest
                                 if (!Directory.Exists(extensionsPath))
                                 {
                                     argumentsAreValid = false;
-                                    Logger.LogWriteLine("Invalid extensions path: " + extensionsPath, false);
+                                    Logger.LogWriteLine($"Invalid extensions path: {extensionsPath}", false);
                                 }
                                 else
                                 {
@@ -350,7 +350,7 @@ namespace BrowserEfficiencyTest
                             {
                                 // The specified measureset is invalid.
                                 argumentsAreValid = false;
-                                Logger.LogWriteLine(string.Format("The specified measureset '{0}' does not exist!", measureSet), false);
+                                Logger.LogWriteLine($"The specified measureset '{measureSet}' does not exist!", false);
                             }
                         }
 
@@ -417,7 +417,7 @@ namespace BrowserEfficiencyTest
                             if (!Directory.Exists(BrowserProfilePath))
                             {
                                 argumentsAreValid = false;
-                                Logger.LogWriteLine(string.Format("The profile path: {0} does not exist!", BrowserProfilePath), false);
+                                Logger.LogWriteLine($"The profile path: {BrowserProfilePath} does not exist!", false);
                             }
                         }
                         else
@@ -444,7 +444,7 @@ namespace BrowserEfficiencyTest
                             if (!File.Exists(CredentialPath))
                             {
                                 argumentsAreValid = false;
-                                Logger.LogWriteLine(string.Format("The credential file: {0} does not exist!", CredentialPath), false);
+                                Logger.LogWriteLine($"The credential file: {CredentialPath} does not exist!", false);
                             }
                         }
                         else
@@ -589,7 +589,7 @@ namespace BrowserEfficiencyTest
                         break;
                     default:
                         argumentsAreValid = false;
-                        Logger.LogWriteLine(string.Format("Invalid argument encountered '{0}'", args[argNum]), false);
+                        Logger.LogWriteLine($"Invalid argument encountered '{args[argNum]}'", false);
                         DisplayUsage();
 
                         break;
@@ -621,7 +621,7 @@ namespace BrowserEfficiencyTest
                 }
             }
 
-            Logger.LogWriteLine(string.Format("BrowserEfficiencyTest Version: {0}", BrowserEfficiencyTestVersion), false);
+            Logger.LogWriteLine($"BrowserEfficiencyTest Version: {BrowserEfficiencyTestVersion}", false);
 
             if (args.Length == 0)
             {
@@ -682,12 +682,12 @@ namespace BrowserEfficiencyTest
             Logger.LogWriteLine("Available workloads and scenarios:", false);
             foreach (var workload in _workloads)
             {
-                Logger.LogWriteLine(string.Format("Workload: {0}", workload.Name), false);
+                Logger.LogWriteLine($"Workload: {workload.Name}", false);
                 Logger.LogWriteLine("  Scenarios:", false);
 
                 foreach (var scenario in workload.Scenarios)
                 {
-                    Logger.LogWriteLine(string.Format("    {0}", scenario.ScenarioName), false);
+                    Logger.LogWriteLine($"    {scenario.ScenarioName}", false);
                 }
             }
         }
