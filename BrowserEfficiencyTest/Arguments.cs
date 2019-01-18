@@ -414,11 +414,6 @@ namespace BrowserEfficiencyTest
                         if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
                         {
                             BrowserProfilePath = args[argNum];
-                            if (!Directory.Exists(BrowserProfilePath))
-                            {
-                                argumentsAreValid = false;
-                                Logger.LogWriteLine(string.Format("The profile path: {0} does not exist!", BrowserProfilePath), false);
-                            }
                         }
                         else
                         {
