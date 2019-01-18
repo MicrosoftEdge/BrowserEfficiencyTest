@@ -329,19 +329,41 @@ namespace BrowserEfficiencyTest
                 case "chrome":
                     ChromeOptions option = new ChromeOptions();
                     option.AddUserProfilePreference("profile.default_content_setting_values.notifications", 1);
-                    ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    if (enableVerboseLogging)
-                    {
-                        chromeDriverService.EnableVerboseLogging = true;
-                    }
 
                     if (!string.IsNullOrEmpty(browserProfilePath))
                     {
                         option.AddArgument("--user-data-dir=" + browserProfilePath);
                     }
 
-                    ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
-                    driver = new ChromeDriver(chromeDriverService, option);
+                    if (hostName.Equals("localhost", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // Using localhost so create a local ChromeDriverService and instantiate an ChromeDriver object with it.
+
+                        ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
+                        if (enableVerboseLogging)
+                        {
+                            chromeDriverService.EnableVerboseLogging = true;
+                        }
+                        ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
+                        driver = new ChromeDriver(chromeDriverService, option);
+                    }
+                    else
+                    {
+                        // Using a different host name.
+                        // We will make the assumption that this host name is the host of a remote webdriver instance.
+                        // We have to use RemoteWebDriver here since it is capable of being instantiated without automatically
+                        // opening a local ChromeDriver.exe instance.
+                        // One the remot host, launch ChromeDriver such as: .\chromedriver --whitelisted-ips="" --port=17556
+
+                        _port = port;
+                        _hostName = hostName;
+                        var remoteUri = new Uri("http://" + _hostName + ":" + _port + "/");
+
+                        Logger.LogWriteLine(string.Format("  Instantiating RemoteWebDriver object for remote execution - Host: {0}  Port: {1}", _hostName, _port));
+                        ScenarioEventSourceProvider.EventLog.LaunchWebDriver(browser);
+                        driver = new RemoteWebDriver(remoteUri, option.ToCapabilities());
+                    }
+
                     break;
                 default:
                     EdgeOptions edgeOptions = new EdgeOptions();
