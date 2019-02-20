@@ -47,6 +47,12 @@ namespace BrowserEfficiencyTest
             driver.NavigateToUrl("https://www.amazon.com");
             driver.Wait(5);
 
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Search for Prime Video");
+            // Type "Prime Video" in the search box and hit enter
+            driver.TypeIntoField(driver.FindElementById("twotabsearchtextbox"), "Prime Video" + Keys.Enter);
+            driver.Wait(5);
+            ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Search for 'Prime Video'");
+
             ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Search for 'Game of Thrones Season 1'");
             // Type "Game of Thrones Season 1" in the search box and hit enter
             driver.TypeIntoField(driver.FindElementById("twotabsearchtextbox"), "Game of Thrones Season 1" + Keys.Enter);
