@@ -38,7 +38,7 @@ namespace BrowserEfficiencyTest
         public AmazonSearch()
         {
             Name = "AmazonSearch";
-            DefaultDuration = 45;
+            DefaultDuration = 55;
         }
 
         public override void Run(RemoteWebDriver driver, string browser, CredentialManager credentialManager, ResponsivenessTimer timer)
@@ -61,7 +61,15 @@ namespace BrowserEfficiencyTest
 
             ScenarioEventSourceProvider.EventLog.ScenarioActionStart("Click on 'Game of Thrones Season 1'");
             // Click into "Game of Thrones Season 1"
-            driver.ClickElement(driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']"));
+            // Currently there are two possible layouts being served.  Try the newer one first, if that fails try the older one.
+            try
+            {
+                driver.ClickElement(driver.FindElementByXPath("//a[.//span[text()='Game of Thrones Season 1']]"));
+            }
+            catch (Exception)
+            {
+                driver.ClickElement(driver.FindElementByXPath("//*[@title='Game of Thrones Season 1']"));
+            }
             driver.WaitForPageLoad();
             driver.Wait(2);
             ScenarioEventSourceProvider.EventLog.ScenarioActionStop("Click on 'Game of Thrones Season 1'");
