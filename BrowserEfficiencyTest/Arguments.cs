@@ -548,7 +548,7 @@ namespace BrowserEfficiencyTest
                     case "-region":
                         // The name of the region must be specified after the -region option.
                         // The region must be defined in the ActiveRegion.xml
-                        // See https://docs.microsoft.com/en-us/windows-hardware/test/wpt/regions-of-interest for more information
+                        // See https://learn.microsoft.com/windows-hardware/test/wpt/regions-of-interest for more information
                         // on Regions of Interest.
                         argNum++;
                         if ((argNum < args.Length) && !(args[argNum].StartsWith("-")))
