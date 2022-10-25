@@ -210,7 +210,7 @@ C:\unpackedExtensions
 |----|----|---- <otherExtFiles>
 ```
 #### Testing your own extension
-If you wish prepare your own extension for testing, you can follow the first half of the Microsoft Edge Extension [ManifoldJS Packaging Guide](https://docs.microsoft.com/en-us/microsoft-edge/extensions/guides/packaging/using-manifoldjs-to-package-extensions) to generate an unpacked extension AppX. From there, you will need to copy the `manifest` folder that ManifoldJS generates into a folder (`C:\unpackedExtensions` for the purposes of this demo) to match the structure above. 
+If you wish prepare your own extension for testing, you can follow the first half of the Microsoft Edge Extension [ManifoldJS Packaging Guide](https://learn.microsoft.com/microsoft-edge/extensions/guides/packaging/using-manifoldjs-to-package-extensions) to generate an unpacked extension AppX. From there, you will need to copy the `manifest` folder that ManifoldJS generates into a folder (`C:\unpackedExtensions` for the purposes of this demo) to match the structure above. 
 
 #### Testing an extension from the Windows Store
 If you wish to run BrowserEfficiencyTest with an extension that is available from the Windows Store, you will need to perform the following steps:
